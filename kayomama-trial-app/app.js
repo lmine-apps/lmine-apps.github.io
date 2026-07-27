@@ -1415,54 +1415,190 @@
     bar.innerHTML = '';
     bar.classList.add('active');
 
-    bar.appendChild(el('span', { className: 'debug-tag', text: 'DEBUG' }));
+    // --- 現在の状態表示 ---
+    var typeTag = state.assignedType || '未設定';
+    var mode = CFG.testMode ? 'test' : 'normal';
+    var startedInfo = state.startedAt ? (Math.round((Date.now() - new Date(state.startedAt).getTime()) / 3600000 * 10) / 10) + 'h経過' : '未開始';
+    bar.appendChild(el('span', {
+      className: 'debug-tag',
+      text: 'DEBUG ・ type=' + typeTag + ' ・ ' + mode + ' ・ ' + startedInfo
+    }));
+
+    // --- グループ1：タイプ切替（入口設定） ---
+    var g1Label = el('span', { className: 'debug-tag', text: '入口:' });
+    bar.appendChild(g1Label);
+    ['A', 'B', 'C', 'D'].forEach(function (T) {
+      var isCurrent = state.assignedType === T;
+      var b = el('button', {
+        type: 'button',
+        text: T + (isCurrent ? '●' : ''),
+        title: T + 'タイプで初期化してスタート'
+      });
+      b.addEventListener('click', function () {
+        if (!confirm('タイプ ' + T + ' で新しく開始しますか？（現在のデータは消えます）')) return;
+        resetState();
+        state.assignedType = T;
+        state.startedAt = nowIso();
+        saveState();
+        location.href = location.pathname + '?type=' + T + '&debug=1';
+      });
+      bar.appendChild(b);
+    });
+
+    // --- グループ2：画面ジャンプ ---
+    var g2Label = el('span', { className: 'debug-tag', text: '画面:' });
+    bar.appendChild(g2Label);
+
+    var screens = [
+      { key: 'welcome', label: 'welcome', ensure: function () { state.startedAt = ''; saveState(); } },
+      { key: 'home',    label: 'home',    ensure: ensureStarted },
+      { key: 'day1',    label: 'day1',    ensure: ensureStartedAndUnlock(1) },
+      { key: 'day2',    label: 'day2',    ensure: ensureStartedAndUnlock(2) },
+      { key: 'day3',    label: 'day3',    ensure: ensureStartedAndUnlock(3) },
+      { key: 'day4',    label: 'day4',    ensure: ensureStartedAndUnlock(4) },
+      { key: 'card',    label: 'card',    ensure: function () {
+          ensureStarted();
+          state.completedDays.day3 = true;
+          state.cardCreated = true;
+          saveState();
+      }},
+      { key: 'report',  label: 'report',  ensure: function () {
+          ensureStarted();
+          state.completedDays.day1 = true;
+          state.completedDays.day2 = true;
+          state.completedDays.day3 = true;
+          state.completedDays.day4 = true;
+          state.cardCreated = true;
+          state.reportGenerated = true;
+          saveState();
+      }},
+      { key: 'offer',   label: 'offer',   ensure: function () {
+          ensureStarted();
+          state.completedDays.day1 = true;
+          state.completedDays.day2 = true;
+          state.completedDays.day3 = true;
+          state.completedDays.day4 = true;
+          state.cardCreated = true;
+          state.reportGenerated = true;
+          saveState();
+      }},
+      { key: 'expired', label: 'expired', ensure: function () {
+          if (!state.startedAt) state.startedAt = nowIso();
+          // 開始時刻をアプリ期限より過去にセット
+          var expireMs = appAvailableMs();
+          state.startedAt = new Date(Date.now() - expireMs - 1000).toISOString();
+          saveState();
+      }}
+    ];
+    screens.forEach(function (s) {
+      var b = el('button', {
+        type: 'button', text: '▶' + s.label,
+        title: s.label + '画面へジャンプ'
+      });
+      b.addEventListener('click', function () {
+        if (!state.assignedType) {
+          alert('先に「入口」でタイプを選んでください');
+          return;
+        }
+        s.ensure();
+        goto(s.key, { force: true });
+      });
+      bar.appendChild(b);
+    });
+
+    // --- グループ3：時間操作 ---
+    var g3Label = el('span', { className: 'debug-tag', text: '時間:' });
+    bar.appendChild(g3Label);
 
     bar.appendChild(el('button', {
-      type: 'button', text: 'reset', onclick: function () {
-        if (!confirm('データをリセットしますか？')) return;
-        resetState();
-        location.reload();
+      type: 'button', text: '⏭ 次の日解放',
+      title: '開始時刻を24時間巻き戻して、次の日が開けるようにする',
+      onclick: function () {
+        if (!state.startedAt) {
+          alert('先に「入口」または「▶welcome」から開始してください');
+          return;
+        }
+        // 開始時刻を "解放間隔" 分だけ過去に
+        var interval = unlockIntervalMs();
+        var currentStart = new Date(state.startedAt).getTime();
+        state.startedAt = new Date(currentStart - interval).toISOString();
+        saveState();
+        goto('home', { force: true });
       }
     }));
 
-    ['A', 'B', 'C', 'D'].forEach(function (T) {
+    bar.appendChild(el('button', {
+      type: 'button', text: '⏰ 期限切れ',
+      title: 'アプリ有効期限を過ぎた状態にする',
+      onclick: function () {
+        if (!state.startedAt) state.startedAt = nowIso();
+        state.startedAt = new Date(Date.now() - appAvailableMs() - 1000).toISOString();
+        saveState();
+        goto('home', { force: true });
+      }
+    }));
+
+    bar.appendChild(el('button', {
+      type: 'button', text: '⏰ 今開始',
+      title: '開始時刻を "今" に戻す（1日目のみ解放状態）',
+      onclick: function () {
+        state.startedAt = nowIso();
+        saveState();
+        goto('home', { force: true });
+      }
+    }));
+
+    // --- グループ4：完了ショートカット ---
+    var g4Label = el('span', { className: 'debug-tag', text: '完了:' });
+    bar.appendChild(g4Label);
+
+    [1, 2, 3, 4].forEach(function (n) {
       bar.appendChild(el('button', {
-        type: 'button', text: 'init ' + T, onclick: function () {
-          resetState();
-          state.assignedType = T;
-          state.startedAt = nowIso();
+        type: 'button', text: '✓day' + n,
+        title: n + '日目を完了扱いにする',
+        onclick: function () {
+          if (!state.startedAt) state.startedAt = nowIso();
+          state.completedDays['day' + n] = true;
+          if (n === 3) state.cardCreated = true;
+          if (n === 4) state.reportGenerated = true;
           saveState();
-          location.href = location.pathname + '?type=' + T + '&debug=1';
+          goto('home', { force: true });
         }
       }));
     });
 
+    // --- グループ5：全リセット ---
     bar.appendChild(el('button', {
-      type: 'button', text: 'complete day1', onclick: function () {
-        state.completedDays.day1 = true; saveState(); goto('home', { force: true });
+      type: 'button', text: '🗑 reset',
+      title: '保存データを全て削除してリロード',
+      onclick: function () {
+        if (!confirm('全データをリセットしますか？')) return;
+        resetState();
+        location.reload();
       }
     }));
-    bar.appendChild(el('button', {
-      type: 'button', text: 'complete day2', onclick: function () {
-        state.completedDays.day2 = true; saveState(); goto('home', { force: true });
-      }
-    }));
-    bar.appendChild(el('button', {
-      type: 'button', text: 'complete day3', onclick: function () {
-        state.completedDays.day3 = true; state.cardCreated = true; saveState(); goto('home', { force: true });
-      }
-    }));
-    bar.appendChild(el('button', {
-      type: 'button', text: 'complete day4', onclick: function () {
-        state.completedDays.day4 = true; state.reportGenerated = true; saveState(); goto('home', { force: true });
-      }
-    }));
+  }
 
-    var typeTag = state.assignedType || '?';
-    bar.appendChild(el('span', {
-      className: 'debug-tag',
-      text: 'type=' + typeTag + ' / ' + (CFG.testMode ? 'test' : 'normal')
-    }));
+  // --- Debug helpers ---
+  function ensureStarted() {
+    if (!state.startedAt) {
+      state.startedAt = nowIso();
+      saveState();
+    }
+  }
+  function ensureStartedAndUnlock(dayN) {
+    return function () {
+      ensureStarted();
+      // その日が解放されるように、開始時刻を過去に巻き戻す
+      var interval = unlockIntervalMs();
+      var needed = (dayN - 1) * interval;
+      var start = new Date(state.startedAt).getTime();
+      var age = Date.now() - start;
+      if (age < needed) {
+        state.startedAt = new Date(Date.now() - needed - 1000).toISOString();
+        saveState();
+      }
+    };
   }
 
   // ============================================================
