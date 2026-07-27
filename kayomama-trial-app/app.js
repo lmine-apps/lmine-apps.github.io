@@ -107,12 +107,16 @@
       answers: { day1: {}, day2: {}, day3: {}, day4: {} },
       cardCreated: false,
       reportGenerated: false,
+      reportViewed: false,   // レポート画面を実際に閲覧した（初回のみtrue）
       offerViewed: false,
       offerClicked: false
     };
   }
 
   var state = defaultState();
+
+  // メモリ上だけで保持するpendingType（URLから拾ったが、まだ開始してないtype）
+  var pendingType = null;
 
   function loadState() {
     if (!hasStorage()) return false;
@@ -135,6 +139,8 @@
         day3: (parsed.answers && parsed.answers.day3) || {},
         day4: (parsed.answers && parsed.answers.day4) || {}
       };
+      // 旧データ互換：reportViewed が存在しない場合は false
+      if (typeof state.reportViewed !== 'boolean') state.reportViewed = false;
       return true;
     } catch (e) {
       console.warn('loadState error', e);
@@ -155,28 +161,50 @@
   function resetState() {
     if (hasStorage()) localStorage.removeItem(STORAGE_KEY);
     state = defaultState();
+    pendingType = null;
   }
 
   // ------------------------------------------------------------
   // タイプ判定
   // ------------------------------------------------------------
+  // 返り値：
+  //   { type, source: 'saved' | 'pending' | 'none', mismatch: boolean }
+  //   - saved  : localStorage に開始済みタイプ（assignedType && startedAt）あり
+  //   - pending: 開始前で、URLから拾ったタイプをメモリ保持
+  //   - none   : どちらも無効
+  //   mismatch : 開始後に別タイプURLでアクセスされた
   function resolveType() {
     var urlType = getQueryParam('type');
-    var savedType = state.assignedType;
+    var validUrlType = urlType && VALID_TYPES.indexOf(urlType) >= 0 ? urlType : null;
 
-    if (savedType && VALID_TYPES.indexOf(savedType) >= 0) {
-      // 保存済みが優先。別タイプURLの場合は "既に開始済み" 表示
-      if (urlType && VALID_TYPES.indexOf(urlType) >= 0 && urlType !== savedType) {
-        return { type: savedType, mismatch: true };
-      }
-      return { type: savedType, mismatch: false };
+    // 開始後（startedAt有り）：assignedTypeを絶対優先、URLでは上書きしない
+    if (state.startedAt && state.assignedType && VALID_TYPES.indexOf(state.assignedType) >= 0) {
+      return {
+        type: state.assignedType,
+        source: 'saved',
+        mismatch: !!(validUrlType && validUrlType !== state.assignedType)
+      };
     }
 
-    if (urlType && VALID_TYPES.indexOf(urlType) >= 0) {
-      return { type: urlType, fromUrl: true, mismatch: false };
+    // 開始前：URLの新しいタイプで pendingType を更新（別タイプURLで開き直せる）
+    if (validUrlType) {
+      pendingType = validUrlType;
+      return { type: validUrlType, source: 'pending', mismatch: false };
     }
 
-    return { type: null };
+    // 開始前でURLも無効：pendingTypeが残っていればそれを使う
+    if (pendingType && VALID_TYPES.indexOf(pendingType) >= 0) {
+      return { type: pendingType, source: 'pending', mismatch: false };
+    }
+
+    return { type: null, source: 'none', mismatch: false };
+  }
+
+  // 現在表示すべきタイプ（assignedType があれば優先、無ければ pendingType）
+  function currentType() {
+    if (state.assignedType && VALID_TYPES.indexOf(state.assignedType) >= 0) return state.assignedType;
+    if (pendingType && VALID_TYPES.indexOf(pendingType) >= 0) return pendingType;
+    return null;
   }
 
   // ------------------------------------------------------------
@@ -197,11 +225,27 @@
     return new Date(start + (dayN - 1) * interval);
   }
 
-  function isDayUnlocked(dayN) {
+  // dayNが「時間的に」解放されているか（前日完了は考慮しない）
+  function isDayTimeUnlocked(dayN) {
     if (dayN === 1) return !!state.startedAt;
     var unlockAt = getDayUnlockAt(dayN);
     if (!unlockAt) return false;
     return Date.now() >= unlockAt.getTime();
+  }
+
+  // dayNが完全に解放されているか（時間経過 AND 前日完了）
+  function isDayUnlocked(dayN) {
+    if (!isDayTimeUnlocked(dayN)) return false;
+    if (dayN === 1) return true;
+    // 2〜4日目：前日が完了していなければNG
+    return !!state.completedDays['day' + (dayN - 1)];
+  }
+
+  // 解放されていない理由：'time'（時間未経過）／'prev'（前日未完了）／null（解放済み）
+  function whyLocked(dayN) {
+    if (isDayUnlocked(dayN)) return null;
+    if (!isDayTimeUnlocked(dayN)) return 'time';
+    return 'prev';
   }
 
   function hoursUntilUnlock(dayN) {
@@ -212,11 +256,13 @@
     return Math.ceil(ms / 3600000);
   }
 
+  // 進捗5工程（day1〜day4 完了＋レポート閲覧）。診断完了は分子・分母に含めない。
   function completedCount() {
-    var c = 1; // 診断完了ぶん
+    var c = 0;
     ['day1','day2','day3','day4'].forEach(function (k) {
       if (state.completedDays[k]) c++;
     });
+    if (state.reportViewed) c++;
     return c;
   }
 
@@ -254,20 +300,21 @@
     }
     loadState();
     var t = resolveType();
-    if (t.type) {
-      state.assignedType = t.type;
-      saveState();
-    }
+    // ここでは assignedType には触らない（開始ボタン押下時に startApp() で確定）
 
     if (!t.type) {
       goto('invalid-type', { scrollTop: false });
+      if (isDebugMode()) renderDebugBar();
       return;
     }
     if (t.mismatch) {
+      // 開始後に別タイプURLで来た → 既存の続き画面
       goto('already-started', { scrollTop: false });
+      if (isDebugMode()) renderDebugBar();
       return;
     }
     if (!state.startedAt) {
+      // 開始前：pendingType のウェルカム
       goto('welcome', { scrollTop: false });
     } else {
       goto('home', { scrollTop: false });
@@ -304,10 +351,11 @@
   // ウェルカム画面
   // ============================================================
   function renderWelcome(root) {
-    var t = TYPES[state.assignedType];
+    var ct = currentType();
+    var t = TYPES[ct];
     if (!t) return renderInvalidType(root);
 
-    trackEvent('app_viewed', {});
+    trackEvent('app_viewed', { type: ct });
 
     var screen = el('section', { className: 'screen active' });
     screen.appendChild(el('div', { className: 'eyebrow', text: '— START —' }));
@@ -370,9 +418,18 @@
 
   function startApp() {
     if (state.startedAt) return; // 二重防止
+    // ここで初めて pendingType を assignedType に確定
+    var ct = currentType();
+    if (!ct || VALID_TYPES.indexOf(ct) < 0) {
+      // 想定外：不正入口へ
+      goto('invalid-type');
+      return;
+    }
+    state.assignedType = ct;
     state.startedAt = nowIso();
     saveState();
-    trackEvent('app_started', {});
+    pendingType = null; // 確定後は使わない
+    trackEvent('app_started', { type: state.assignedType });
     goto('home');
   }
 
@@ -437,6 +494,7 @@
       var key = 'day' + i;
       var completed = state.completedDays[key];
       var unlocked = isDayUnlocked(i);
+      var lockReason = whyLocked(i);
       var todayCandidate = !completed && unlocked;
 
       var subText = '';
@@ -450,13 +508,17 @@
         badgeText = 'はじめる →';
       } else {
         st = 'locked';
-        var h = hoursUntilUnlock(i);
-        if (h == null) {
-          subText = COMMON.lockedDayLabel || 'まだ開いていません';
-        } else if (h <= 12) {
-          subText = (COMMON.unlockedHoursTemplate || 'あと約{h}時間で開きます').replace('{h}', h);
+        if (lockReason === 'prev') {
+          subText = COMMON.lockedByPrevDay || '前の日を終えると開きます';
         } else {
-          subText = COMMON.unlockedTomorrow || '明日、開きます';
+          var h = hoursUntilUnlock(i);
+          if (h == null) {
+            subText = COMMON.lockedDayLabel || 'まだ開いていません';
+          } else if (h <= 12) {
+            subText = (COMMON.unlockedHoursTemplate || 'あと約{h}時間で開きます').replace('{h}', h);
+          } else {
+            subText = COMMON.unlockedTomorrow || '明日、開きます';
+          }
         }
         badgeText = '';
       }
@@ -477,8 +539,8 @@
     list.appendChild(makeDayItem({
       label: COMMON.reportLinkLabel || 'あなたの台所レポート',
       sub: reportUnlocked ? '' : '4日目を完了すると開きます',
-      badge: reportUnlocked ? (state.reportGenerated ? 'ひらく →' : '見に行く →') : '',
-      state: reportUnlocked ? (state.reportGenerated ? 'completed' : '') : 'locked',
+      badge: reportUnlocked ? (state.reportViewed ? 'ふりかえる' : (state.reportGenerated ? 'ひらく →' : '見に行く →')) : '',
+      state: reportUnlocked ? (state.reportViewed ? 'completed' : '') : 'locked',
       onclick: reportUnlocked ? function () { goto('report'); } : null
     }));
 
@@ -497,16 +559,8 @@
       screen.appendChild(cardLinkWrap);
     }
 
-    // Course sub-link
-    var subLink = el('div', { className: 'home-sub-link' });
-    var a = el('a', {
-      href: CFG.courseUrl || '#',
-      target: '_blank',
-      rel: 'noopener',
-      text: COMMON.courseSubLinkLabel || 'すでに家庭料理マスターコースを詳しく知りたい方へ'
-    });
-    subLink.appendChild(a);
-    screen.appendChild(subLink);
+    // 【重要】ホーム画面にコース直リンクは出さない（仕様1）。
+    // オファーへは「4日間完了→レポート→続きの案内」経由でのみ到達する。
 
     root.appendChild(screen);
   }
@@ -541,7 +595,10 @@
     if (!t) return renderInvalidType(root);
 
     if (isExpired()) return renderExpired(root, true);
-    if (!isDayUnlocked(dayN)) { goto('home'); return; }
+    // 完了済みの日は再閲覧可能。未完了かつ解放されていなければホームへ。
+    if (!isDayUnlocked(dayN) && !state.completedDays['day' + dayN]) {
+      goto('home'); return;
+    }
 
     var dayKey = 'day' + dayN;
     var content = t[dayKey];
@@ -609,16 +666,22 @@
       // 保存
       autoSaveDayInputs(dayN, t);
 
-      // バリデーション
-      if (dayN === 2 && state.assignedType === 'B') {
-        var s = state.answers.day2.staples || [];
-        var allFilled = s.length >= 3 && s.every(function (x) { return x && x.trim(); });
-        if (!allFilled) {
-          completeBtn.dataset.busy = '';
-          alert('3つとも入力してから進めてください。');
-          return;
+      // 共通バリデーション（必須未回答なら停止＋インラインエラー）
+      var vres = validateDay(dayN, t, screen);
+      if (!vres.ok) {
+        completeBtn.dataset.busy = '';
+        // 最初の未回答要素へスクロール＆フォーカス
+        if (vres.firstEl) {
+          try {
+            vres.firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (e) { vres.firstEl.scrollIntoView(); }
+          setTimeout(function () {
+            try { vres.firstEl.focus({ preventScroll: true }); } catch (e) {}
+          }, 400);
         }
+        return;
       }
+
       if (dayN === 3) {
         state.cardCreated = true;
         trackEvent('card_created', {});
@@ -655,19 +718,114 @@
     });
   }
 
+  // ------------------------------------------------------------
+  // バリデーション（通常利用者向け・alertを使わずインラインエラー表示）
+  // ------------------------------------------------------------
+  function clearInlineErrors(root) {
+    $$('.inline-error', root).forEach(function (n) { n.remove(); });
+    $$('.has-error', root).forEach(function (n) { n.classList.remove('has-error'); });
+  }
+  function makeInlineError(text) {
+    return el('div', { className: 'inline-error', text: text });
+  }
+
+  function validateDay(dayN, t, screen) {
+    clearInlineErrors(screen);
+    var dayKey = 'day' + dayN;
+    var content = t[dayKey] || {};
+    var answers = state.answers[dayKey] || {};
+    var firstErrorEl = null;
+    var ok = true;
+
+    function fail(anchorEl, msg) {
+      ok = false;
+      if (!anchorEl) return;
+      anchorEl.classList.add('has-error');
+      // 質問カード直下にエラーを表示
+      var err = makeInlineError(msg);
+      anchorEl.parentNode.insertBefore(err, anchorEl.nextSibling);
+      if (!firstErrorEl) firstErrorEl = anchorEl;
+    }
+
+    // 4日目：共通3設問（q1, q2, q3）必須
+    if (dayN === 4) {
+      var q1El = $('[data-vkey="day4_q1"]', screen);
+      if (!answers.q1) fail(q1El, COMMON.errorSingleChoice || 'ひとつ選んでから進んでください');
+      var q2El = $('[data-vkey="day4_q2"]', screen);
+      if (!answers.q2) fail(q2El, COMMON.errorSingleChoice || 'ひとつ選んでから進んでください');
+      var q3El = $('[data-vkey="day4_q3"]', screen);
+      if (!answers.q3) fail(q3El, COMMON.errorSingleChoice || 'ひとつ選んでから進んでください');
+      return { ok: ok, firstEl: firstErrorEl };
+    }
+
+    // 3日目：カード自動生成のため、明示的なrequiredはなし（前日完了で担保済み）
+    if (dayN === 3) {
+      return { ok: true, firstEl: null };
+    }
+
+    // 1・2日目：questions を required に沿って検証
+    (content.questions || []).forEach(function (q) {
+      if (!q.required) return;
+      var val = answers[q.key];
+      var wrapEl = $('[data-vkey="' + dayKey + '_' + q.key + '"]', screen);
+
+      // "今日は料理をしなかった" が選ばれた場合はaltを検証
+      if (content.altQuestion && val === content.altQuestion.trigger) {
+        var altVal = answers[content.altQuestion.key];
+        var altEl = $('[data-vkey="' + dayKey + '_' + content.altQuestion.key + '"]', screen);
+        if (!altVal || !String(altVal).trim()) {
+          fail(altEl || wrapEl, COMMON.errorTextInput || 'こちらを入力してから進んでください');
+        }
+        return;
+      }
+
+      if (q.type === 'single_choice' || q.type === 'single_choice_with_other') {
+        if (!val) {
+          fail(wrapEl, COMMON.errorSingleChoice || 'ひとつ選んでから進んでください');
+          return;
+        }
+        if (q.type === 'single_choice_with_other' && val === 'その他') {
+          var oval = answers[q.otherKey];
+          if (!oval || !String(oval).trim()) {
+            fail(wrapEl, COMMON.errorOtherDetail || '「その他」の内容を入力してから進んでください');
+          }
+        }
+      } else if (q.type === 'text_with_suggestions' || q.type === 'text_optional') {
+        if (!val || !String(val).trim()) {
+          fail(wrapEl, COMMON.errorTextInput || 'こちらを入力してから進んでください');
+        }
+      } else if (q.type === 'three_slots_with_suggestions') {
+        var arr = Array.isArray(val) ? val : [];
+        var allFilled = arr.length >= 3 && arr.every(function (x) { return x && String(x).trim(); });
+        if (!allFilled) {
+          fail(wrapEl, COMMON.errorMultiSlots || '3つとも入力してから進んでください');
+        }
+      }
+    });
+
+    return { ok: ok, firstEl: firstErrorEl };
+  }
+
   // 各質問の描画
   function renderDayQuestions(card, t, dayN) {
     var dayKey = 'day' + dayN;
     var content = t[dayKey];
     if (!content || !content.questions) return;
 
+    // 代替質問（"今日は料理をしなかった" 等）は最後にまとめて描画
+    var altWrapRef = { el: null, altInputRef: null };
+
     content.questions.forEach(function (q) {
       var savedVal = (state.answers[dayKey] || {})[q.key];
 
-      card.appendChild(el('div', {
+      var qLabel = el('div', {
         className: 'day-question serif',
         text: q.label
-      }));
+      });
+      // バリデーション時アンカー用
+      qLabel.setAttribute('data-vkey', dayKey + '_' + q.key);
+      qLabel.setAttribute('tabindex', '-1');
+      card.appendChild(qLabel);
 
       if (q.type === 'single_choice' || q.type === 'single_choice_with_other') {
         var choicesWrap = el('div', { className: 'choices', 'data-qkey': q.key });
@@ -684,7 +842,6 @@
             // "その他" 分岐
             if (q.type === 'single_choice_with_other' && opt === 'その他') {
               otherWrap.style.display = 'block';
-              // トリガー分岐用
             } else if (q.type === 'single_choice_with_other') {
               otherWrap.style.display = 'none';
               state.answers[dayKey][q.otherKey] = '';
@@ -695,6 +852,8 @@
             } else if (specialMsg) {
               specialMsg.style.display = 'none';
             }
+            // "今日は料理をしなかった" などalt質問トリガー
+            toggleAltVisibility(content, opt, altWrapRef);
           });
           choicesWrap.appendChild(b);
         });
@@ -746,6 +905,7 @@
           } else if (specialMsg2) {
             specialMsg2.style.display = 'none';
           }
+          toggleAltVisibility(content, input.value, altWrapRef);
         });
         textWrap.appendChild(input);
         card.appendChild(textWrap);
@@ -764,6 +924,7 @@
               } else if (specialMsg2) {
                 specialMsg2.style.display = 'none';
               }
+              toggleAltVisibility(content, s, altWrapRef);
             });
             sugWrap.appendChild(chip);
           });
@@ -848,6 +1009,48 @@
         }
       }
     });
+
+    // ---------- 代替質問（「今日は料理をしなかった」等） ----------
+    if (content.altQuestion) {
+      var alt = content.altQuestion;
+      var altWrap = el('div', { className: 'alt-question-wrap', style: 'margin-top: 22px; display:none;' });
+      var altLabel = el('div', { className: 'day-question serif', text: alt.label });
+      altLabel.setAttribute('data-vkey', dayKey + '_' + alt.key);
+      altLabel.setAttribute('tabindex', '-1');
+      altWrap.appendChild(altLabel);
+
+      var altSavedVal = (state.answers[dayKey] || {})[alt.key] || '';
+      var altField = el('div', { className: 'field' });
+      var altInput = el('input', {
+        type: 'text', className: 'input',
+        placeholder: alt.placeholder || '',
+        value: altSavedVal
+      });
+      altInput.addEventListener('input', function () {
+        state.answers[dayKey][alt.key] = altInput.value;
+        saveState();
+      });
+      altField.appendChild(altInput);
+      altWrap.appendChild(altField);
+      card.appendChild(altWrap);
+
+      altWrapRef.el = altWrap;
+
+      // 初期表示：現状の主質問の値が trigger かどうかで判定
+      var initialTriggered = false;
+      (content.questions || []).forEach(function (q) {
+        var v = (state.answers[dayKey] || {})[q.key];
+        if (v === alt.trigger) initialTriggered = true;
+      });
+      altWrap.style.display = initialTriggered ? 'block' : 'none';
+    }
+  }
+
+  // 主質問の選択値が alt.trigger と一致したら代替質問を表示
+  function toggleAltVisibility(content, currentVal, altWrapRef) {
+    if (!content || !content.altQuestion || !altWrapRef || !altWrapRef.el) return;
+    var show = (currentVal === content.altQuestion.trigger);
+    altWrapRef.el.style.display = show ? 'block' : 'none';
   }
 
   function renderDay3Content(card, t) {
@@ -975,7 +1178,10 @@
   function renderDay4Content(card, t) {
     // Q1（共通）
     var q1Saved = state.answers.day4.q1;
-    card.appendChild(el('div', { className: 'day-question serif', text: COMMON.day4Q1 }));
+    var q1Label = el('div', { className: 'day-question serif', text: COMMON.day4Q1 });
+    q1Label.setAttribute('data-vkey', 'day4_q1');
+    q1Label.setAttribute('tabindex', '-1');
+    card.appendChild(q1Label);
     var q1Wrap = el('div', { className: 'choices' });
     COMMON.day4Q1Options.forEach(function (opt) {
       var b = el('button', {
@@ -995,7 +1201,10 @@
 
     // Q2（タイプ別）
     var q2Saved = state.answers.day4.q2;
-    card.appendChild(el('div', { className: 'day-question serif', text: COMMON.day4Q2, style: 'margin-top:24px;' }));
+    var q2Label = el('div', { className: 'day-question serif', text: COMMON.day4Q2, style: 'margin-top:24px;' });
+    q2Label.setAttribute('data-vkey', 'day4_q2');
+    q2Label.setAttribute('tabindex', '-1');
+    card.appendChild(q2Label);
     var q2Wrap = el('div', { className: 'choices' });
     (t.day4.q2Options || []).forEach(function (opt) {
       var b = el('button', {
@@ -1015,7 +1224,10 @@
 
     // Q3（タイプ別）
     var q3Saved = state.answers.day4.q3;
-    card.appendChild(el('div', { className: 'day-question serif', text: COMMON.day4Q3, style: 'margin-top:24px;' }));
+    var q3Label = el('div', { className: 'day-question serif', text: COMMON.day4Q3, style: 'margin-top:24px;' });
+    q3Label.setAttribute('data-vkey', 'day4_q3');
+    q3Label.setAttribute('tabindex', '-1');
+    card.appendChild(q3Label);
     var q3Wrap = el('div', { className: 'choices' });
     (t.day4.q3Options || []).forEach(function (opt) {
       var b = el('button', {
@@ -1104,16 +1316,20 @@
   function generateCardLines(t) {
     var lines = [];
     var struct = (t.day3 && t.day3.cardStructure) || [];
+    var labels = (t.day3 && t.day3.cardLabels) || {};
     struct.forEach(function (key) {
       // "day2.staples" / "day1.q1" 等
       var parts = key.split('.');
       var dayKey = parts[0];
       var field = parts[1];
       var val = (state.answers[dayKey] || {})[field];
+      var prefix = labels[key] || '';
       if (Array.isArray(val)) {
-        val.forEach(function (v) { if (v && v.trim()) lines.push(v); });
+        val.forEach(function (v) {
+          if (v && v.trim()) lines.push(prefix ? (prefix + v) : v);
+        });
       } else if (val && String(val).trim()) {
-        lines.push(String(val));
+        lines.push(prefix ? (prefix + String(val)) : String(val));
       }
     });
     return lines;
@@ -1125,6 +1341,13 @@
   function renderReport(root) {
     var t = TYPES[state.assignedType];
     if (!t || !state.completedDays.day4) { goto('home'); return; }
+
+    // 初回閲覧を記録（進捗5/5達成のトリガー）
+    if (!state.reportViewed) {
+      state.reportViewed = true;
+      saveState();
+      trackEvent('report_viewed', {});
+    }
 
     var screen = el('section', { className: 'screen active' });
 
@@ -1155,18 +1378,22 @@
     var day3Text = fillTemplate(t.report.day3Template, state.answers.day3, t);
     if (day3Text) addReportSection(card, COMMON.reportDay3Label, day3Text);
 
-    // 4日目：本人が感じた変化
+    // 4日目：本人が感じた変化（Q1）
     var q1 = state.answers.day4.q1 || '';
-    var day4Text;
-    if (q1 === 'まだ分からない') {
-      day4Text = 'まだ大きな変化は感じていないかもしれません。\nただ、この4日間の小さな実践が、\n次の一歩の土台になっています。';
-    } else {
-      day4Text = 'あなたは、この4日間で\n「' + q1 + '」変化を感じられたと答えました。\n' +
-        (state.answers.day4.free ? '\n' + state.answers.day4.free : '');
+    var day4Text = day4Q1ToNaturalText(q1);
+    if (state.answers.day4.free && String(state.answers.day4.free).trim()) {
+      day4Text += '\n\n' + state.answers.day4.free;
     }
     addReportSection(card, COMMON.reportDay4Label, day4Text);
 
-    // 次の目標
+    // 4日目：この先に感じている変化（Q2）
+    var q2 = state.answers.day4.q2 || '';
+    if (q2) {
+      var q2Text = day4Q2ToNaturalText(q2);
+      addReportSection(card, COMMON.reportChangeExpectedLabel || 'この先に感じている変化', q2Text);
+    }
+
+    // 次の目標（Q3）
     if (state.answers.day4.q3) {
       addReportSection(card, COMMON.reportNextLabel, state.answers.day4.q3);
     }
@@ -1193,6 +1420,31 @@
     root.appendChild(screen);
   }
 
+  // Q1（"かなり感じた"/"少し感じた"/"まだ分からない"）を自然文に
+  function day4Q1ToNaturalText(q1) {
+    switch (q1) {
+      case 'かなり感じた':
+        return '以前より、気持ちや見方の変化を\nしっかり感じています。';
+      case '少し感じた':
+        return '以前より、気持ちや見方が\n少し変わったと感じています。';
+      case 'まだ分からない':
+        return 'まだ大きな変化は分からないかもしれません。\nただ、小さく試すための土台はできました。';
+      default:
+        return q1
+          ? 'あなたは、この4日間で\n「' + q1 + '」と答えました。'
+          : '';
+    }
+  }
+
+  // Q2（続けたらどんな変化がありそうか）を自然文に
+  function day4Q2ToNaturalText(q2) {
+    if (!q2) return '';
+    if (q2 === 'まだ想像できない') {
+      return 'この先の変化は、まだはっきりとは想像できないかもしれません。\nただ、続けた分だけ、静かに変わっていくはずです。';
+    }
+    return 'あなたは、この小さな実践を続けることで、\n「' + q2 + '」と感じています。';
+  }
+
   function addReportSection(root, label, body) {
     var sec = el('div', { className: 'report-section' });
     sec.appendChild(el('div', { className: 'report-section-label', text: label }));
@@ -1200,18 +1452,37 @@
     root.appendChild(sec);
   }
 
+  // テンプレート内 {day_key} / {day_key_line} をデータで置換
+  //   {day2_q1}       → 値そのまま
+  //   {day2_q1_line}  → 値がある時のみ 改行＋ラベル付き で挿入（Cレポート用）
   function fillTemplate(tpl, data, t) {
     if (!tpl) return '';
+    // ラベル定義（"_line" 表示時の見出し）
+    var LINE_LABELS = {
+      'day2_dish_name_line': '\n\n料理：\n',
+      'day2_q2_line': '\n\n次回へのメモ：\n'
+    };
     return tpl.replace(/\{([^}]+)\}/g, function (m, key) {
-      // "day1_q1" のような形式
-      var parts = key.split('_');
-      var dayK = parts[0];
-      var fieldK = parts.slice(1).join('_');
-      var val = (state.answers[dayK] || {})[fieldK];
-      if (Array.isArray(val)) {
-        return val.filter(function (v) { return v && v.trim(); }).join('・');
+      // "_line" 版
+      if (/_line$/.test(key)) {
+        var baseKey = key.replace(/_line$/, '');
+        var parts = baseKey.split('_');
+        var dayK = parts[0];
+        var fieldK = parts.slice(1).join('_');
+        var val = (state.answers[dayK] || {})[fieldK];
+        if (val == null || String(val).trim() === '') return '';
+        var lineLabel = LINE_LABELS[key] || '\n';
+        return lineLabel + String(val);
       }
-      return val ? String(val) : '';
+      // 通常
+      var parts2 = key.split('_');
+      var dayK2 = parts2[0];
+      var fieldK2 = parts2.slice(1).join('_');
+      var val2 = (state.answers[dayK2] || {})[fieldK2];
+      if (Array.isArray(val2)) {
+        return val2.filter(function (v) { return v && v.trim(); }).join('・');
+      }
+      return val2 ? String(val2) : '';
     });
   }
 
@@ -1219,9 +1490,21 @@
   // オファー画面
   // ============================================================
   function renderOffer(root) {
-    var t = TYPES[state.assignedType];
-    if (!t) return renderInvalidType(root);
+    // ---------- アクセス制御（仕様2） ----------
+    if (
+      !state.completedDays.day4 ||
+      !state.reportGenerated ||
+      VALID_TYPES.indexOf(state.assignedType) === -1
+    ) {
+      // 条件不足 → offerViewed も更新せずホームへ
+      goto('home');
+      return;
+    }
 
+    var t = TYPES[state.assignedType];
+    if (!t) { goto('home'); return; }
+
+    // 条件通過後にのみ offerViewed 記録
     if (!state.offerViewed) {
       state.offerViewed = true;
       saveState();
@@ -1246,6 +1529,33 @@
         className: 'page-body text-center mb-lg',
         text: t.offerBridge
       }));
+    }
+
+    // ---------- オファー動画（offerVideoUrl 設定時のみ） ----------
+    if (CFG.offerVideoUrl && String(CFG.offerVideoUrl).trim()) {
+      var offerVideoTitle = el('div', {
+        className: 'eyebrow mb-sm',
+        text: COMMON.offerVideoTitle || '4日間を終えたあなたへ'
+      });
+      offerVideoTitle.style.marginTop = '4px';
+      screen.appendChild(offerVideoTitle);
+
+      var offerVideoWrap = el('div', { className: 'video-wrap' });
+      var offerIsYouTube = /youtube\.com|youtu\.be/.test(CFG.offerVideoUrl);
+      if (offerIsYouTube) {
+        var oIframe = el('iframe', {
+          src: CFG.offerVideoUrl,
+          allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+          allowfullscreen: 'allowfullscreen'
+        });
+        offerVideoWrap.appendChild(oIframe);
+      } else {
+        var oVid = el('video', { controls: 'controls', playsinline: 'playsinline' });
+        var oSrc = el('source', { src: CFG.offerVideoUrl, type: 'video/mp4' });
+        oVid.appendChild(oSrc);
+        offerVideoWrap.appendChild(oVid);
+      }
+      screen.appendChild(offerVideoWrap);
     }
 
     var card = el('div', { className: 'card card-lg card-primary' });
@@ -1305,7 +1615,7 @@
       text: COMMON.expiredBody
     }));
 
-    // 引き続き見られるもの
+    // 引き続き見られるもの（4日間完了時のみコース案内へ進めるボタンを表示）
     var list = el('div', { className: 'card' });
     if (state.cardCreated) {
       var b1 = el('button', {
@@ -1325,14 +1635,21 @@
       });
       list.appendChild(b2);
     }
-    var b3 = el('a', {
-      className: 'btn btn-primary btn-block',
-      href: CFG.courseUrl || '#',
-      target: '_blank',
-      rel: 'noopener',
-      text: COMMON.offerBtn
-    });
-    list.appendChild(b3);
+    // 期限切れ画面から直接コース外部URLは出さない。
+    // 4日間＋レポート閲覧が済んでいるユーザーには「案内へ進む」でオファーへ遷移させ、
+    // 未達なら案内自体を出さない（仕様1・仕様2）。
+    if (
+      state.completedDays.day4 &&
+      state.reportGenerated
+    ) {
+      var b3 = el('button', {
+        className: 'btn btn-primary btn-block',
+        type: 'button',
+        text: 'この続きの案内を読む →',
+        onclick: function () { goto('offer'); }
+      });
+      list.appendChild(b3);
+    }
     screen.appendChild(list);
 
     root.appendChild(screen);
@@ -1450,7 +1767,13 @@
     bar.appendChild(g2Label);
 
     var screens = [
-      { key: 'welcome', label: 'welcome', ensure: function () { state.startedAt = ''; saveState(); } },
+      { key: 'welcome', label: 'welcome', ensure: function () {
+          // ウェルカムに戻す：開始状態を解除、pendingTypeを現assignedTypeに引き継ぐ
+          if (state.assignedType) pendingType = state.assignedType;
+          state.startedAt = '';
+          state.assignedType = null;
+          saveState();
+      } },
       { key: 'home',    label: 'home',    ensure: ensureStarted },
       { key: 'day1',    label: 'day1',    ensure: ensureStartedAndUnlock(1) },
       { key: 'day2',    label: 'day2',    ensure: ensureStartedAndUnlock(2) },
@@ -1581,10 +1904,17 @@
 
   // --- Debug helpers ---
   function ensureStarted() {
+    // assignedTypeが空なら pendingType または現URLの type を採用
+    if (!state.assignedType) {
+      var ct = currentType() || getQueryParam('type');
+      if (ct && VALID_TYPES.indexOf(ct) >= 0) {
+        state.assignedType = ct;
+      }
+    }
     if (!state.startedAt) {
       state.startedAt = nowIso();
-      saveState();
     }
+    saveState();
   }
   function ensureStartedAndUnlock(dayN) {
     return function () {

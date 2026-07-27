@@ -27,10 +27,11 @@ window.COMMON_CONTENT = {
   historyLabel: "これまでの4日間",
   cardLinkLabel: "うちの定番カード",
   reportLinkLabel: "あなたの台所レポート",
-  courseSubLinkLabel: "すでに家庭料理マスターコースを詳しく知りたい方へ",
+  // courseSubLinkLabel は削除。コースへの導線は「4日間完了→レポート→続きの案内→オファー」に限定。
   unlockedTomorrow: "明日、開きます",
   unlockedHoursTemplate: "あと約{h}時間で開きます",
   lockedDayLabel: "まだ開いていません",
+  lockedByPrevDay: "前の日を終えると開きます",
   diagnosisDone: "診断完了　✓",
 
   // 期限後
@@ -69,10 +70,18 @@ window.COMMON_CONTENT = {
   reportDay2Label: "2日目に試したこと",
   reportDay3Label: "3日目に作ったカード",
   reportDay4Label: "4日目に感じたこと",
+  reportChangeExpectedLabel: "この先に感じている変化",
   reportNextLabel: "次に育てたい目標",
   reportSummaryLabel: "あなたに贈る、ひとこと",
 
+  // インライン入力エラー（穏やかな文言）
+  errorSingleChoice: "ひとつ選んでから進んでください",
+  errorTextInput: "こちらを入力してから進んでください",
+  errorMultiSlots: "3つとも入力してから進んでください",
+  errorOtherDetail: "「その他」の内容を入力してから進んでください",
+
   // コース案内共通
+  offerVideoTitle: "4日間を終えたあなたへ",
   offerHeading: "この続きを、1年間かけて育てたい方へ",
   offerCourseName: "家庭料理マスターコース",
   offerBody:
@@ -107,11 +116,14 @@ window.TYPE_CONTENT = {
       body:
         "自信は、誰かから褒められるのを待つより、\n自分で「悪くなかった」と気づく回数から\n少しずつ育っていきます。\n\n今日は、\n"
         + "「小さなOK」を一つ、見つけるだけで大丈夫です。",
+      // 「料理をしなかった日」用の代替入り口
+      noCookOption: "今日は料理をしなかった",
       questions: [
         {
           key: "q1",
           type: "text_with_suggestions",
-          label: "今日作ったものの中で、\n「これは悪くなかった」と思えるものはありますか？",
+          required: true,
+          label: "今日、または直近で作ったものの中で、\n「これは悪くなかった」と思えるものはありますか？",
           placeholder: "たとえば「お味噌汁の塩加減」など",
           suggestions: [
             "味つけ",
@@ -119,10 +131,19 @@ window.TYPE_CONTENT = {
             "盛りつけ",
             "家族が食べてくれた",
             "今日も作ったこと",
-            "特に思いつかない"
+            "特に思いつかない",
+            "今日は料理をしなかった"
           ]
         }
       ],
+      // 「今日は料理をしなかった」を選んだ時の代替質問
+      altQuestion: {
+        trigger: "今日は料理をしなかった",
+        key: "q1_alt",
+        required: true,
+        label: "最近作った中で、\n「これは悪くなかった」と思えたものは？",
+        placeholder: "たとえば「昨日のお味噌汁」など"
+      },
       onSpecial: {
         // 「特に思いつかない」を選んだ時の追加メッセージ
         trigger: "特に思いつかない",
@@ -135,12 +156,13 @@ window.TYPE_CONTENT = {
     day2: {
       theme: "家族に聞く前に、自分で一つ評価する",
       body:
-        "誰かの「美味しい」を待つ癖から、\n少しだけ離れてみる練習です。\n\n今日の料理を、あなた自身の目で、\n一つだけ良かったところを見つけてみてください。",
+        "誰かの「美味しい」を待つ癖から、\n少しだけ離れてみる練習です。\n\n今日、または直近の料理を、あなた自身の目で、\n一つだけ良かったところを見つけてみてください。",
       questions: [
         {
           key: "q1",
           type: "text_with_suggestions",
-          label: "今日の料理で、\n自分が一番よかったと思うところは？",
+          required: true,
+          label: "今日、または直近の料理で、\n自分が一番よかったと思うところは？",
           placeholder: "たとえば「手際がよかった」など",
           suggestions: [
             "味がよかった",
@@ -229,6 +251,7 @@ window.TYPE_CONTENT = {
         {
           key: "q1",
           type: "single_choice",
+          required: true,
           label: "今日、献立を決めるまでに\nどれくらい迷いましたか？",
           options: [
             "ほとんど迷わなかった",
@@ -241,6 +264,7 @@ window.TYPE_CONTENT = {
         {
           key: "q2",
           type: "single_choice_with_other",
+          required: false,
           label: "どの場面で一番迷いましたか？",
           options: [
             "冷蔵庫を開けたとき",
@@ -266,6 +290,7 @@ window.TYPE_CONTENT = {
         {
           key: "staples",
           type: "three_slots_with_suggestions",
+          required: true,
           label: "来週の定番を、3つ",
           slots: ["定番1", "定番2", "定番3"],
           placeholders: ["魚", "麺", "カレー"],
@@ -361,22 +386,26 @@ window.TYPE_CONTENT = {
         "レシピを見ながら作るのは、\n決して悪いことではありません。\n\n"
         + "ただ、毎回すがるように見ていると、\n\"自分の中の物差し\" が\n育つ機会が減っていきます。\n\n"
         + "今日は、どのくらい確認しているかを\n振り返るだけで大丈夫です。",
+      noCookOption: "今日は料理をしなかった",
       questions: [
         {
           key: "q1",
           type: "single_choice",
-          label: "今日、料理中にレシピやスマホを\n何回くらい確認しましたか？",
+          required: true,
+          label: "今日、または直近で料理中に、\nレシピやスマホを何回くらい確認しましたか？",
           options: [
             "見なかった",
             "1〜2回",
             "3〜5回",
             "6回以上",
-            "ずっと見ながら作った"
+            "ずっと見ながら作った",
+            "今日は料理をしなかった"
           ]
         },
         {
           key: "q2",
           type: "single_choice_with_other",
+          required: false,
           label: "どの場面で確認しましたか？",
           options: [
             "調味料の量",
@@ -390,6 +419,13 @@ window.TYPE_CONTENT = {
           otherLabel: "よければ、教えてください"
         }
       ],
+      altQuestion: {
+        trigger: "今日は料理をしなかった",
+        key: "q1_alt",
+        required: true,
+        label: "最近作った料理で、\nレシピを見ながら作った場面はありましたか？",
+        placeholder: "たとえば「お味噌汁を作るとき、味を確認した」など"
+      },
       complete:
         "確認する回数を知ることは、\n\"自分がどこで不安になるか\" を知ることです。\n\n"
         + "気づけたこと、それだけで十分です。"
@@ -401,25 +437,43 @@ window.TYPE_CONTENT = {
         "今日は、小さな実験です。\n\n"
         + "最初にレシピを一度だけ読んだら、\nスマホを伏せる、または離す。\n\n"
         + "その状態で味見をして、\nあなた自身の物差しで判断してみます。",
+      noCookOption: "今日は料理をしなかった",
       questions: [
+        {
+          key: "dish_name",
+          type: "text_optional",
+          required: false,
+          label: "今日、または直近で作った料理は何ですか？",
+          placeholder: "たとえば、お味噌汁"
+        },
         {
           key: "q1",
           type: "single_choice",
+          required: true,
           label: "味見をしたとき、\nどれに近かったですか？",
           options: [
             "薄い",
             "濃い",
             "ちょうどいい",
-            "判断が難しかった"
+            "判断が難しかった",
+            "今日は料理をしなかった"
           ]
         },
         {
           key: "q2",
           type: "text_optional",
+          required: false,
           label: "どんな調整をしましたか？（任意）",
           placeholder: "たとえば「お醤油を少し足した」など"
         }
       ],
+      altQuestion: {
+        trigger: "今日は料理をしなかった",
+        key: "q1_alt",
+        required: true,
+        label: "最近、味見をしたときに\nどう感じることが多いですか？",
+        placeholder: "たとえば「少し薄いと感じることが多い」など"
+      },
       complete:
         "スマホを閉じて判断する。\nこの経験こそが、\nあなたの「うちの物差し」を育てます。"
     },
@@ -430,7 +484,13 @@ window.TYPE_CONTENT = {
         "2日目に試した味見と調整を、\nあなただけのカードにまとめます。\n\n"
         + "次に同じ料理を作るとき、\nこのカードが役に立ちます。",
       cardName: "うちの味の物差し",
-      cardStructure: ["day2.q1", "day2.q2"],
+      // 料理名 → 味見 → 調整、の順にカードへ反映
+      cardStructure: ["day2.dish_name", "day2.q1", "day2.q2"],
+      cardLabels: {
+        "day2.dish_name": "料理：",
+        "day2.q1": "味見したとき：",
+        "day2.q2": "調整したこと："
+      },
       whenOptions: [
         "同じ料理を作るとき",
         "レシピを見ずに作ってみたいとき",
@@ -466,8 +526,9 @@ window.TYPE_CONTENT = {
         "あなたは、レシピに頼りすぎず、\n自分の判断で作る練習を始めた方です。",
       day1Template:
         "1日目、あなたは料理中に「{day1_q1}」\nレシピを確認していました。\n特に「{day1_q2}」の場面で、\n迷いやすい傾向がありました。",
+      // dish_name が空でも自然になるよう、{day2_dish_name_line} を使う
       day2Template:
-        "2日目、あなたは味見をして\n「{day2_q1}」と判断しました。",
+        "2日目、あなたは味見をして\n「{day2_q1}」と判断しました。{day2_dish_name_line}{day2_q2_line}",
       day3Template:
         "3日目、あなたは「うちの味の物差し」\nというカードを作りました。",
       summary:
@@ -498,6 +559,7 @@ window.TYPE_CONTENT = {
         {
           key: "q1",
           type: "text_with_suggestions",
+          required: true,
           label: "最近、\n「作ってみたい」と思った料理や食材はありますか？",
           placeholder: "たとえば「秋の栗ごはん」など",
           suggestions: [
@@ -524,6 +586,7 @@ window.TYPE_CONTENT = {
         {
           key: "q1",
           type: "single_choice_with_other",
+          required: true,
           label: "どんな新しさを、加えてみますか？",
           options: [
             "新しい食材",

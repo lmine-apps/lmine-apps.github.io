@@ -24,6 +24,10 @@ window.APP_CONFIG = {
   // 空文字列にすると、動画枠自体を表示しません
   welcomeVideoUrl: "",
 
+  // オファー動画のURL（4日間終了後・レポート後・コース説明前に表示）
+  // 空文字列にすると、動画枠自体・タイトルとも表示しません
+  offerVideoUrl: "",
+
   // 家庭料理マスターコース 案内・申込みURL
   courseUrl: "https://example.com/course",
 
