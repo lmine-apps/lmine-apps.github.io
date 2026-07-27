@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF4EB">
+  <meta name="description" content="かよママさん監修「あなたの台所を軽くする4日間」の小さな実践アプリ">
+  <title>あなたの台所を軽くする4日間 ／ かよママ</title>
+
+  <!-- Preload なし。全部同じフォルダから読む -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ============= App root ============= -->
+  <main id="app" class="app" role="main" aria-live="polite">
+    <!-- Screens are rendered by app.js -->
+    <noscript>
+      <div class="no-js-fallback">
+        このアプリはJavaScriptが必要です。<br>
+        ブラウザの設定でJavaScriptを有効にしてから、<br>
+        もう一度お試しください。
+      </div>
+    </noscript>
+  </main>
+
+  <!-- ============= Loading splash ============= -->
+  <div id="loading-splash" class="loading-splash" aria-hidden="true">
+    <div class="loading-card">
+      <div class="loading-pulse"></div>
+      <div class="loading-text serif">しばらくお待ちください</div>
+    </div>
+  </div>
+
+  <!-- ============= Debug bar (only when ?debug=1) ============= -->
+  <nav id="debug-bar" class="debug-bar" aria-label="開発用メニュー"></nav>
+
+  <!-- ============= Scripts ============= -->
+  <script src="config.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
