@@ -855,6 +855,77 @@ body:has(.debug-bar.active) { padding-bottom: 40vh; }
   .progress-bar-inner { transition: none; }
 }
 
+/* ============= Check-line stage animation ============= */
+.check-line-screen {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px !important;
+}
+.stage-box {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stage-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.stage-fade-out {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.stage-main-text {
+  font-size: 26px !important;
+  line-height: 1.6 !important;
+  color: var(--heading);
+  margin-bottom: 18px !important;
+}
+.stage-sub-text {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.85;
+  margin-top: 14px;
+  transition: opacity 0.25s ease;
+}
+.stage-final-sub {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.95;
+  margin-top: 18px;
+}
+.stage-progress-outer {
+  height: 6px;
+  background: rgba(222, 199, 175, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 24px auto 8px;
+  max-width: 220px;
+}
+.stage-progress-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--terracotta-light), var(--terracotta));
+  transition: width 3.2s cubic-bezier(0.25, 0.8, 0.4, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-box, .stage-fade-in, .stage-fade-out {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .stage-progress-inner {
+    transition: none;
+    width: 100% !important;
+  }
+}
+
 /* ============= Inline validation error (機能追加・最小限) ============= */
 .inline-error {
   font-family: var(--sans);

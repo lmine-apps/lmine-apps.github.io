@@ -588,63 +588,151 @@
   }
 
   // ============================================================
-  // 「LINE確認してね」画面
-  //   welcomeで「解決したい」を押した直後に表示。
-  //   その瞬間にGAS→call-beacon で LINEにも「小さな一歩、始まります」的な
-  //   メッセージが届いてる想定。ユーザーはLINEを見てから戻ってくる。
+  // 「LINE確認してね」画面（staged animation）
+  //   「改善したい！」押下直後に表示。
+  //   4段階のアニメーションで、まるでかよママが準備してくれてるような演出。
+  //   同時に GAS→call-beacon で LINEに「小さな一歩、始まります」メッセージ配信。
   // ============================================================
   function renderCheckLine(root) {
-    var screen = el('section', { className: 'screen active' });
-
-    screen.appendChild(el('div', { className: 'eyebrow', text: '— NEXT STEP —' }));
-    screen.appendChild(el('h1', {
-      className: 'page-title serif',
-      html: 'LINEに<br>メッセージを送りました！<br>確認してみてくださいね♡'
-    }));
-    screen.appendChild(el('hr', { className: 'divider' }));
-
-    var card = el('div', { className: 'card card-lg card-primary' });
-    card.appendChild(el('div', {
-      className: 'page-body',
-      html:
-        'かよママから、<br>' +
-        'あなただけの4日間ワークについての<br>' +
-        'ご案内を LINEに送りましたよ。<br><br>' +
-        '<strong>LINEアプリを開いて、<br>新しいメッセージを確認してみてください。</strong><br><br>' +
-        '4日間の毎朝、<br>' +
-        'こちらから「今日も頑張ってね」のメッセージも<br>' +
-        '届くようになりますね。',
-      style: 'text-align:center; white-space:normal;'
-    }));
-    screen.appendChild(card);
-
-    // LINEアプリを開くリンク（スマホでは line:// で LINE起動、PCではLINE Web版）
-    var lineBtnRow = el('div', { className: 'text-center mt-lg' });
-    var lineBtn = el('a', {
-      className: 'btn btn-primary btn-block',
-      href: 'https://line.me/R/',
-      target: '_blank',
-      rel: 'noopener',
-      text: 'LINEを開く'
-    });
-    lineBtnRow.appendChild(lineBtn);
-    screen.appendChild(lineBtnRow);
-
-    // 補足：あとから戻れるリンク
-    var subLink = el('div', {
-      className: 'text-center mt-md',
-      style: 'padding-top:8px;'
-    });
-    var homeLink = el('button', {
-      className: 'btn btn-ghost',
-      type: 'button',
-      onclick: function () { goto('home'); },
-      text: '→ こちらから4日間ワークへ進む'
-    });
-    subLink.appendChild(homeLink);
-    screen.appendChild(subLink);
-
+    var screen = el('section', { className: 'screen active check-line-screen' });
+    var stageBox = el('div', { className: 'stage-box' });
+    screen.appendChild(stageBox);
     root.appendChild(screen);
+
+    var stages = [
+      {
+        html: 'ですよね！',
+        subHtml: '',
+        dur: 1500
+      },
+      {
+        html: 'その意気です♡',
+        subHtml: '',
+        dur: 1500
+      },
+      {
+        html: 'ちょっと待っててくださいね<br>準備しますね！',
+        subHtml: '',
+        progress: true,
+        dur: 3800
+      },
+      {
+        html: '準備できましたっ✨',
+        subHtml:
+          'LINEにご案内を<br>お届けしましたので<br>' +
+          'まずはタップして<br>確認してみてくださいね♡',
+        final: true,
+        dur: 0
+      }
+    ];
+
+    var idx = 0;
+    function showStage() {
+      if (idx >= stages.length) return;
+      var s = stages[idx];
+
+      // フェードアウト → 内容差し替え → フェードイン
+      stageBox.classList.remove('stage-fade-in');
+      stageBox.classList.add('stage-fade-out');
+
+      setTimeout(function () {
+        stageBox.innerHTML = '';
+        stageBox.classList.remove('stage-fade-out');
+
+        // メインテキスト
+        var main = el('h1', {
+          className: 'page-title serif stage-main-text',
+          html: s.html
+        });
+        stageBox.appendChild(main);
+
+        // プログレスバー（stage 3 のみ）
+        if (s.progress) {
+          var pOuter = el('div', { className: 'stage-progress-outer' });
+          var pInner = el('div', { className: 'stage-progress-inner' });
+          pOuter.appendChild(pInner);
+          stageBox.appendChild(pOuter);
+          // 準備中の遊びメッセージをローテーション
+          var subText = el('div', { className: 'stage-sub-text' });
+          stageBox.appendChild(subText);
+          var funLines = [
+            'エプロンをつけてます...',
+            'レシピを準備してます...',
+            'あなたに合わせて調整中...',
+            'もうすぐです✨'
+          ];
+          var fi = 0;
+          subText.textContent = funLines[0];
+          var funInterval = setInterval(function () {
+            fi++;
+            if (fi >= funLines.length) { clearInterval(funInterval); return; }
+            subText.style.opacity = 0;
+            setTimeout(function () {
+              subText.textContent = funLines[fi];
+              subText.style.opacity = 1;
+            }, 200);
+          }, 900);
+          // プログレスバーを段階的に伸ばす
+          setTimeout(function () { pInner.style.width = '100%'; }, 100);
+        }
+
+        // 補足テキスト
+        if (s.subHtml) {
+          stageBox.appendChild(el('div', {
+            className: 'stage-sub-text stage-final-sub',
+            html: s.subHtml
+          }));
+        }
+
+        // 最終ステージ：LINEボタン
+        if (s.final) {
+          var lineBtnRow = el('div', { className: 'text-center', style: 'margin-top:28px;' });
+          var lineBtn = el('a', {
+            className: 'btn btn-primary btn-block',
+            href: 'https://line.me/R/',
+            target: '_blank',
+            rel: 'noopener',
+            text: 'LINEを開く'
+          });
+          lineBtnRow.appendChild(lineBtn);
+          stageBox.appendChild(lineBtnRow);
+
+          var subLink = el('div', {
+            className: 'text-center',
+            style: 'padding-top:14px;'
+          });
+          var homeLink = el('button', {
+            className: 'btn btn-ghost',
+            type: 'button',
+            onclick: function () { goto('home'); },
+            text: '→ こちらから続きへ進む'
+          });
+          subLink.appendChild(homeLink);
+          stageBox.appendChild(subLink);
+        }
+
+        // フェードイン
+        void stageBox.offsetWidth; // reflow
+        stageBox.classList.add('stage-fade-in');
+
+        idx++;
+        if (!s.final) {
+          setTimeout(showStage, s.dur);
+        }
+      }, 300); // フェードアウト時間
+    }
+
+    // 最初のステージだけ即表示（フェードアウト飛ばす）
+    setTimeout(function () {
+      var s = stages[idx];
+      stageBox.appendChild(el('h1', {
+        className: 'page-title serif stage-main-text',
+        html: s.html
+      }));
+      stageBox.classList.add('stage-fade-in');
+      idx++;
+      setTimeout(showStage, s.dur);
+    }, 50);
   }
 
   function startApp() {
