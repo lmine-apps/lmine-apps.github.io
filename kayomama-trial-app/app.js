@@ -101,16 +101,17 @@
     return {
       version: 2,
       assignedType: null,
+      name: '',                 // ★お名前（入力してもらう）
       startedAt: '',
       lastVisitedAt: '',
       completedDays: { day1: false, day2: false, day3: false, day4: false },
       answers: { day1: {}, day2: {}, day3: {}, day4: {} },
       cardCreated: false,
       reportGenerated: false,
-      reportViewed: false,      // レポート画面を実際に閲覧した（初回のみtrue）
+      reportViewed: false,
       offerViewed: false,
       offerClicked: false,
-      diagnosisRecorded: false  // 診断完了イベントをGASに記録済み（重複防止）
+      diagnosisRecorded: false
     };
   }
 
@@ -270,15 +271,16 @@
   // ------------------------------------------------------------
   // イベント（console + GAS Web App への POST 送信）
   // ------------------------------------------------------------
-  function trackEvent(name, payload) {
+  function trackEvent(eventName, payload) {
     payload = payload || {};
     if (!payload.type) payload.type = state.assignedType;
-    console.log('[event]', name, payload);
+    console.log('[event]', eventName, payload);
     // GAS Web Appへ非同期送信（uidが取れてる場合のみ）
     sendToGas_('record_event', {
       uid:     getLineUid(),
       type:    state.assignedType || '',
-      event:   name,
+      name:    state.name || '',    // ★お名前も同送
+      event:   eventName,
       payload: payload
     });
   }
@@ -422,8 +424,12 @@
     }
 
     if (!state.startedAt) {
-      // 開始前：pendingType のウェルカム
-      goto('welcome', { scrollTop: false });
+      // 開始前：まずお名前入力（未入力なら）、その後 welcome（詳細結果）
+      if (!state.name) {
+        goto('name-input', { scrollTop: false });
+      } else {
+        goto('welcome', { scrollTop: false });
+      }
     } else {
       goto('home', { scrollTop: false });
     }
@@ -439,6 +445,7 @@
     app.innerHTML = '';
 
     switch (currentScreen) {
+      case 'name-input': renderNameInput(app); break;
       case 'welcome': renderWelcome(app); break;
       case 'check-line': renderCheckLine(app); break;
       case 'home': renderHome(app); break;
@@ -457,6 +464,98 @@
   }
 
   // ============================================================
+  // お名前入力画面（起動直後・詳細結果を見せる前）
+  // ============================================================
+  function renderNameInput(root) {
+    var ct = currentType();
+    var t = TYPES[ct];
+    if (!t) return renderInvalidType(root);
+
+    var screen = el('section', { className: 'screen active' });
+
+    screen.appendChild(el('div', { className: 'eyebrow', text: '— WELCOME —' }));
+    screen.appendChild(el('h1', {
+      className: 'page-title serif',
+      html: 'はじめまして♡<br>まずはお名前を<br>教えてくださいね'
+    }));
+    screen.appendChild(el('hr', { className: 'divider' }));
+
+    var card = el('div', { className: 'card card-lg' });
+    card.appendChild(el('div', {
+      className: 'page-body text-center',
+      html:
+        'あなたの詳しい結果とアドバイスを<br>' +
+        '<strong>あなたに向けて</strong>お届けしたいので、<br>' +
+        'まずはお名前を教えてくださいね。<br><br>' +
+        '<span style="font-size:12.5px;color:var(--muted);">（下のお名前で、後から連絡させてもらいます♪）</span>',
+      style: 'white-space:normal;'
+    }));
+    screen.appendChild(card);
+
+    // 入力フォーム
+    var formWrap = el('div', { className: 'field', style: 'margin-top:14px;' });
+    formWrap.appendChild(el('label', { className: 'input-label', text: 'お名前（ニックネームでもOK）' }));
+    var input = el('input', {
+      type: 'text',
+      className: 'input',
+      placeholder: 'たとえば「はなこ」',
+      value: state.name || '',
+      maxlength: '40',
+      autocomplete: 'name',
+      'data-vkey': 'name-input'
+    });
+    formWrap.appendChild(input);
+    screen.appendChild(formWrap);
+
+    // 送信ボタン
+    var btnRow = el('div', { className: 'text-center mt-lg' });
+    var submitBtn = el('button', {
+      type: 'button',
+      className: 'btn btn-primary btn-block',
+      text: 'つづきへ →'
+    });
+    btnRow.appendChild(submitBtn);
+    screen.appendChild(btnRow);
+
+    // エラー表示エリア（初期は空）
+    var errWrap = el('div', {
+      className: 'text-center',
+      style: 'min-height:24px; margin-top:10px; color:#B84D3A; font-size:13px;'
+    });
+    screen.appendChild(errWrap);
+
+    root.appendChild(screen);
+
+    // 送信処理
+    submitBtn.addEventListener('click', function () {
+      var v = String(input.value || '').trim();
+      if (!v) {
+        errWrap.textContent = 'お名前を入力してから進んでくださいね';
+        input.focus();
+        return;
+      }
+      state.name = v;
+      saveState();
+      // GASへ記録（uidがあれば送信）
+      trackEvent('name_registered', { name: v });
+      goto('welcome');
+    });
+
+    // Enterキーで送信
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitBtn.click();
+      }
+    });
+
+    // 自動フォーカス（モバイル配慮：アニメーション後に）
+    setTimeout(function () {
+      try { input.focus(); } catch (e) {}
+    }, 300);
+  }
+
+  // ============================================================
   // ウェルカム画面
   // ============================================================
   function renderWelcome(root) {
@@ -470,6 +569,14 @@
 
     // ---------- ①診断結果ヘッダー ----------
     screen.appendChild(el('div', { className: 'eyebrow', text: '— YOUR RESULT —' }));
+    // 名前入り挨拶（あれば）
+    if (state.name) {
+      screen.appendChild(el('div', {
+        className: 'page-body text-center',
+        html: escapeHtml(state.name) + ' さん、<br>ようこそ♡',
+        style: 'font-size:15px; color:var(--muted); margin-bottom:14px;'
+      }));
+    }
     // 表示名（かよママ世界観に合わせて）
     var displayName = el('h1', {
       className: 'page-title serif',
@@ -2166,8 +2273,14 @@
     bar.appendChild(g2Label);
 
     var screens = [
+      { key: 'name-input', label: 'name入力', ensure: function () {
+          if (state.assignedType) pendingType = state.assignedType;
+          state.startedAt = '';
+          state.assignedType = null;
+          state.name = '';
+          saveState();
+      } },
       { key: 'welcome', label: 'welcome', ensure: function () {
-          // ウェルカムに戻す：開始状態を解除、pendingTypeを現assignedTypeに引き継ぐ
           if (state.assignedType) pendingType = state.assignedType;
           state.startedAt = '';
           state.assignedType = null;
