@@ -440,6 +440,7 @@
 
     switch (currentScreen) {
       case 'welcome': renderWelcome(app); break;
+      case 'check-line': renderCheckLine(app); break;
       case 'home': renderHome(app); break;
       case 'day1': renderDay(app, 1); break;
       case 'day2': renderDay(app, 2); break;
@@ -586,21 +587,85 @@
     root.appendChild(screen);
   }
 
+  // ============================================================
+  // 「LINE確認してね」画面
+  //   welcomeで「解決したい」を押した直後に表示。
+  //   その瞬間にGAS→call-beacon で LINEにも「小さな一歩、始まります」的な
+  //   メッセージが届いてる想定。ユーザーはLINEを見てから戻ってくる。
+  // ============================================================
+  function renderCheckLine(root) {
+    var screen = el('section', { className: 'screen active' });
+
+    screen.appendChild(el('div', { className: 'eyebrow', text: '— NEXT STEP —' }));
+    screen.appendChild(el('h1', {
+      className: 'page-title serif',
+      html: 'LINEに<br>続きのメッセージを<br>お届けしました♡'
+    }));
+    screen.appendChild(el('hr', { className: 'divider' }));
+
+    var card = el('div', { className: 'card card-lg card-primary' });
+    card.appendChild(el('div', {
+      className: 'page-body',
+      html:
+        'かよママから、<br>' +
+        'あなただけの4日間ワークについての<br>' +
+        'ご案内を LINEに送りましたよ。<br><br>' +
+        '<strong>LINEアプリを開いて、<br>新しいメッセージを確認してみてください。</strong><br><br>' +
+        '4日間の毎朝、<br>' +
+        'こちらから「今日も頑張ってね」のメッセージも<br>' +
+        '届くようになりますね。',
+      style: 'text-align:center; white-space:normal;'
+    }));
+    screen.appendChild(card);
+
+    // LINEアプリを開くリンク（スマホでは line:// で LINE起動、PCではLINE Web版）
+    var lineBtnRow = el('div', { className: 'text-center mt-lg' });
+    var lineBtn = el('a', {
+      className: 'btn btn-primary btn-block',
+      href: 'https://line.me/R/',
+      target: '_blank',
+      rel: 'noopener',
+      text: 'LINEを開く'
+    });
+    lineBtnRow.appendChild(lineBtn);
+    screen.appendChild(lineBtnRow);
+
+    // 補足：あとから戻れるリンク
+    var subLink = el('div', {
+      className: 'text-center mt-md',
+      style: 'padding-top:8px;'
+    });
+    var homeLink = el('button', {
+      className: 'btn btn-ghost',
+      type: 'button',
+      onclick: function () { goto('home'); },
+      text: '→ こちらから4日間ワークへ進む'
+    });
+    subLink.appendChild(homeLink);
+    screen.appendChild(subLink);
+
+    root.appendChild(screen);
+  }
+
   function startApp() {
-    if (state.startedAt) return; // 二重防止
+    if (state.startedAt) {
+      // 二重防止：すでに開始済みなら home へ
+      goto('home');
+      return;
+    }
     // ここで初めて pendingType を assignedType に確定
     var ct = currentType();
     if (!ct || VALID_TYPES.indexOf(ct) < 0) {
-      // 想定外：不正入口へ
       goto('invalid-type');
       return;
     }
     state.assignedType = ct;
     state.startedAt = nowIso();
     saveState();
-    pendingType = null; // 確定後は使わない
+    pendingType = null;
     trackEvent('app_started', { type: state.assignedType });
-    goto('home');
+    // 「LINE確認してね」画面へ（すぐhomeではなく、LINEに続きが届いたことを伝える）
+    goto('check-line');
   }
 
   // ============================================================
@@ -2020,6 +2085,7 @@
           state.assignedType = null;
           saveState();
       } },
+      { key: 'check-line', label: 'checkLINE', ensure: ensureStarted },
       { key: 'home',    label: 'home',    ensure: ensureStarted },
       { key: 'day1',    label: 'day1',    ensure: ensureStartedAndUnlock(1) },
       { key: 'day2',    label: 'day2',    ensure: ensureStartedAndUnlock(2) },
