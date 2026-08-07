@@ -466,18 +466,86 @@
     trackEvent('app_viewed', { type: ct });
 
     var screen = el('section', { className: 'screen active' });
-    screen.appendChild(el('div', { className: 'eyebrow', text: '— START —' }));
-    screen.appendChild(el('h1', { className: 'page-title', text: COMMON.welcomeHeading }));
 
-    // タイプ別イントロ
-    var intro = el('div', {
-      className: 'page-body text-center mb-md',
-      text: t.intro
+    // ---------- ①診断結果ヘッダー ----------
+    screen.appendChild(el('div', { className: 'eyebrow', text: '— YOUR RESULT —' }));
+    // 表示名（かよママ世界観に合わせて）
+    var displayName = el('h1', {
+      className: 'page-title serif',
+      html: 'あなたのタイプは<br>「' + escapeHtml(t.displayName) + '」'
     });
-    screen.appendChild(intro);
+    screen.appendChild(displayName);
+    // 分割線
+    screen.appendChild(el('hr', { className: 'divider' }));
 
-    // 動画
+    // ---------- ②詳細結果 + アドバイス（welcomeDetailed が定義されてる場合） ----------
+    var wd = t.welcomeDetailed;
+    if (wd) {
+      // 「あなたの結果」
+      var resultCard = el('div', { className: 'card card-lg' });
+      resultCard.appendChild(el('div', {
+        className: 'eyebrow',
+        text: '— ' + (wd.resultTitle || 'あなたの結果') + ' —',
+        style: 'margin-bottom:10px;'
+      }));
+      resultCard.appendChild(el('div', {
+        className: 'page-body',
+        text: wd.resultBody,
+        style: 'white-space:pre-line;'
+      }));
+      screen.appendChild(resultCard);
+
+      // 「そうなってしまう理由」
+      if (wd.whyBody) {
+        var whyCard = el('div', { className: 'card card-lg' });
+        whyCard.appendChild(el('div', {
+          className: 'eyebrow',
+          text: '— ' + (wd.whyTitle || 'そうなってしまう理由') + ' —',
+          style: 'margin-bottom:10px;'
+        }));
+        whyCard.appendChild(el('div', {
+          className: 'page-body',
+          text: wd.whyBody,
+          style: 'white-space:pre-line;'
+        }));
+        screen.appendChild(whyCard);
+      }
+
+      // 「改善のための小さな一歩」
+      var adviceCard = el('div', { className: 'card card-lg card-primary' });
+      adviceCard.appendChild(el('div', {
+        className: 'eyebrow',
+        text: '— ' + (wd.adviceTitle || '改善のための小さな一歩') + ' —',
+        style: 'margin-bottom:10px;'
+      }));
+      adviceCard.appendChild(el('div', {
+        className: 'page-body',
+        text: wd.adviceBody,
+        style: 'white-space:pre-line;'
+      }));
+      screen.appendChild(adviceCard);
+    } else {
+      // フォールバック（旧shortバージョン）
+      screen.appendChild(el('div', {
+        className: 'page-body text-center mb-md',
+        text: t.intro
+      }));
+      var body = el('div', { className: 'card' });
+      body.appendChild(el('div', {
+        className: 'page-body',
+        text: COMMON.welcomeBody
+      }));
+      screen.appendChild(body);
+    }
+
+    // ---------- ③動画（設定されていれば） ----------
     if (CFG.welcomeVideoUrl && CFG.welcomeVideoUrl.trim()) {
+      var videoTitle = el('div', {
+        className: 'eyebrow mb-sm',
+        text: COMMON.welcomeVideoTitle
+      });
+      videoTitle.style.marginTop = '18px';
+      screen.appendChild(videoTitle);
       var videoWrap = el('div', { className: 'video-wrap' });
       var isYouTube = /youtube\.com|youtu\.be/.test(CFG.welcomeVideoUrl);
       if (isYouTube) {
@@ -493,33 +561,27 @@
         vid.appendChild(src);
         videoWrap.appendChild(vid);
       }
-      var videoTitle = el('div', {
-        className: 'eyebrow mb-sm',
-        text: COMMON.welcomeVideoTitle
-      });
-      videoTitle.style.marginTop = '18px';
-      screen.appendChild(videoTitle);
       screen.appendChild(videoWrap);
     }
 
-    // 本文
-    var body = el('div', { className: 'card' });
-    body.appendChild(el('div', {
-      className: 'page-body',
-      text: COMMON.welcomeBody
-    }));
-    screen.appendChild(body);
-
-    // 開始ボタン
+    // ---------- ④「小さな一歩を試したい方はこちら」ボタン ----------
     var btnRow = el('div', { className: 'text-center mt-lg' });
+    var btnText = (wd && wd.ctaText) || COMMON.startBtn;
     var btn = el('button', {
       className: 'btn btn-primary btn-block',
       type: 'button',
       onclick: startApp,
-      text: COMMON.startBtn
+      text: btnText
     });
     btnRow.appendChild(btn);
     screen.appendChild(btnRow);
+
+    // 補足：4日間で何をやるかの一言
+    screen.appendChild(el('div', {
+      className: 'page-body text-center mt-md',
+      text: '1日3分ほど、朝ここに届く\n小さな実践を4日間だけ',
+      style: 'font-size:13px; color:var(--muted); white-space:pre-line;'
+    }));
 
     root.appendChild(screen);
   }

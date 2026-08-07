@@ -1,0 +1,1479 @@
+<!--
+============================================================
+かよママさん 診断ファネル2 オプトインLP（プロラインフリー コンテンツページ用）
+============================================================
+【対象】
+インスタから流入 → 診断案内＋本体 → プチ結果ポップアップ → LINE公式へ
+
+【設計方針】
+- ミニキャラは使わない（かよままさん新デザイン方針）
+- 明朝寄り、余白多め、静物トーン
+- 「べきべき思考を手放す」がキャッチ
+- 全15問（Type A/B/C ×5問）、3セクション、4段階選択肢
+- Q15回答後：ポップアップでローディング演出（4秒）→ プチ結果 → LINE誘引
+- CTA：「結果はこちら」でLINE公式ページへ
+- 迷惑メール防止・プライバシー明記、フッターに特商法・プライバシーポリシー
+
+【使い方】
+1. このファイル全体（コメント以外）をコピー
+2. プロラインフリーの「コンテンツページ」編集画面に貼り付け
+3. 下記 CONFIG の LINE_URL を実際の友だち追加URLに差し替え
+4. 公開して動作確認
+
+【編集箇所】
+- LINE_URL：公式LINE友だち追加URL（末尾の <script>内）
+============================================================
+-->
+
+<style type="text/css">
+.kayo-shindan,
+.kayo-shindan *,
+.kayo-shindan *::before,
+.kayo-shindan *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.kayo-shindan {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #FAF4EB;
+  color: #4A3829;
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif;
+  line-height: 1.9;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.kayo-shindan .serif {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', 'Noto Serif JP', 'Times New Roman', serif;
+  font-weight: 500;
+}
+.kayo-shindan section {
+  padding: 48px 28px;
+}
+.kayo-shindan .divider {
+  width: 32px;
+  height: 1px;
+  background: #B69253;
+  margin: 0 auto 24px;
+  opacity: 0.55;
+}
+
+/* ---------- Hero ---------- */
+.kayo-shindan .hero {
+  padding: 68px 28px 44px;
+  background: #FAF4EB;
+  text-align: center;
+}
+.kayo-shindan .hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: #8A7430;
+  margin-bottom: 22px;
+  font-weight: 500;
+}
+.kayo-shindan .hero-title {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 22px;
+  line-height: 2;
+  letter-spacing: 0.06em;
+  color: #3D2C1F;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.kayo-shindan .hero-title strong {
+  color: #B86E55;
+  font-weight: 500;
+}
+.kayo-shindan .hero-lead {
+  font-size: 14px;
+  color: #6B5644;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  margin-bottom: 32px;
+}
+.kayo-shindan .hero-meta {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #A18870;
+  padding: 6px 18px;
+  border: 1px solid rgba(182,146,83,0.35);
+  border-radius: 999px;
+}
+
+/* ---------- Section Common ---------- */
+.kayo-shindan .section-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #B86E55;
+  text-align: center;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.kayo-shindan .section-title {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 19px;
+  line-height: 1.9;
+  letter-spacing: 0.06em;
+  color: #3D2C1F;
+  text-align: center;
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+/* ---------- "べきべき" 提示 ---------- */
+.kayo-shindan .bekibeki {
+  background: #FFF8EC;
+}
+.kayo-shindan .bekibeki-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 320px;
+}
+.kayo-shindan .bekibeki-list li {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 15px;
+  line-height: 2.2;
+  color: #4A3829;
+  padding: 12px 0;
+  border-bottom: 1px dashed rgba(182,146,83,0.30);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.kayo-shindan .bekibeki-list li:last-child { border-bottom: none; }
+.kayo-shindan .bekibeki-list li::before {
+  content: '　「';
+  color: #B86E55;
+}
+.kayo-shindan .bekibeki-list li::after {
+  content: '」';
+  color: #B86E55;
+}
+.kayo-shindan .bekibeki-close {
+  text-align: center;
+  margin-top: 26px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 14px;
+  line-height: 2;
+  color: #6B5644;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- Message ---------- */
+.kayo-shindan .message { background: #FAF4EB; }
+.kayo-shindan .message-body {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 14.5px;
+  line-height: 2.2;
+  color: #4A3829;
+  letter-spacing: 0.05em;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.kayo-shindan .message-body p { margin-bottom: 20px; }
+.kayo-shindan .message-body p:last-child { margin-bottom: 0; }
+.kayo-shindan .message-sign {
+  text-align: center;
+  margin-top: 30px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 13px;
+  color: #B86E55;
+  letter-spacing: 0.14em;
+}
+
+/* ---------- What You Get ---------- */
+.kayo-shindan .whatyouget { background: #FFF8EC; }
+.kayo-shindan .wyg-list {
+  list-style: none; padding: 0; max-width: 360px; margin: 0 auto;
+}
+.kayo-shindan .wyg-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 4px;
+  border-bottom: 1px solid rgba(222,199,175,0.40);
+}
+.kayo-shindan .wyg-item:last-child { border-bottom: none; }
+.kayo-shindan .wyg-num {
+  flex: 0 0 26px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 16px;
+  color: #B86E55;
+  font-weight: 500;
+  padding-top: 2px;
+  letter-spacing: 0.05em;
+}
+.kayo-shindan .wyg-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.95;
+  color: #4A3829;
+  letter-spacing: 0.04em;
+}
+.kayo-shindan .wyg-text strong { color: #3D2C1F; font-weight: 600; }
+
+/* ---------- Flow ---------- */
+.kayo-shindan .flow { background: #FAF4EB; }
+.kayo-shindan .flow-steps {
+  max-width: 340px; margin: 0 auto; padding: 0; list-style: none;
+}
+.kayo-shindan .flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 14px 0 20px;
+  position: relative;
+}
+.kayo-shindan .flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 17px; top: 44px; bottom: -6px;
+  width: 1px;
+  background: rgba(182,146,83,0.35);
+}
+.kayo-shindan .flow-num {
+  flex: 0 0 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #B69253;
+  background: #FFF8EC;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 14px;
+  color: #8A7430;
+  text-align: center;
+  line-height: 34px;
+  letter-spacing: 0.05em;
+  z-index: 1;
+  position: relative;
+}
+.kayo-shindan .flow-body { flex: 1; padding-top: 4px; }
+.kayo-shindan .flow-title {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 14.5px;
+  color: #3D2C1F;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+.kayo-shindan .flow-desc {
+  font-size: 12.5px;
+  color: #6B5644;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Diagnosis ---------- */
+.kayo-shindan .diagnosis {
+  background: #FFF8EC;
+  padding: 48px 24px 56px;
+}
+.kayo-shindan .diagnosis-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.kayo-shindan .diagnosis-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #B86E55;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.kayo-shindan .diagnosis-title {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 20px;
+  color: #3D2C1F;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+/* ---------- Progress ---------- */
+.kayo-shindan .progress-wrap {
+  max-width: 340px;
+  margin: 0 auto 24px;
+}
+.kayo-shindan .progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: #A18870;
+  margin-bottom: 8px;
+}
+.kayo-shindan .progress-meta .pct {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  color: #B86E55;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+.kayo-shindan .progress {
+  position: relative;
+  height: 4px;
+  background: rgba(222,199,175,0.55);
+  border-radius: 4px;
+  overflow: visible;
+}
+.kayo-shindan .progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #D4856A, #B86E55);
+  border-radius: 4px;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.kayo-shindan .progress-mark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFF8EC;
+  border: 1px solid rgba(182,146,83,0.55);
+}
+.kayo-shindan .progress-mark.reached {
+  background: #B86E55;
+  border-color: #B86E55;
+}
+
+/* ---------- Section Intro Card ---------- */
+.kayo-shindan .section-intro {
+  background: #FFFDF7;
+  border: 1px solid rgba(222,199,175,0.68);
+  border-radius: 14px;
+  padding: 26px 22px;
+  max-width: 380px;
+  margin: 0 auto;
+  text-align: center;
+  display: none;
+}
+.kayo-shindan .section-intro.active {
+  display: block;
+  animation: qFade 0.5s ease;
+}
+.kayo-shindan .si-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #B86E55;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.kayo-shindan .si-title {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 17px;
+  color: #3D2C1F;
+  line-height: 1.9;
+  letter-spacing: 0.05em;
+  margin-bottom: 18px;
+}
+.kayo-shindan .si-body {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 13.5px;
+  color: #6B5644;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  margin-bottom: 22px;
+}
+.kayo-shindan .si-btn {
+  padding: 12px 32px;
+  background: #FFFFFF;
+  color: #B86E55;
+  border: 1.5px solid #D4856A;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: background 0.2s, color 0.2s;
+}
+.kayo-shindan .si-btn:active {
+  background: #D4856A;
+  color: #FFFFFF;
+}
+
+/* ---------- Question Card ---------- */
+.kayo-shindan .quiz { max-width: 380px; margin: 0 auto; }
+.kayo-shindan .q-card {
+  background: #FFFDF7;
+  border: 1px solid rgba(222,199,175,0.68);
+  border-radius: 14px;
+  padding: 26px 20px 22px;
+  box-shadow: 0 2px 12px rgba(74,56,41,0.06);
+  display: none;
+}
+.kayo-shindan .q-card.active {
+  display: block;
+  animation: qFade 0.4s ease;
+}
+@keyframes qFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kayo-shindan .q-num {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #B86E55;
+  text-align: center;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.kayo-shindan .q-text {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: #3D2C1F;
+  letter-spacing: 0.04em;
+  margin-bottom: 22px;
+  min-height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.kayo-shindan .q-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.kayo-shindan .q-choice {
+  padding: 14px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(212,133,106,0.45);
+  background: #FFFFFF;
+  color: #4A3829;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.kayo-shindan .q-choice:active {
+  transform: scale(0.98);
+  background: rgba(255,246,230,1);
+}
+.kayo-shindan .q-choice.strong {
+  color: #B86E55;
+}
+.kayo-shindan .q-back {
+  display: block;
+  margin: 18px auto 0;
+  background: none;
+  border: none;
+  color: #A18870;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ---------- Mid Feedback ---------- */
+.kayo-shindan .mid-feedback {
+  max-width: 340px;
+  margin: 22px auto 0;
+  padding: 16px 18px;
+  background: rgba(255,246,230,0.85);
+  border-left: 3px solid #B69253;
+  border-radius: 8px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #6B5644;
+  letter-spacing: 0.04em;
+  display: none;
+}
+.kayo-shindan .mid-feedback.active {
+  display: block;
+  animation: qFade 0.5s ease;
+}
+
+/* ---------- Start Button ---------- */
+.kayo-shindan .start-wrap {
+  text-align: center;
+  padding-top: 8px;
+}
+.kayo-shindan .start-btn {
+  display: inline-block;
+  padding: 18px 44px;
+  background: linear-gradient(135deg, #D4856A 0%, #B86E55 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 15px;
+  cursor: pointer;
+  letter-spacing: 0.12em;
+  box-shadow: 0 6px 18px rgba(212,133,106,0.28);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.kayo-shindan .start-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 10px rgba(212,133,106,0.30);
+}
+.kayo-shindan .start-meta {
+  margin-top: 14px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #A18870;
+}
+
+/* ---------- Closing ---------- */
+.kayo-shindan .closing {
+  background: #FAF4EB;
+  text-align: center;
+  padding: 48px 28px 32px;
+}
+.kayo-shindan .closing-line {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 14.5px;
+  color: #6B5644;
+  line-height: 2.2;
+  letter-spacing: 0.06em;
+  margin-bottom: 22px;
+}
+.kayo-shindan .closing-sign {
+  font-size: 12px;
+  color: #B86E55;
+  letter-spacing: 0.14em;
+}
+
+/* ---------- Footer ---------- */
+.kayo-shindan .foot {
+  background: #F4EAD8;
+  text-align: center;
+  padding: 28px 20px 34px;
+  border-top: 1px solid rgba(182,146,83,0.20);
+}
+.kayo-shindan .foot-links {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.kayo-shindan .foot-links a {
+  color: #8A7430;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(138,116,48,0.35);
+  padding-bottom: 1px;
+}
+.kayo-shindan .foot-copy {
+  font-size: 10px;
+  color: #A18870;
+  letter-spacing: 0.14em;
+  margin-top: 6px;
+}
+
+/* ---------- Reveal Animation ---------- */
+.kayo-shindan .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.kayo-shindan .reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .kayo-shindan .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- Popup (Loading + Mini Result) ---------- */
+.kayo-shindan .ks-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 22, 15, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: ksModalIn 0.35s ease;
+}
+.kayo-shindan .ks-modal.active { display: flex; }
+@keyframes ksModalIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.kayo-shindan .ks-modal-card {
+  background: linear-gradient(180deg, #FFF9EB 0%, #FFFDF7 100%);
+  border: 1.5px solid rgba(182,146,83,0.55);
+  border-radius: 22px;
+  padding: 40px 24px 28px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(28,20,14,0.30);
+  animation: ksCardPop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes ksCardPop {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Loading pulse */
+.kayo-shindan .ks-loading {
+  padding: 20px 8px 6px;
+}
+.kayo-shindan .ks-pulse {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  background: radial-gradient(circle at 45% 40%, #FFE6D0, #F4C89D);
+  box-shadow: 0 0 0 12px rgba(212,133,106,0.10);
+  animation: ksPulse 1.6s ease-in-out infinite;
+}
+@keyframes ksPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px rgba(212,133,106,0.10);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 22px rgba(212,133,106,0.02);
+  }
+}
+.kayo-shindan .ks-load-msg {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 15px;
+  color: #3D2C1F;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s;
+}
+.kayo-shindan .ks-dots {
+  display: inline-flex;
+  gap: 6px;
+  justify-content: center;
+}
+.kayo-shindan .ks-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #B86E55;
+  opacity: 0.3;
+  animation: ksDot 1.2s infinite;
+}
+.kayo-shindan .ks-dots span:nth-child(2) { animation-delay: 0.2s; }
+.kayo-shindan .ks-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes ksDot {
+  0%, 60%, 100% { opacity: 0.3; transform: scale(1); }
+  30% { opacity: 1; transform: scale(1.4); }
+}
+
+/* Mini Result */
+.kayo-shindan .ks-result {
+  display: none;
+}
+.kayo-shindan .ks-result.active {
+  display: block;
+  animation: qFade 0.5s ease;
+}
+.kayo-shindan .ks-result-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #B86E55;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.kayo-shindan .ks-result-name {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 22px;
+  color: #3D2C1F;
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.kayo-shindan .ks-result-name strong {
+  color: #B86E55;
+  font-weight: 500;
+}
+.kayo-shindan .ks-result-summary {
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 13.5px;
+  color: #6B5644;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  margin-bottom: 26px;
+  padding: 0 4px;
+}
+.kayo-shindan .ks-cta-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #D4856A 0%, #B86E55 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 15px;
+  cursor: pointer;
+  letter-spacing: 0.12em;
+  box-shadow: 0 6px 16px rgba(212,133,106,0.30);
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+.kayo-shindan .ks-cta-btn:active { transform: scale(0.98); }
+.kayo-shindan .ks-note {
+  font-size: 10.5px;
+  color: #8A7430;
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+  margin-top: 18px;
+  padding: 0 4px;
+  text-align: left;
+}
+.kayo-shindan .ks-note a {
+  color: #B86E55;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+</style>
+
+<div class="kayo-shindan">
+
+  <!-- ============= HERO ============= -->
+  <section class="hero">
+    <div class="hero-eyebrow">— OKAWARIGOHAN —</div>
+    <h1 class="hero-title serif">
+      毎日、頑張っているのに、<br>
+      なぜか、疲れる。<br><br>
+      それは、あなたを縛っている<br>
+      <strong>"べきべき"</strong> が<br>
+      原因かもしれません。
+    </h1>
+    <p class="hero-lead">
+      お料理タイプ診断で、<br>
+      あなたの "べきべき" を、<br>
+      やさしく手放す第一歩を。
+    </p>
+    <span class="hero-meta">無料 ・ 全15問 ・ 約2分</span>
+  </section>
+
+  <!-- ============= "べきべき" ============= -->
+  <section class="bekibeki reveal">
+    <div class="divider"></div>
+    <div class="section-eyebrow">— YOUR "BEKIBEKI" —</div>
+    <h2 class="section-title serif">
+      こんな "べきべき"、<br>
+      ありませんか。
+    </h2>
+    <ul class="bekibeki-list">
+      <li>もっと上手に作れるべき</li>
+      <li>毎日、ちゃんと考えるべき</li>
+      <li>レシピ通り、正しく作るべき</li>
+      <li>家族に "美味しい" と言われるべき</li>
+    </ul>
+    <p class="bekibeki-close">
+      どれか一つでも、<br>
+      心が動いた方へ。
+    </p>
+  </section>
+
+  <!-- ============= Message ============= -->
+  <section class="message reveal">
+    <div class="divider"></div>
+    <div class="section-eyebrow">— MESSAGE —</div>
+    <h2 class="section-title serif">
+      お料理は、<br>
+      "べきべき" で作るものではなく、<br>
+      "うちの味" を積み重ねるもの。
+    </h2>
+    <div class="message-body">
+      <p>毎日、お台所に立っているだけで、<br>本当は、もう、十分すごい。</p>
+      <p>なのに、なぜか<br>「もっと、ちゃんと」と<br>自分を追いかけてしまう。</p>
+      <p>その "べきべき" は、<br>あなたのタイプによって、<br>少しずつ形が違います。</p>
+      <p>まず、あなたの "べきべき" を<br>知ることから、<br>軽くしていきませんか。</p>
+    </div>
+    <div class="message-sign">— かよママ より —</div>
+  </section>
+
+  <!-- ============= What You Get ============= -->
+  <section class="whatyouget reveal">
+    <div class="divider"></div>
+    <div class="section-eyebrow">— WHAT YOU GET —</div>
+    <h2 class="section-title serif">
+      この診断で、<br>
+      わかること。
+    </h2>
+    <ul class="wyg-list">
+      <li class="wyg-item">
+        <div class="wyg-num">一</div>
+        <div class="wyg-text"><strong>あなたを縛っている "べきべき" のタイプ</strong><br>4つの傾向から、あなたに一番近いものを。</div>
+      </li>
+      <li class="wyg-item">
+        <div class="wyg-num">二</div>
+        <div class="wyg-text"><strong>その "べきべき" が、なぜ生まれるのか</strong><br>原因がわかると、手放し方も見えてきます。</div>
+      </li>
+      <li class="wyg-item">
+        <div class="wyg-num">三</div>
+        <div class="wyg-text"><strong>あなたに合った、次の一歩</strong><br>今日から試せる、小さなヒントをお届けします。</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============= Flow ============= -->
+  <section class="flow reveal">
+    <div class="divider"></div>
+    <div class="section-eyebrow">— HOW IT WORKS —</div>
+    <h2 class="section-title serif">診断の流れ</h2>
+    <ol class="flow-steps">
+      <li class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-body">
+          <div class="flow-title serif">15問の質問に答える</div>
+          <div class="flow-desc">4択で選ぶだけ。<br>2分ほどで終わります。</div>
+        </div>
+      </li>
+      <li class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-body">
+          <div class="flow-title serif">あなたのタイプが表示されます</div>
+          <div class="flow-desc">4つのタイプから、あなたに近いものを。<br>まずは概要を、その場でご覧いただけます。</div>
+        </div>
+      </li>
+      <li class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-body">
+          <div class="flow-title serif">詳しい結果は、続きのページで</div>
+          <div class="flow-desc">タイプ別のくわしい解説と、<br>今日から試せる 3つのヒントをお届けします。</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============= Start Button ============= -->
+  <section class="reveal" style="text-align: center; padding: 40px 28px 24px; background:#FAF4EB;">
+    <div class="start-wrap">
+      <button class="start-btn" onclick="document.getElementById('kayoShindanStart').scrollIntoView({behavior:'smooth'})">診断をはじめる</button>
+      <div class="start-meta">無料 ・ 全15問 ・ 約2分</div>
+    </div>
+  </section>
+
+  <!-- ============= Diagnosis ============= -->
+  <section class="diagnosis" id="kayoShindanStart">
+    <div class="diagnosis-header">
+      <div class="diagnosis-eyebrow">— QUESTION —</div>
+      <h2 class="diagnosis-title serif">わたしの "お料理べきべき" タイプ診断</h2>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="ksProgressLabel">Q 1 / 15</span>
+        <span class="pct" id="ksProgressPct">0%</span>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" id="ksProgressBar"></div>
+        <div class="progress-mark" style="left: 33.3%"></div>
+        <div class="progress-mark" style="left: 66.6%"></div>
+      </div>
+    </div>
+
+    <!-- Section Intros -->
+    <div class="section-intro" id="ksIntro1">
+      <div class="si-eyebrow">— SECTION 1 / 3 —</div>
+      <div class="si-title serif">あなたの毎日の<br>"料理時間" について</div>
+      <div class="si-body">まずは5問。<br>肩の力を抜いて、<br>ふっと感じるままにお答えください。</div>
+      <button class="si-btn" onclick="ksNextIntro(1)">はじめる →</button>
+    </div>
+    <div class="section-intro" id="ksIntro2">
+      <div class="si-eyebrow">— SECTION 2 / 3 —</div>
+      <div class="si-title serif">あなたの<br>"心の動き" について</div>
+      <div class="si-body">ここまで、ありがとうございます。<br>次は、もう少し深く<br>聞かせてください。</div>
+      <button class="si-btn" onclick="ksNextIntro(2)">続ける →</button>
+    </div>
+    <div class="section-intro" id="ksIntro3">
+      <div class="si-eyebrow">— SECTION 3 / 3 —</div>
+      <div class="si-title serif">あなたの<br>"料理との向き合い方"</div>
+      <div class="si-body">ふう、あと5問です。<br>ここからは、あなたが料理と<br>どう向き合っているかについて。</div>
+      <button class="si-btn" onclick="ksNextIntro(3)">続ける →</button>
+    </div>
+
+    <!-- Mid Feedback -->
+    <div class="mid-feedback" id="ksMid1">
+      ここまで、ありがとうございます。<br>だんだん、あなたの傾向が、<br>浮かび上がってきました。
+    </div>
+    <div class="mid-feedback" id="ksMid2">
+      あと少しです。<br>ここまでの回答から、<br>ぼんやりと輪郭が見えてきました。
+    </div>
+
+    <!-- Quiz -->
+    <div class="quiz" id="ksQuiz">
+      <!-- Q1 A -->
+      <div class="q-card" data-type="A" data-idx="0">
+        <div class="q-num">Q 1 / 15</div>
+        <div class="q-text serif">"これ、うまくできたな" と思える料理が思い浮かばなくて、ちょっと寂しくなることがある</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+      </div>
+      <!-- Q2 B -->
+      <div class="q-card" data-type="B" data-idx="1">
+        <div class="q-num">Q 2 / 15</div>
+        <div class="q-text serif">"今日、何食べたい？" と聞かれるのが、正直、地味にしんどい</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q3 C -->
+      <div class="q-card" data-type="C" data-idx="2">
+        <div class="q-num">Q 3 / 15</div>
+        <div class="q-text serif">レシピを見ずに作ろうとすると、"これで合ってる…？" と手が止まる</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q4 A -->
+      <div class="q-card" data-type="A" data-idx="3">
+        <div class="q-num">Q 4 / 15</div>
+        <div class="q-text serif">家族に "美味しい？" と聞くとき、心のどこかで少しドキッとする</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q5 B -->
+      <div class="q-card" data-type="B" data-idx="4">
+        <div class="q-num">Q 5 / 15</div>
+        <div class="q-text serif">夜ごはんを食べ終わった瞬間、"明日の朝、何にしよう…" と頭が働き出して、休めない</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q6 C -->
+      <div class="q-card" data-type="C" data-idx="5">
+        <div class="q-num">Q 6 / 15</div>
+        <div class="q-text serif">味見をして "何か足りない気がする…でも何を足せばいいの？" と迷って、そのまま出してしまう</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q7 A -->
+      <div class="q-card" data-type="A" data-idx="6">
+        <div class="q-num">Q 7 / 15</div>
+        <div class="q-text serif">レシピ動画を見ながら "この人みたいには作れないな…" と、そっと自信をなくすことがある</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q8 B -->
+      <div class="q-card" data-type="B" data-idx="7">
+        <div class="q-num">Q 8 / 15</div>
+        <div class="q-text serif">冷蔵庫を開けて、"あ、これも古くなってる…" と一日の疲れが増すことがある</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q9 C -->
+      <div class="q-card" data-type="C" data-idx="8">
+        <div class="q-num">Q 9 / 15</div>
+        <div class="q-text serif">レシピ通りに作ったのに、"あれ、なんか違うぞ？" と首をかしげたことがある</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q10 A -->
+      <div class="q-card" data-type="A" data-idx="9">
+        <div class="q-num">Q 10 / 15</div>
+        <div class="q-text serif">"手料理を褒められた記憶" が、パッと思い出せない</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q11 B -->
+      <div class="q-card" data-type="B" data-idx="10">
+        <div class="q-num">Q 11 / 15</div>
+        <div class="q-text serif">スーパーで買い物中、"何を作るか決まってなくて、無駄に長居してしまう" ことがある</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q12 C -->
+      <div class="q-card" data-type="C" data-idx="11">
+        <div class="q-num">Q 12 / 15</div>
+        <div class="q-text serif">調味料を目分量で入れる人を見ると、"すごい" と少し憧れる</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q13 A -->
+      <div class="q-card" data-type="A" data-idx="12">
+        <div class="q-num">Q 13 / 15</div>
+        <div class="q-text serif">誰かに料理を出すとき、"口に合うかな…" と食べ始めるまで少し落ち着かない</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q14 B -->
+      <div class="q-card" data-type="B" data-idx="13">
+        <div class="q-num">Q 14 / 15</div>
+        <div class="q-text serif">"今週の献立" をまとめて考えられない自分に、ちょっとがっかりすることがある</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+      <!-- Q15 C -->
+      <div class="q-card" data-type="C" data-idx="14">
+        <div class="q-num">Q 15 / 15</div>
+        <div class="q-text serif">料理中、常にスマホを片手に持っていて、"レシピなしで作れる日" が来る気がしない</div>
+        <div class="q-choices">
+          <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
+          <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
+          <button class="q-choice" onclick="ksAnswer(0)">あまりない</button>
+          <button class="q-choice" onclick="ksAnswer(0)">ない</button>
+        </div>
+        <button class="q-back" onclick="ksBack()">← 前の質問へ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= Closing ============= -->
+  <section class="closing reveal">
+    <div class="divider"></div>
+    <div class="closing-line serif">
+      "べきべき" を手放した先に、<br>
+      あなたの、あなたらしい台所が、<br>
+      きっと待っています。
+    </div>
+    <div class="closing-sign">— かよママ より —</div>
+  </section>
+
+  <!-- ============= Footer ============= -->
+  <footer class="foot">
+    <div class="foot-links">
+      <a href="https://vhutdb31.autosns.app/cp/UK4NethjAB" target="_blank" rel="noopener">特定商取引法に基づく表記</a>
+      <a href="https://vhutdb31.autosns.app/cp/gt5oa9xQ7P" target="_blank" rel="noopener">プライバシーポリシー</a>
+    </div>
+    <div class="foot-copy">© かよママ</div>
+  </footer>
+
+  <!-- ============= Popup (Loading + Mini Result) ============= -->
+  <div class="ks-modal" id="ksModal">
+    <div class="ks-modal-card">
+
+      <!-- Phase 1: Loading -->
+      <div class="ks-loading" id="ksLoading">
+        <div class="ks-pulse"></div>
+        <div class="ks-load-msg serif" id="ksLoadMsg">回答を受け取りました…</div>
+        <div class="ks-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <!-- Phase 2: Mini Result -->
+      <div class="ks-result" id="ksResult">
+        <div class="ks-result-eyebrow">— YOUR RESULT —</div>
+        <div class="ks-result-name serif" id="ksResultName">―</div>
+        <div class="ks-result-summary" id="ksResultSummary">―</div>
+        <a class="ks-cta-btn serif" id="ksCtaBtn" href="#" target="_blank" rel="noopener">結果はこちら →</a>
+        <div class="ks-note">
+          「結果はこちら」をタップすると、公式LINEへ移動します。<br>
+          友だち追加すると、あなたのタイプに合ったヒントや<br>
+          豆知識などを定期的に配信します。いつでもブロックできます。<br>
+          詳しくは <a href="https://vhutdb31.autosns.app/cp/gt5oa9xQ7P" target="_blank" rel="noopener">プライバシーポリシー</a> をご確認ください。
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // ============================================================
+  // CONFIG（プロラインフリー貼付時、ここだけ書き換え）
+  // ============================================================
+  var CONFIG = {
+    // タイプ別 LINE公式友だち追加URL
+    LINE_URLS: {
+      A: 'https://vhutdb31.autosns.app/addfriend/s/fi0GdSrOyX/@115vaudn',
+      B: 'https://vhutdb31.autosns.app/addfriend/s/R3iDnY1TAl/@115vaudn',
+      C: 'https://vhutdb31.autosns.app/addfriend/s/mYPLrm82gT/@115vaudn',
+      D: 'https://vhutdb31.autosns.app/addfriend/s/SZ57fLvWlG/@115vaudn'
+    },
+    // ローディング演出秒数
+    LOADING_MS: 5000,
+    // GAS Web App URL / TOKEN（スプシへの記録用）
+    //   プロラインの /cp/ 経由でLPを開くとURLに ?uid=[[uid]] が展開される。
+    //   uidがある時のみ、診断完了イベントを記録する。
+    GAS_URL:   'https://script.google.com/macros/s/AKfycbwyy_kIboj_EnyxbJSIhPFlUJOgITE1iSBMoHGLyoDyaMGkfbNd7PNaFf91xMnI-ZTb/exec',
+    GAS_TOKEN: 'kayomama-app-tk8n3r5p2x9m7w4'
+  };
+
+  // URLパラメータ取得ヘルパー
+  function ksGetParam(name) {
+    var m = window.location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // GASへ診断結果を送信（uid付きで開かれた場合のみ）
+  // fire-and-forget（結果を待たない）
+  function ksSendToGas(type) {
+    var uid = ksGetParam('uid');
+    if (!uid) return; // uidなしの場合は送信しない
+    if (!CONFIG.GAS_URL) return;
+    try {
+      fetch(CONFIG.GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          token: CONFIG.GAS_TOKEN,
+          action: 'record_event',
+          uid: uid,
+          type: type,
+          event: 'diagnosis_complete',
+          payload: { source: 'diagnosis_lp_v2' }
+        }),
+        mode: 'cors',
+        credentials: 'omit'
+      }).catch(function(){ /* silent */ });
+    } catch (e) { /* silent */ }
+  }
+
+  // タイプ別情報（表示用。key A/B/C/D は内部管理用）
+  var TYPES = {
+    A: {
+      name: 'もっとうまく作りたい、<br><strong>遠慮しがち さん</strong>',
+      summary: 'あなたを縛っているのは、<br>「もっと上手にできるべき」という "べきべき"。<br>手放し方のヒント、続きでお届けします。'
+    },
+    B: {
+      name: '今日何にしよう、<br><strong>が口ぐせ さん</strong>',
+      summary: 'あなたを縛っているのは、<br>「毎日ちゃんと考えるべき」という "べきべき"。<br>手放し方のヒント、続きでお届けします。'
+    },
+    C: {
+      name: 'スマホ片手に、<br><strong>正解探し さん</strong>',
+      summary: 'あなたを縛っているのは、<br>「レシピ通り作るべき」という "べきべき"。<br>手放し方のヒント、続きでお届けします。'
+    },
+    D: {
+      name: 'もう回ってる、<br><strong>次いきたい さん</strong>',
+      summary: 'あなたはすでに、"べきべき" を<br>ほどよく手放せている方。<br>次のステージへのヒント、続きでお届けします。'
+    }
+  };
+
+  // ローディング演出のメッセージ
+  var LOAD_MESSAGES = [
+    '回答を受け取りました…',
+    'あなたのパターンを、ふむふむ…',
+    'なるほど、なるほど…',
+    'あなたに合ったヒントを準備中…',
+    'もうすぐです！'
+  ];
+
+  // 状態
+  var scores = { A: 0, B: 0, C: 0 };
+  var current = 0;               // 現在の質問index (0-14)
+  var totalQuestions = 15;
+  var answered = [];             // 各質問の回答スコア
+
+  // ============================================================
+  // Section Intro（開始時に表示）
+  // ============================================================
+  function showIntro(section) {
+    ['ksIntro1','ksIntro2','ksIntro3'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    document.querySelectorAll('.kayo-shindan .q-card').forEach(function(c){
+      c.classList.remove('active');
+    });
+    var el = document.getElementById('ksIntro' + section);
+    if (el) el.classList.add('active');
+    scrollToDiag();
+  }
+
+  window.ksNextIntro = function(section) {
+    document.getElementById('ksIntro' + section).classList.remove('active');
+    // Section 1 → Q1, Section 2 → Q6, Section 3 → Q11
+    var startIdx = (section - 1) * 5;
+    current = startIdx;
+    showCard(current);
+    updateProgress();
+  };
+
+  // ============================================================
+  // Quiz
+  // ============================================================
+  window.ksAnswer = function(val) {
+    var cards = document.querySelectorAll('.kayo-shindan .q-card');
+    var cur = cards[current];
+    if (!cur) return;
+    var type = cur.dataset.type;
+    if (val > 0) scores[type] = (scores[type] || 0) + val;
+    answered[current] = { type: type, val: val };
+    current++;
+    updateProgress();
+
+    // Q5 (idx 4) 終了で mid feedback 1、Section 2 intro
+    if (current === 5) {
+      showMidFeedback(1, function(){ showIntro(2); });
+      return;
+    }
+    // Q10 (idx 9) 終了で mid feedback 2、Section 3 intro
+    if (current === 10) {
+      showMidFeedback(2, function(){ showIntro(3); });
+      return;
+    }
+    // 完了
+    if (current >= totalQuestions) {
+      finish();
+      return;
+    }
+    showCard(current);
+  };
+
+  window.ksBack = function() {
+    if (current <= 0) return;
+    current--;
+    var prev = answered[current];
+    if (prev && prev.val > 0 && scores[prev.type] >= prev.val) {
+      scores[prev.type] -= prev.val;
+    }
+    answered[current] = null;
+    updateProgress();
+    showCard(current);
+  };
+
+  function showCard(idx) {
+    document.querySelectorAll('.kayo-shindan .q-card').forEach(function(c, i) {
+      c.classList.toggle('active', i === idx);
+    });
+    // Intro とmid feedback を隠す
+    ['ksIntro1','ksIntro2','ksIntro3','ksMid1','ksMid2'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    scrollToDiag();
+  }
+
+  function showMidFeedback(num, callback) {
+    // 現在のカードを消す
+    document.querySelectorAll('.kayo-shindan .q-card').forEach(function(c){
+      c.classList.remove('active');
+    });
+    var el = document.getElementById('ksMid' + num);
+    if (el) el.classList.add('active');
+    scrollToDiag();
+    // 2.5秒後に次のintroへ
+    setTimeout(function(){
+      if (el) el.classList.remove('active');
+      if (callback) callback();
+    }, 2600);
+  }
+
+  function scrollToDiag() {
+    var el = document.getElementById('kayoShindanStart');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function updateProgress() {
+    var bar = document.getElementById('ksProgressBar');
+    var label = document.getElementById('ksProgressLabel');
+    var pct = document.getElementById('ksProgressPct');
+    var displayIdx = Math.min(current + 1, totalQuestions);
+    var pctVal = Math.min(100, Math.round((current) / totalQuestions * 100));
+    if (bar) bar.style.width = pctVal + '%';
+    if (label) label.textContent = 'Q ' + displayIdx + ' / ' + totalQuestions;
+    if (pct) pct.textContent = pctVal + '%';
+    // マーカー（3セクション区切り）を通過したら色を変える
+    var marks = document.querySelectorAll('.kayo-shindan .progress-mark');
+    marks.forEach(function(m, i){
+      var threshold = (i + 1) * 33.33;
+      m.classList.toggle('reached', pctVal >= threshold);
+    });
+  }
+
+  // ============================================================
+  // Finish → Loading Popup → Mini Result
+  // ============================================================
+  function finish() {
+    var modal = document.getElementById('ksModal');
+    var loading = document.getElementById('ksLoading');
+    var result = document.getElementById('ksResult');
+    var msg = document.getElementById('ksLoadMsg');
+    if (!modal) return;
+
+    // モーダル表示
+    modal.classList.add('active');
+    loading.style.display = 'block';
+    result.classList.remove('active');
+    // スクロールロック
+    document.body.style.overflow = 'hidden';
+
+    // メッセージを段階切替
+    var interval = CONFIG.LOADING_MS / LOAD_MESSAGES.length;
+    LOAD_MESSAGES.forEach(function(m, i){
+      setTimeout(function(){
+        if (msg) {
+          msg.style.opacity = 0;
+          setTimeout(function(){
+            msg.textContent = m;
+            msg.style.opacity = 1;
+          }, 200);
+        }
+      }, i * interval);
+    });
+
+    // ローディング終了 → 結果表示
+    setTimeout(function(){
+      loading.style.display = 'none';
+      showMiniResult();
+    }, CONFIG.LOADING_MS);
+  }
+
+  function showMiniResult() {
+    // タイプ判定
+    var totalYes = scores.A + scores.B + scores.C;
+    var resultType;
+    if (totalYes === 0) {
+      resultType = 'D';
+    } else {
+      var max = Math.max(scores.A, scores.B, scores.C);
+      // 同点時：B → C → A の優先度
+      if (scores.B === max) resultType = 'B';
+      else if (scores.C === max) resultType = 'C';
+      else resultType = 'A';
+    }
+
+    var t = TYPES[resultType];
+    document.getElementById('ksResultName').innerHTML = t.name;
+    document.getElementById('ksResultSummary').innerHTML = t.summary;
+
+    // LINE誘引URL（タイプ別に分岐）
+    var url = CONFIG.LINE_URLS[resultType] || CONFIG.LINE_URLS.A;
+    document.getElementById('ksCtaBtn').href = url;
+
+    // タイプをlocalStorageに保存（結果ページで参照可能）
+    try { localStorage.setItem('kayoShindanResult', resultType); } catch(e) {}
+
+    // GASへ診断結果を記録（uid付きで開かれた場合のみ）
+    ksSendToGas(resultType);
+
+    document.getElementById('ksResult').classList.add('active');
+  }
+
+  // ============================================================
+  // 初期化：Section 1 のイントロを表示
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function(){
+    showIntro(1);
+    updateProgress();
+
+    // Reveal animation
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.kayo-shindan .reveal').forEach(function(el){
+        io.observe(el);
+      });
+    } else {
+      document.querySelectorAll('.kayo-shindan .reveal').forEach(function(el){
+        el.classList.add('in-view');
+      });
+    }
+  });
+})();
+</script>
+
+<!-- ============================================================
+     [[uid]] 自動置換スクリプト
+     -----------------------------------------------------------
+     このLPは通常プロラインの「自作ページ転送（/cp/）」経由で
+     開かれる。到達URLは apps.l-mine.com/kayomama-diagnosis/?uid=xxx
+     の形になるので、ページ内に残っている `[[uid]]` 文字列を
+     すべて URLパラメータの uid に置換する。
+     プロライン外（uidなし）で開かれた場合は `[[uid]]` を空文字にする。
+     ============================================================ -->
+<script>
+(function(){
+  function getParam(name) {
+    var m = window.location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+  var uid = getParam('uid');
+  // [[uid]] 文字列を含む属性を持つ全要素を走査して置換
+  var TAGS = ['img', 'iframe', 'source', 'video', 'audio', 'a', 'link', 'script'];
+  var ATTRS = ['src', 'href', 'data-src'];
+  TAGS.forEach(function(tag){
+    document.querySelectorAll(tag).forEach(function(el){
+      ATTRS.forEach(function(attr){
+        var v = el.getAttribute(attr);
+        if (v && v.indexOf('[[uid]]') >= 0) {
+          el.setAttribute(attr, v.split('[[uid]]').join(encodeURIComponent(uid)));
+        }
+      });
+    });
+  });
+})();
+</script>
