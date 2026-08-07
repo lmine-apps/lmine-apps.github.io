@@ -926,6 +926,16 @@ body:has(.debug-bar.active) { padding-bottom: 40vh; }
   }
 }
 
+/* ============= Piece Pop アニメーション（ピース獲得演出） ============= */
+@keyframes piecePop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="piecePop"] { animation: none !important; }
+}
+
 /* ============= Inline validation error (機能追加・最小限) ============= */
 .inline-error {
   font-family: var(--sans);

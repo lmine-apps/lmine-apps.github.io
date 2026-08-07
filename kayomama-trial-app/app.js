@@ -268,6 +268,28 @@
     return c;
   }
 
+  // 【エンダウドプログレス効果】診断完了ぶん 20% を最初から満たした状態でスタート
+  // 実際の completedCount 0〜5 を、視覚上 20〜100% にマップ
+  function progressPct() {
+    var real = completedCount() / 5;
+    return Math.round(20 + real * 80);
+  }
+
+  // 【保有効果 + IKEA効果】カードのピース数 X/4
+  // Day1完了で 1/4、Day2で 2/4、Day3で 3/4、Day4完了で 4/4
+  function cardPieces() {
+    var n = 0;
+    ['day1','day2','day3','day4'].forEach(function (k) {
+      if (state.completedDays[k]) n++;
+    });
+    return n;
+  }
+
+  // 【サンクコスト＋ストリーク】完了した日数（連続前提のアプリ設計なので、実質完了日数）
+  function streakDays() {
+    return cardPieces(); // 同じロジック
+  }
+
   // ------------------------------------------------------------
   // イベント（console + GAS Web App への POST 送信）
   // ------------------------------------------------------------
@@ -919,19 +941,78 @@
     }));
     screen.appendChild(header);
 
-    // Progress bar
+    // 【ナッジ強化】進捗バー＋カードピース＋ストリーク
     var cnt = completedCount();
-    var pct = Math.round((cnt / 5) * 100);
+    var pct = progressPct();  // 20%スタートのエンダウドプログレス
+    var pieces = cardPieces();
+    var streak = streakDays();
+
     var prog = el('div', { className: 'progress-bar-wrap' });
+
+    // 進捗バー（大きめ）
     var meta = el('div', { className: 'progress-meta' });
-    meta.appendChild(el('span', { text: (COMMON.progressLabel || '進捗') }));
-    meta.appendChild(el('span', { text: cnt + ' / 5 完了' }));
+    meta.appendChild(el('span', {
+      text: 'あなたのチャレンジ',
+      style: 'font-family:var(--serif); color:var(--terracotta); letter-spacing:0.15em;'
+    }));
+    meta.appendChild(el('span', {
+      html: '<strong>' + pct + '%</strong>',
+      style: 'font-family:var(--serif); font-size:14px; color:var(--heading);'
+    }));
     prog.appendChild(meta);
-    var barOut = el('div', { className: 'progress-bar-outer' });
+    var barOut = el('div', { className: 'progress-bar-outer', style: 'height:8px;' });
     var barIn = el('div', { className: 'progress-bar-inner' });
     barIn.style.width = pct + '%';
     barOut.appendChild(barIn);
     prog.appendChild(barOut);
+    prog.appendChild(el('div', {
+      text: '（診断完了 ✓ → 4日間 → レポート受取）',
+      style: 'font-size:11px; color:var(--muted); text-align:right; margin-top:4px; letter-spacing:0.06em;'
+    }));
+
+    // カード X/4 完成度（保有効果）
+    var cardBox = el('div', {
+      className: 'card',
+      style: 'display:flex; align-items:center; justify-content:space-between; padding:14px 16px; margin-top:14px;'
+    });
+    var cardLeft = el('div');
+    cardLeft.appendChild(el('div', {
+      html: '🎴　あなたのカード',
+      style: 'font-family:var(--serif); font-size:14px; color:var(--heading); margin-bottom:6px;'
+    }));
+    // ピースバー
+    var piecesBar = el('div', {
+      style: 'display:flex; gap:4px;'
+    });
+    for (var pi = 0; pi < 4; pi++) {
+      var piece = el('div', {
+        style: 'width:22px; height:14px; border-radius:3px; ' +
+               (pi < pieces
+                 ? 'background:linear-gradient(135deg, var(--terracotta-light), var(--terracotta));'
+                 : 'background:#F0E4D2; border:1px dashed #D0BEA5;')
+      });
+      piecesBar.appendChild(piece);
+    }
+    cardLeft.appendChild(piecesBar);
+    cardBox.appendChild(cardLeft);
+    cardBox.appendChild(el('div', {
+      html: '<strong>' + pieces + '</strong> / 4 ピース',
+      style: 'font-family:var(--serif); font-size:15px; color:var(--terracotta);'
+    }));
+    prog.appendChild(cardBox);
+
+    // ストリーク（サンクコスト＋達成感）
+    if (streak > 0) {
+      var streakBox = el('div', {
+        style: 'text-align:center; padding:10px 14px; margin-top:10px; background:#FFF4E4; border-radius:12px; font-family:var(--serif); font-size:14px; color:var(--heading);'
+      });
+      streakBox.appendChild(el('span', {
+        html: '🔥 <strong>' + streak + '日</strong> 続いてます！',
+        style: 'letter-spacing:0.08em;'
+      }));
+      prog.appendChild(streakBox);
+    }
+
     screen.appendChild(prog);
 
     // Day list
@@ -1161,17 +1242,60 @@
         return;
       }
 
-      // 完了メッセージ
+      // 【ピース獲得演出】＋完了メッセージ
+      var afterPieces = cardPieces();  // 完了後のピース数
+      msgWrap.innerHTML = '';
+      msgWrap.style.display = 'block';
+
+      // ✨ +1 ピース獲得！バッジ
+      var badgeWrap = el('div', {
+        style: 'text-align:center; margin-bottom:14px;'
+      });
+      var badge = el('div', {
+        html: '✨ <strong>+1 ピース</strong> 獲得！',
+        style: 'display:inline-block; padding:8px 20px; ' +
+               'background:linear-gradient(135deg, var(--terracotta-light), var(--terracotta)); ' +
+               'color:#FFF; border-radius:20px; font-family:var(--serif); font-size:15px; ' +
+               'letter-spacing:0.08em; box-shadow:0 4px 14px rgba(212,133,106,0.32); ' +
+               'animation: piecePop 0.6s ease-out;'
+      });
+      badgeWrap.appendChild(badge);
+      msgWrap.appendChild(badgeWrap);
+
+      // ピースバー
+      var pbar = el('div', {
+        style: 'display:flex; gap:6px; justify-content:center; margin-bottom:16px;'
+      });
+      for (var pi2 = 0; pi2 < 4; pi2++) {
+        pbar.appendChild(el('div', {
+          style: 'width:32px; height:20px; border-radius:4px; ' +
+                 (pi2 < afterPieces
+                   ? 'background:linear-gradient(135deg, var(--terracotta-light), var(--terracotta)); ' +
+                     (pi2 === afterPieces - 1 ? 'animation: piecePop 0.6s ease-out 0.2s both;' : '')
+                   : 'background:#F0E4D2; border:1px dashed #D0BEA5;')
+        }));
+      }
+      msgWrap.appendChild(pbar);
+      msgWrap.appendChild(el('div', {
+        html: '<strong>' + afterPieces + '</strong> / 4 ピース　' +
+              (afterPieces < 4 ? '（あと ' + (4 - afterPieces) + ' ピースで完成✨）' : '（🎉 完成！）'),
+        style: 'text-align:center; font-family:var(--serif); font-size:14px; color:var(--heading); margin-bottom:12px;'
+      }));
+
+      // 元のカスタムメッセージ
       var msg = content.complete || '';
       if (msg) {
-        msgWrap.textContent = msg;
-        msgWrap.style.display = 'block';
+        msgWrap.appendChild(el('div', {
+          text: msg,
+          style: 'text-align:center; white-space:pre-line; color:var(--muted); font-family:var(--serif); font-size:14px; line-height:1.9;'
+        }));
       }
+
       // 少し余韻を持たせてホームへ
       setTimeout(function () {
         completeBtn.dataset.busy = '';
         goto('home');
-      }, 1400);
+      }, 2600);
     });
   }
 
@@ -1520,10 +1644,17 @@
       }));
     }
 
+    // 【IKEA効果】カードの名前をユーザーが自分でつけられる
+    var currentCardName = (state.answers.day3 || {}).cardName || content.cardName;
+
     // カード自動生成プレビュー
     var savedCard = el('div', { className: 'saved-card' });
     savedCard.appendChild(el('div', { className: 'saved-card-eyebrow', text: '— YOUR CARD —' }));
-    savedCard.appendChild(el('div', { className: 'saved-card-title serif', text: content.cardName }));
+    var cardTitleEl = el('div', {
+      className: 'saved-card-title serif',
+      text: currentCardName
+    });
+    savedCard.appendChild(cardTitleEl);
     // 生成データ
     var lines = generateCardLines(t);
     if (lines.length) {
@@ -1534,6 +1665,28 @@
       savedCard.appendChild(ul);
     }
     card.appendChild(savedCard);
+
+    // カード命名フィールド（IKEA効果）
+    card.appendChild(el('label', {
+      className: 'input-label',
+      html: '✏️ このカードに名前をつけてみましょう <span style="color:var(--muted);font-size:11px;">（そのままでもOK）</span>',
+      style: 'margin-top:20px; display:block;'
+    }));
+    var cardNameInput = el('input', {
+      type: 'text',
+      className: 'input',
+      placeholder: content.cardName,
+      value: (state.answers.day3 || {}).cardName || '',
+      maxlength: '40'
+    });
+    cardNameInput.addEventListener('input', function () {
+      var v = cardNameInput.value.trim();
+      state.answers.day3.cardName = v;
+      // カード内のタイトルを即時反映
+      cardTitleEl.textContent = v || content.cardName;
+      saveState();
+    });
+    card.appendChild(cardNameInput);
 
     // 追加質問（Dのみ：誰と食べたいか）
     if (content.extraQuestion) {
@@ -1747,7 +1900,9 @@
 
     var savedCard = el('div', { className: 'saved-card' });
     savedCard.appendChild(el('div', { className: 'saved-card-eyebrow', text: '— YOUR CARD —' }));
-    savedCard.appendChild(el('div', { className: 'saved-card-title serif', text: t.day3.cardName }));
+    // ユーザーが命名したカード名があれば使用（IKEA効果）
+    var displayCardName = (state.answers.day3 || {}).cardName || t.day3.cardName;
+    savedCard.appendChild(el('div', { className: 'saved-card-title serif', text: displayCardName }));
     var lines = generateCardLines(t);
     if (lines.length) {
       var ul = el('ul', { className: 'saved-card-list' });
