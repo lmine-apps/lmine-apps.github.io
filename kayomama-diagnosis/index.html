@@ -265,10 +265,56 @@
   letter-spacing: 0.04em;
 }
 
-/* ---------- Diagnosis ---------- */
+/* ---------- Diagnosis (Modal Overlay) ---------- */
 .kayo-shindan .diagnosis {
   background: #FFF8EC;
   padding: 48px 24px 56px;
+  display: none;
+  position: relative;
+}
+.kayo-shindan .diagnosis.is-open {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 40px 22px 60px;
+  animation: ksQuizIn 0.4s ease;
+}
+@keyframes ksQuizIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kayo-shindan .quiz-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 810;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #E6D5C3;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: #6B5644;
+  font-family: inherit;
+}
+.kayo-shindan .quiz-close-btn:hover { background: #FFF; }
+
+/* Section Indicator (Q1/Q6/Q11の上に動的表示・小さいバナー) */
+.kayo-shindan .section-indicator {
+  text-align: center;
+  padding: 8px 16px;
+  margin: 0 auto 12px;
+  max-width: 320px;
+  font-family: 'Hiragino Mincho Pro', 'Yu Mincho', serif;
+  font-size: 12px;
+  color: #B86E55;
+  letter-spacing: 0.14em;
+  transition: opacity 0.3s ease;
 }
 .kayo-shindan .diagnosis-header {
   text-align: center;
@@ -857,13 +903,15 @@
   <!-- ============= Start Button ============= -->
   <section class="reveal" style="text-align: center; padding: 40px 28px 24px; background:#FAF4EB;">
     <div class="start-wrap">
-      <button class="start-btn" onclick="document.getElementById('kayoShindanStart').scrollIntoView({behavior:'smooth'})">診断をはじめる</button>
+      <button class="start-btn" onclick="openQuiz()">診断をはじめる</button>
       <div class="start-meta">無料 ・ 全15問 ・ 約2分</div>
     </div>
   </section>
 
-  <!-- ============= Diagnosis ============= -->
+  <!-- ============= Diagnosis (Modal Overlay) ============= -->
   <section class="diagnosis" id="kayoShindanStart">
+    <button class="quiz-close-btn" onclick="closeQuiz()" aria-label="閉じる">×</button>
+
     <div class="diagnosis-header">
       <div class="diagnosis-eyebrow">— QUESTION —</div>
       <h2 class="diagnosis-title serif">わたしの "お料理べきべき" タイプ診断</h2>
@@ -873,7 +921,7 @@
     <div class="progress-wrap">
       <div class="progress-meta">
         <span id="ksProgressLabel">Q 1 / 15</span>
-        <span class="pct" id="ksProgressPct">0%</span>
+        <span class="pct" id="ksProgressPct">7%</span>
       </div>
       <div class="progress">
         <div class="progress-bar" id="ksProgressBar"></div>
@@ -882,25 +930,8 @@
       </div>
     </div>
 
-    <!-- Section Intros -->
-    <div class="section-intro" id="ksIntro1">
-      <div class="si-eyebrow">— SECTION 1 / 3 —</div>
-      <div class="si-title serif">あなたの毎日の<br>"料理時間" について</div>
-      <div class="si-body">まずは5問。<br>肩の力を抜いて、<br>ふっと感じるままにお答えください。</div>
-      <button class="si-btn" onclick="ksNextIntro(1)">はじめる →</button>
-    </div>
-    <div class="section-intro" id="ksIntro2">
-      <div class="si-eyebrow">— SECTION 2 / 3 —</div>
-      <div class="si-title serif">あなたの<br>"心の動き" について</div>
-      <div class="si-body">ここまで、ありがとうございます。<br>次は、もう少し深く<br>聞かせてください。</div>
-      <button class="si-btn" onclick="ksNextIntro(2)">続ける →</button>
-    </div>
-    <div class="section-intro" id="ksIntro3">
-      <div class="si-eyebrow">— SECTION 3 / 3 —</div>
-      <div class="si-title serif">あなたの<br>"料理との向き合い方"</div>
-      <div class="si-body">ふう、あと5問です。<br>ここからは、あなたが料理と<br>どう向き合っているかについて。</div>
-      <button class="si-btn" onclick="ksNextIntro(3)">続ける →</button>
-    </div>
+    <!-- Section Indicator（動的に更新される小さなバナー） -->
+    <div class="section-indicator" id="ksSectionIndicator">SECTION 1 / 3 ・ 料理時間について</div>
 
     <!-- Mid Feedback -->
     <div class="mid-feedback" id="ksMid1">
@@ -1234,26 +1265,29 @@
   // ============================================================
   // Section Intro（開始時に表示）
   // ============================================================
-  function showIntro(section) {
-    ['ksIntro1','ksIntro2','ksIntro3'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) el.classList.remove('active');
-    });
-    document.querySelectorAll('.kayo-shindan .q-card').forEach(function(c){
-      c.classList.remove('active');
-    });
-    var el = document.getElementById('ksIntro' + section);
-    if (el) el.classList.add('active');
-    scrollToDiag();
-  }
-
-  window.ksNextIntro = function(section) {
-    document.getElementById('ksIntro' + section).classList.remove('active');
-    // Section 1 → Q1, Section 2 → Q6, Section 3 → Q11
-    var startIdx = (section - 1) * 5;
-    current = startIdx;
-    showCard(current);
+  // ============================================================
+  // Quiz モーダル開閉
+  // ============================================================
+  window.openQuiz = function() {
+    var diag = document.getElementById('kayoShindanStart');
+    if (!diag) return;
+    diag.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    // 開いたら最初から
+    scores = { A: 0, B: 0, C: 0 };
+    current = 0;
+    answered = [];
+    showCard(0);
     updateProgress();
+    // モーダル内部を先頭スクロール
+    diag.scrollTop = 0;
+  };
+
+  window.closeQuiz = function() {
+    var diag = document.getElementById('kayoShindanStart');
+    if (!diag) return;
+    diag.classList.remove('is-open');
+    document.body.style.overflow = '';
   };
 
   // ============================================================
@@ -1269,14 +1303,14 @@
     current++;
     updateProgress();
 
-    // Q5 (idx 4) 終了で mid feedback 1、Section 2 intro
+    // Q5 (idx 4) 終了 → mid feedback を短く挟んで自動で Q6 へ
     if (current === 5) {
-      showMidFeedback(1, function(){ showIntro(2); });
+      showMidFeedback(1, function(){ showCard(current); });
       return;
     }
-    // Q10 (idx 9) 終了で mid feedback 2、Section 3 intro
+    // Q10 (idx 9) 終了 → mid feedback を挟んで自動で Q11 へ
     if (current === 10) {
-      showMidFeedback(2, function(){ showIntro(3); });
+      showMidFeedback(2, function(){ showCard(current); });
       return;
     }
     // 完了
@@ -1303,12 +1337,19 @@
     document.querySelectorAll('.kayo-shindan .q-card').forEach(function(c, i) {
       c.classList.toggle('active', i === idx);
     });
-    // Intro とmid feedback を隠す
-    ['ksIntro1','ksIntro2','ksIntro3','ksMid1','ksMid2'].forEach(function(id){
+    // Mid feedback を隠す
+    ['ksMid1','ksMid2'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) el.classList.remove('active');
     });
-    scrollToDiag();
+    // Section indicator を更新
+    var sec = document.getElementById('ksSectionIndicator');
+    if (sec) {
+      if (idx < 5)       sec.textContent = 'SECTION 1 / 3 ・ 料理時間について';
+      else if (idx < 10) sec.textContent = 'SECTION 2 / 3 ・ 心の動きについて';
+      else               sec.textContent = 'SECTION 3 / 3 ・ 料理との向き合い方';
+    }
+    scrollToTopOfQuiz();
   }
 
   function showMidFeedback(num, callback) {
@@ -1318,17 +1359,21 @@
     });
     var el = document.getElementById('ksMid' + num);
     if (el) el.classList.add('active');
-    scrollToDiag();
-    // 2.5秒後に次のintroへ
+    scrollToTopOfQuiz();
+    // 1.8秒後に次の質問へ自動遷移（ボタン不要）
     setTimeout(function(){
       if (el) el.classList.remove('active');
       if (callback) callback();
-    }, 2600);
+    }, 1800);
   }
 
-  function scrollToDiag() {
-    var el = document.getElementById('kayoShindanStart');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function scrollToTopOfQuiz() {
+    var diag = document.getElementById('kayoShindanStart');
+    if (diag && diag.classList.contains('is-open')) {
+      diag.scrollTop = 0;
+    } else if (diag) {
+      diag.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   function updateProgress() {
@@ -1357,6 +1402,10 @@
     var result = document.getElementById('ksResult');
     var msg = document.getElementById('ksLoadMsg');
     if (!modal) return;
+
+    // 診断オーバーレイを閉じて、結果モーダルへ切替
+    var diag = document.getElementById('kayoShindanStart');
+    if (diag) diag.classList.remove('is-open');
 
     // モーダル表示
     modal.classList.add('active');
@@ -1421,7 +1470,8 @@
   // 初期化：Section 1 のイントロを表示
   // ============================================================
   document.addEventListener('DOMContentLoaded', function(){
-    showIntro(1);
+    // モーダル方式：初期表示は診断セクション非表示、はじめるボタンでopenQuiz()発火
+    updateProgress();
     updateProgress();
 
     // Reveal animation
@@ -1442,38 +1492,6 @@
         el.classList.add('in-view');
       });
     }
-  });
-})();
-</script>
-
-<!-- ============================================================
-     [[uid]] 自動置換スクリプト
-     -----------------------------------------------------------
-     このLPは通常プロラインの「自作ページ転送（/cp/）」経由で
-     開かれる。到達URLは apps.l-mine.com/kayomama-diagnosis/?uid=xxx
-     の形になるので、ページ内に残っている `[[uid]]` 文字列を
-     すべて URLパラメータの uid に置換する。
-     プロライン外（uidなし）で開かれた場合は `[[uid]]` を空文字にする。
-     ============================================================ -->
-<script>
-(function(){
-  function getParam(name) {
-    var m = window.location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
-    return m ? decodeURIComponent(m[1]) : '';
-  }
-  var uid = getParam('uid');
-  // [[uid]] 文字列を含む属性を持つ全要素を走査して置換
-  var TAGS = ['img', 'iframe', 'source', 'video', 'audio', 'a', 'link', 'script'];
-  var ATTRS = ['src', 'href', 'data-src'];
-  TAGS.forEach(function(tag){
-    document.querySelectorAll(tag).forEach(function(el){
-      ATTRS.forEach(function(attr){
-        var v = el.getAttribute(attr);
-        if (v && v.indexOf('[[uid]]') >= 0) {
-          el.setAttribute(attr, v.split('[[uid]]').join(encodeURIComponent(uid)));
-        }
-      });
-    });
   });
 })();
 </script>
