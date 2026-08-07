@@ -9,43 +9,54 @@
  *
  * ------------------------------------------------------------
  * 変更頻度が高い項目：
- *   - welcomeVideoUrl … ウェルカム動画のURL（YouTube 埋め込みURL など）
- *   - courseUrl       … 家庭料理マスターコースの案内・申込みURL
- * ------------------------------------------------------------
- * 動作テスト用：
- *   - testMode = true にすると、解放間隔・有効期限が分単位に切り替わります
+ *   - welcomeVideoUrl / offerVideoUrl … 動画URL
+ *   - courseUrls  … 4サービスそれぞれの案内・申込みURL
  * ------------------------------------------------------------
  */
 window.APP_CONFIG = {
   // アプリの表題（ホーム画面ヘッダー等に表示）
   appTitle: "あなたの台所を軽くする4日間",
 
-  // ウェルカム動画のURL（YouTubeの埋め込みURLや直接動画URLを想定）
+  // ウェルカム動画のURL（YouTube埋め込みURL or 直接mp4）
   // 空文字列にすると、動画枠自体を表示しません
   welcomeVideoUrl: "",
 
   // オファー動画のURL（4日間終了後・レポート後・コース説明前に表示）
-  // 空文字列にすると、動画枠自体・タイトルとも表示しません
+  // 空文字列にすると、動画タイトル・枠とも表示しません
   offerVideoUrl: "",
 
-  // 家庭料理マスターコース 案内・申込みURL
-  courseUrl: "https://example.com/course",
+  // 4サービスそれぞれの案内・申込みURL
+  //   content.js の services.<name>.urlKey に対応
+  courseUrls: {
+    homelovedKitchen: "https://example.com/homeloved-kitchen",  // ほめられキッチン
+    kondate:          "https://example.com/kondate",             // 献立サポート
+    ajitsuke:         "https://example.com/ajitsuke",            // 味付けサポート
+    koji:             "https://example.com/koji"                 // 麹サポート
+  },
 
   // 何かあった時の問い合わせ先URL（未使用でも空でOK）
   supportUrl: "",
 
   // ----- 通常モードの時間設定 -----
-  // 次の日が解放されるまでの時間（時間）
-  unlockIntervalHours: 24,
-  // アプリの実践可能期間（時間）— 開始から120時間=5日
-  appAvailableHours: 120,
+  unlockIntervalHours: 24,          // 次の日解放までの時間
+  appAvailableHours: 120,           // 有効期間（120時間=5日）
 
   // ----- テストモード -----
-  // true にすると、下記の "分単位" 設定を使用
-  testMode: false,
+  testMode: false,                  // true にすると分単位で動く
   testUnlockIntervalMinutes: 1,
   testAppAvailableMinutes: 10,
 
-  // localStorage キー（バージョン変更時にここも変えると、旧データを無効化できる）
-  storageKey: "kayomama_trial_v2"
+  // localStorage キー
+  storageKey: "kayomama_trial_v2",
+
+  // ============================================================
+  // GAS Web App 連携（ユーザー管理スプシとの通信）
+  // ============================================================
+  //   これを設定すると、アプリの挙動が自動でスプシに記録され、
+  //   uid付きURL（?uid=xxx）で開いたユーザーは
+  //   自動でタイプ引当されて該当タイプ画面が表示されます。
+  //
+  //   空文字列のままなら、GAS連携は完全にオフ（従来通り動く）
+  gasWebhookUrl: "https://script.google.com/macros/s/AKfycbwyy_kIboj_EnyxbJSIhPFlUJOgITE1iSBMoHGLyoDyaMGkfbNd7PNaFf91xMnI-ZTb/exec",
+  gasToken:      "kayomama-app-tk8n3r5p2x9m7w4"
 };

@@ -267,13 +267,88 @@
   }
 
   // ------------------------------------------------------------
-  // イベント
+  // イベント（console + GAS Web App への POST 送信）
   // ------------------------------------------------------------
   function trackEvent(name, payload) {
     payload = payload || {};
     if (!payload.type) payload.type = state.assignedType;
     console.log('[event]', name, payload);
-    // 本番でLINEやスプシに送るときは、ここでfetch等を追加
+    // GAS Web Appへ非同期送信（uidが取れてる場合のみ）
+    sendToGas_('record_event', {
+      uid:     getLineUid(),
+      type:    state.assignedType || '',
+      event:   name,
+      payload: payload
+    });
+  }
+
+  // ------------------------------------------------------------
+  // LINE uid の取得（URL ?uid= を優先、localStorage にも保存して再訪時対応）
+  // ------------------------------------------------------------
+  var LINE_UID_STORAGE_KEY = 'kayomama_line_uid';
+  function getLineUid() {
+    var q = getQueryParam('uid');
+    if (q) {
+      try { localStorage.setItem(LINE_UID_STORAGE_KEY, q); } catch (e) {}
+      return q;
+    }
+    try { return localStorage.getItem(LINE_UID_STORAGE_KEY) || ''; } catch (e) { return ''; }
+  }
+
+  // ------------------------------------------------------------
+  // GAS Web App 呼出し（fetch, POST, JSONボディ）
+  //   ・ CFG.gasWebhookUrl 未設定なら何もしない（開発時オフ）
+  //   ・ uid 未取得なら何もしない
+  //   ・ 失敗しても throw しない（fire-and-forget）
+  // ------------------------------------------------------------
+  function sendToGas_(action, params) {
+    var url = CFG.gasWebhookUrl;
+    if (!url || !String(url).trim()) return Promise.resolve(null);
+    if (!params || !params.uid) return Promise.resolve(null);
+    var body = Object.assign({ token: CFG.gasToken || '', action: action }, params);
+    try {
+      return fetch(url, {
+        method: 'POST',
+        // ContentType:'application/json' にすると preflight で弾かれるため text/plain で送る（GAS側で JSON.parse する）
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body),
+        mode: 'cors',
+        credentials: 'omit'
+      }).then(function (res) {
+        return res.json().catch(function () { return null; });
+      }).then(function (json) {
+        if (json && json.ok === false) console.warn('[gas]', action, 'err:', json.error);
+        return json;
+      }).catch(function (e) {
+        console.warn('[gas] fetch error:', e && e.message);
+        return null;
+      });
+    } catch (e) {
+      console.warn('[gas] send error:', e && e.message);
+      return Promise.resolve(null);
+    }
+  }
+
+  // ------------------------------------------------------------
+  // GAS からタイプを引き当てる（bootstrap時、uid付きURLで起動された時のみ）
+  //   ・成功すると type を返し、state.assignedType が空なら埋める
+  //   ・失敗（uid未登録・未診断・通信エラー）は null を返す
+  // ------------------------------------------------------------
+  function fetchTypeFromGas_() {
+    var uid = getLineUid();
+    if (!uid) return Promise.resolve(null);
+    var url = CFG.gasWebhookUrl;
+    if (!url) return Promise.resolve(null);
+    var qs = 'action=get_type&token=' + encodeURIComponent(CFG.gasToken || '') + '&uid=' + encodeURIComponent(uid);
+    return fetch(url + '?' + qs, { method: 'GET', mode: 'cors', credentials: 'omit' })
+      .then(function (res) { return res.json(); })
+      .then(function (json) {
+        if (json && json.ok && json.type && VALID_TYPES.indexOf(json.type) >= 0) {
+          return json.type;
+        }
+        return null;
+      })
+      .catch(function () { return null; });
   }
 
   // ------------------------------------------------------------
@@ -299,6 +374,29 @@
       return;
     }
     loadState();
+
+    // URLに uid はあるが type がない or 保存済み type もない場合、GASから type を引き当てる
+    var needsGasLookup = getLineUid() && !getQueryParam('type') && !state.assignedType;
+    if (needsGasLookup) {
+      fetchTypeFromGas_().then(function (t) {
+        if (t && VALID_TYPES.indexOf(t) >= 0) {
+          // GASから取得できたタイプを pendingType にセット（開始前）or assignedType にセット（既に開始済み）
+          if (state.startedAt && !state.assignedType) {
+            state.assignedType = t;
+            saveState();
+          } else {
+            pendingType = t;
+          }
+        }
+        proceedBootstrap_();
+      });
+      return;
+    }
+
+    proceedBootstrap_();
+  }
+
+  function proceedBootstrap_() {
     var t = resolveType();
     // ここでは assignedType には触らない（開始ボタン押下時に startApp() で確定）
 
@@ -1558,47 +1656,123 @@
       screen.appendChild(offerVideoWrap);
     }
 
-    var card = el('div', { className: 'card card-lg card-primary' });
-    card.appendChild(el('div', {
-      className: 'eyebrow', text: '— MASTER COURSE —', style: 'margin-bottom:8px;'
-    }));
-    card.appendChild(el('div', {
-      className: 'page-title serif',
-      text: COMMON.offerCourseName,
-      style: 'font-size:19px; margin-bottom:16px;'
-    }));
-    card.appendChild(el('div', { className: 'offer-body', text: COMMON.offerBody }));
-
-    var features = el('ul', { className: 'offer-features' });
-    (COMMON.offerFeatures || []).forEach(function (f) {
-      features.appendChild(el('li', { text: f }));
-    });
-    card.appendChild(features);
-
-    var price = el('div', { className: 'offer-price' });
-    price.appendChild(el('div', { className: 'offer-price-main', text: COMMON.offerPriceMonth }));
-    price.appendChild(el('div', { className: 'offer-price-sub', text: COMMON.offerPriceYear }));
-    card.appendChild(price);
-
-    var btn = el('a', {
-      className: 'btn btn-primary btn-block',
-      href: CFG.courseUrl || '#',
-      target: '_blank',
-      rel: 'noopener',
-      text: COMMON.offerBtn
-    });
-    btn.addEventListener('click', function () {
-      if (!state.offerClicked) {
-        state.offerClicked = true;
-        saveState();
+    // ---------- メインオファー（あなたにいちばん合うサービス） ----------
+    var mainName = t.mainOffer;
+    var mainSvc = (COMMON.services || {})[mainName];
+    if (mainSvc) {
+      var card = el('div', { className: 'card card-lg card-primary' });
+      card.appendChild(el('div', {
+        className: 'eyebrow',
+        text: COMMON.offerMainBadge || 'あなたにいちばんおすすめ',
+        style: 'margin-bottom:8px;'
+      }));
+      card.appendChild(el('div', {
+        className: 'page-title serif',
+        text: mainSvc.name,
+        style: 'font-size:20px; margin-bottom:8px;'
+      }));
+      if (mainSvc.tagline) {
+        card.appendChild(el('div', {
+          className: 'page-body text-center',
+          text: mainSvc.tagline,
+          style: 'font-size:13.5px; color:var(--muted); margin-bottom:14px; white-space:pre-line;'
+        }));
       }
-      trackEvent('offer_clicked', {});
-    });
-    card.appendChild(btn);
+      card.appendChild(el('div', { className: 'offer-body', text: mainSvc.body }));
 
-    screen.appendChild(card);
+      var features = el('ul', { className: 'offer-features' });
+      (mainSvc.features || []).forEach(function (f) {
+        features.appendChild(el('li', { text: f }));
+      });
+      card.appendChild(features);
+
+      if (mainSvc.priceMain) {
+        var price = el('div', { className: 'offer-price' });
+        price.appendChild(el('div', { className: 'offer-price-main', text: mainSvc.priceMain }));
+        if (mainSvc.priceSub) {
+          price.appendChild(el('div', { className: 'offer-price-sub', text: mainSvc.priceSub }));
+        }
+        card.appendChild(price);
+      }
+
+      var mainUrl = resolveServiceUrl_(mainSvc);
+      var btn = el('a', {
+        className: 'btn btn-primary btn-block',
+        href: mainUrl,
+        target: '_blank',
+        rel: 'noopener',
+        text: mainSvc.name + 'を詳しく見る'
+      });
+      btn.addEventListener('click', function () {
+        if (!state.offerClicked) {
+          state.offerClicked = true;
+          saveState();
+        }
+        trackEvent('offer_clicked', { service: mainSvc.name, position: 'main' });
+      });
+      card.appendChild(btn);
+
+      screen.appendChild(card);
+    }
+
+    // ---------- サブオファー（他にもこんなサポートあります） ----------
+    var subNames = (t.subOffers || []);
+    if (subNames.length) {
+      screen.appendChild(el('div', {
+        className: 'eyebrow mt-lg mb-sm',
+        text: COMMON.offerSubLabel || '他にも、こんなサポートがあります',
+        style: 'margin-top:22px;'
+      }));
+
+      subNames.forEach(function (name) {
+        var svc = (COMMON.services || {})[name];
+        if (!svc) return;
+        var subCard = el('div', { className: 'card' });
+        subCard.appendChild(el('div', {
+          className: 'page-title serif',
+          text: svc.name,
+          style: 'font-size:16px; margin-bottom:6px; text-align:left;'
+        }));
+        if (svc.tagline) {
+          subCard.appendChild(el('div', {
+            className: 'day-item-sub',
+            text: svc.tagline,
+            style: 'margin-bottom:12px; white-space:pre-line;'
+          }));
+        }
+        if (svc.priceMain) {
+          subCard.appendChild(el('div', {
+            className: 'offer-price-sub',
+            text: svc.priceMain,
+            style: 'text-align:left; margin-bottom:10px;'
+          }));
+        }
+        var subUrl = resolveServiceUrl_(svc);
+        var subBtn = el('a', {
+          className: 'btn btn-secondary btn-block',
+          href: subUrl,
+          target: '_blank',
+          rel: 'noopener',
+          text: (COMMON.offerBtnPrefix || '詳しく見る →')
+        });
+        subBtn.addEventListener('click', function () {
+          trackEvent('offer_clicked', { service: svc.name, position: 'sub' });
+        });
+        subCard.appendChild(subBtn);
+        screen.appendChild(subCard);
+      });
+    }
 
     root.appendChild(screen);
+  }
+
+  // サービスの申込URLを、config.js の courseUrls から引く
+  function resolveServiceUrl_(svc) {
+    if (!svc) return '#';
+    var urls = CFG.courseUrls || {};
+    if (svc.urlKey && urls[svc.urlKey]) return urls[svc.urlKey];
+    // フォールバック（旧設定と互換）
+    return CFG.courseUrl || '#';
   }
 
   // ============================================================
