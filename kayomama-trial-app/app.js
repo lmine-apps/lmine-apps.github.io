@@ -423,13 +423,14 @@
       saveState();
     }
 
+    // 導線：
+    //   1. 未開始 → welcome（詳細結果・お名前不要でサクッと閲覧）
+    //   2. 開始済み & 名前未入力 → name-input（改善意思表明後のコミット）
+    //   3. 開始済み & 名前入力済み → home（4日間チャレンジ本体）
     if (!state.startedAt) {
-      // 開始前：まずお名前入力（未入力なら）、その後 welcome（詳細結果）
-      if (!state.name) {
-        goto('name-input', { scrollTop: false });
-      } else {
-        goto('welcome', { scrollTop: false });
-      }
+      goto('welcome', { scrollTop: false });
+    } else if (!state.name) {
+      goto('name-input', { scrollTop: false });
     } else {
       goto('home', { scrollTop: false });
     }
@@ -464,7 +465,8 @@
   }
 
   // ============================================================
-  // お名前入力画面（起動直後・詳細結果を見せる前）
+  // お名前入力画面（改善意思表明後・4日間チャレンジのコミット）
+  //   welcome → 改善したい！ → check-line → LINE → 戻ってきたら ここ
   // ============================================================
   function renderNameInput(root) {
     var ct = currentType();
@@ -473,10 +475,10 @@
 
     var screen = el('section', { className: 'screen active' });
 
-    screen.appendChild(el('div', { className: 'eyebrow', text: '— WELCOME —' }));
+    screen.appendChild(el('div', { className: 'eyebrow', text: '— START YOUR CHALLENGE —' }));
     screen.appendChild(el('h1', {
       className: 'page-title serif',
-      html: 'はじめまして♡<br>まずはお名前を<br>教えてくださいね'
+      html: 'その意気です♡<br>4日間、一緒に<br>始めましょう✨'
     }));
     screen.appendChild(el('hr', { className: 'divider' }));
 
@@ -484,10 +486,11 @@
     card.appendChild(el('div', {
       className: 'page-body text-center',
       html:
-        'あなたの詳しい結果とアドバイスを<br>' +
-        '<strong>あなたに向けて</strong>お届けしたいので、<br>' +
-        'まずはお名前を教えてくださいね。<br><br>' +
-        '<span style="font-size:12.5px;color:var(--muted);">（下のお名前で、後から連絡させてもらいます♪）</span>',
+        'これから4日間、朝ここに<br>' +
+        '「今日も頑張ってね♡」の<br>' +
+        'メッセージが届きますね。<br><br>' +
+        'まずは <strong>お名前</strong> を<br>教えてもらえますか？<br><br>' +
+        '<span style="font-size:12.5px;color:var(--muted);">（お名前で呼ばせていただきますね♪）</span>',
       style: 'white-space:normal;'
     }));
     screen.appendChild(card);
@@ -512,7 +515,7 @@
     var submitBtn = el('button', {
       type: 'button',
       className: 'btn btn-primary btn-block',
-      text: 'つづきへ →'
+      text: 'この名前で始める！'
     });
     btnRow.appendChild(submitBtn);
     screen.appendChild(btnRow);
@@ -536,9 +539,8 @@
       }
       state.name = v;
       saveState();
-      // GASへ記録（uidがあれば送信）
       trackEvent('name_registered', { name: v });
-      goto('welcome');
+      goto('home');
     });
 
     // Enterキーで送信
@@ -672,8 +674,29 @@
       screen.appendChild(videoWrap);
     }
 
-    // ---------- ④「小さな一歩を試したい方はこちら」ボタン ----------
-    var btnRow = el('div', { className: 'text-center mt-lg' });
+    // ---------- ④【ハードル下げカード】改善への一歩を後押し ----------
+    var hurdleCard = el('div', {
+      className: 'card',
+      style: 'text-align:center; background:#FFF8EC; border:1px dashed var(--gold); margin-top:22px;'
+    });
+    hurdleCard.appendChild(el('div', {
+      className: 'eyebrow',
+      text: '— 気楽に、4日だけ —',
+      style: 'margin-bottom:12px; color:var(--gold);'
+    }));
+    hurdleCard.appendChild(el('div', {
+      className: 'page-body',
+      html:
+        '✔ <strong>1日たった3分</strong>ほど<br>' +
+        '✔ 朝ここに<strong>タップだけ</strong>で始められる<br>' +
+        '✔ <strong>4日だけ</strong>やってみるだけ<br><br>' +
+        '<span style="font-size:13px;color:var(--muted);">合わなかったらいつでもやめてOK。<br>まずは "とりあえず" で試してみませんか？</span>',
+      style: 'white-space:normal; font-size:14px; line-height:1.9;'
+    }));
+    screen.appendChild(hurdleCard);
+
+    // ⑤ 改善へのボタン（ハードル下げカードの直後）
+    var btnRow = el('div', { className: 'text-center mt-md' });
     var btnText = (wd && wd.ctaText) || COMMON.startBtn;
     var btn = el('button', {
       className: 'btn btn-primary btn-block',
@@ -684,11 +707,11 @@
     btnRow.appendChild(btn);
     screen.appendChild(btnRow);
 
-    // 補足：4日間で何をやるかの一言
+    // 補足：さらに軽く
     screen.appendChild(el('div', {
       className: 'page-body text-center mt-md',
-      text: '1日3分ほど、朝ここに届く\n小さな実践を4日間だけ',
-      style: 'font-size:13px; color:var(--muted); white-space:pre-line;'
+      text: '押しても、まだ迷えます♪',
+      style: 'font-size:12px; color:var(--muted);'
     }));
 
     root.appendChild(screen);
@@ -811,7 +834,11 @@
           var homeLink = el('button', {
             className: 'btn btn-ghost',
             type: 'button',
-            onclick: function () { goto('home'); },
+            onclick: function () {
+              // 名前未入力なら name-input へ、それ以外は home
+              if (!state.name) goto('name-input');
+              else goto('home');
+            },
             text: '→ こちらから続きへ進む'
           });
           subLink.appendChild(homeLink);
