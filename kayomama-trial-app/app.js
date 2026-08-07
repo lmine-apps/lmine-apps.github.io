@@ -599,7 +599,7 @@
     screen.appendChild(el('div', { className: 'eyebrow', text: '— NEXT STEP —' }));
     screen.appendChild(el('h1', {
       className: 'page-title serif',
-      html: 'LINEに<br>続きのメッセージを<br>お届けしました♡'
+      html: 'LINEに<br>メッセージを送りました！<br>確認してみてくださいね♡'
     }));
     screen.appendChild(el('hr', { className: 'divider' }));
 
