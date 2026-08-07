@@ -107,9 +107,10 @@
       answers: { day1: {}, day2: {}, day3: {}, day4: {} },
       cardCreated: false,
       reportGenerated: false,
-      reportViewed: false,   // レポート画面を実際に閲覧した（初回のみtrue）
+      reportViewed: false,      // レポート画面を実際に閲覧した（初回のみtrue）
       offerViewed: false,
-      offerClicked: false
+      offerClicked: false,
+      diagnosisRecorded: false  // 診断完了イベントをGASに記録済み（重複防止）
     };
   }
 
@@ -411,6 +412,15 @@
       if (isDebugMode()) renderDebugBar();
       return;
     }
+
+    // 初回登録：uid付きURLで開かれた かつ 診断イベント未記録なら fire
+    //  （LP側で送信済みなら二重記録になるが GAS 側で冪等ガード）
+    if (getLineUid() && !state.diagnosisRecorded) {
+      trackEvent('diagnosis_complete', { source: 'app_first_load', urlType: getQueryParam('type') || '' });
+      state.diagnosisRecorded = true;
+      saveState();
+    }
+
     if (!state.startedAt) {
       // 開始前：pendingType のウェルカム
       goto('welcome', { scrollTop: false });
