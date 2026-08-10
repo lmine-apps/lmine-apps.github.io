@@ -1001,3 +1001,71 @@ body:has(.debug-bar.active) { padding-bottom: 40vh; }
     overflow: hidden;
   }
 }
+
+/* ============================================================
+ * 先行予約モーダル
+ * ============================================================ */
+.reservation-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: resFadeIn 0.2s ease-out;
+}
+@keyframes resFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.reservation-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px 24px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: resPop 0.28s cubic-bezier(0.22, 1.2, 0.6, 1);
+}
+@keyframes resPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.reservation-icon { font-size: 44px; margin-bottom: 8px; }
+.reservation-title {
+  font-size: 22px;
+  color: #d47a95;
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+.reservation-service {
+  font-size: 18px;
+  color: #333;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.reservation-price {
+  font-size: 15px;
+  color: #d47a95;
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+.reservation-note {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  white-space: pre-line;
+  margin: 12px 0 20px;
+  padding: 12px 14px;
+  background: #fff5f7;
+  border-radius: 10px;
+}
+.reservation-btn-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+.reservation-btn-row .btn { margin: 0; }

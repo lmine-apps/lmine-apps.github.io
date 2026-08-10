@@ -2209,13 +2209,10 @@
         card.appendChild(price);
       }
 
-      var mainUrl = resolveServiceUrl_(mainSvc);
-      var btn = el('a', {
+      var btn = el('button', {
+        type: 'button',
         className: 'btn btn-primary btn-block',
-        href: mainUrl,
-        target: '_blank',
-        rel: 'noopener',
-        text: mainSvc.name + 'を詳しく見る'
+        text: '🌸 ' + mainSvc.name + 'を先行予約する♡'
       });
       btn.addEventListener('click', function () {
         if (!state.offerClicked) {
@@ -2223,6 +2220,7 @@
           saveState();
         }
         trackEvent('offer_clicked', { service: mainSvc.name, position: 'main' });
+        openReservationModal_(mainSvc);
       });
       card.appendChild(btn);
 
@@ -2261,16 +2259,14 @@
             style: 'text-align:left; margin-bottom:10px;'
           }));
         }
-        var subUrl = resolveServiceUrl_(svc);
-        var subBtn = el('a', {
+        var subBtn = el('button', {
+          type: 'button',
           className: 'btn btn-secondary btn-block',
-          href: subUrl,
-          target: '_blank',
-          rel: 'noopener',
-          text: (COMMON.offerBtnPrefix || '詳しく見る →')
+          text: '🌸 ' + svc.name + 'を先行予約する♡'
         });
         subBtn.addEventListener('click', function () {
           trackEvent('offer_clicked', { service: svc.name, position: 'sub' });
+          openReservationModal_(svc);
         });
         subCard.appendChild(subBtn);
         screen.appendChild(subCard);
@@ -2287,6 +2283,112 @@
     if (svc.urlKey && urls[svc.urlKey]) return urls[svc.urlKey];
     // フォールバック（旧設定と互換）
     return CFG.courseUrl || '#';
+  }
+
+  // ============================================================
+  // 先行予約モーダル
+  // ============================================================
+  function openReservationModal_(svc) {
+    if (!svc) return;
+    // 既存モーダルがあれば消す
+    var existing = document.getElementById('reservation-modal');
+    if (existing) existing.remove();
+
+    var overlay = el('div', {
+      id: 'reservation-modal',
+      className: 'reservation-modal-overlay'
+    });
+    var modal = el('div', { className: 'reservation-modal' });
+
+    modal.appendChild(el('div', {
+      className: 'reservation-icon',
+      text: '🌸'
+    }));
+    modal.appendChild(el('h2', {
+      className: 'reservation-title',
+      text: '先行予約しますか？'
+    }));
+    modal.appendChild(el('div', {
+      className: 'reservation-service',
+      text: svc.name
+    }));
+    if (svc.priceMain) {
+      modal.appendChild(el('div', {
+        className: 'reservation-price',
+        text: svc.priceMain
+      }));
+    }
+    modal.appendChild(el('div', {
+      className: 'reservation-note',
+      text: 'かよママさんから、直接ご案内いたします♡\nいまなら先行特典もお伝えできます。'
+    }));
+
+    var btnRow = el('div', { className: 'reservation-btn-row' });
+    var cancelBtn = el('button', {
+      type: 'button',
+      className: 'btn btn-secondary btn-block',
+      text: 'あとで考える'
+    });
+    cancelBtn.addEventListener('click', function () { overlay.remove(); });
+
+    var confirmBtn = el('button', {
+      type: 'button',
+      className: 'btn btn-primary btn-block',
+      text: '🌸 先行予約する♡'
+    });
+    confirmBtn.addEventListener('click', function () {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = '送信中...';
+      // GAS へ reservation_requested イベント送信
+      trackEvent('reservation_requested', {
+        service: svc.urlKey || '',
+        service_name: svc.name || '',
+        price: svc.priceMain || ''
+      });
+      // 送信完了を待たずに（fire-and-forget）Thanks画面へ
+      setTimeout(function () {
+        showReservationThanks_(svc);
+      }, 400);
+    });
+
+    btnRow.appendChild(cancelBtn);
+    btnRow.appendChild(confirmBtn);
+    modal.appendChild(btnRow);
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+  }
+
+  function showReservationThanks_(svc) {
+    var overlay = document.getElementById('reservation-modal');
+    if (!overlay) return;
+    overlay.innerHTML = '';
+    var modal = el('div', { className: 'reservation-modal' });
+    modal.appendChild(el('div', {
+      className: 'reservation-icon',
+      text: '🌸'
+    }));
+    modal.appendChild(el('h2', {
+      className: 'reservation-title',
+      text: 'ありがとうございます♡'
+    }));
+    modal.appendChild(el('div', {
+      className: 'reservation-service',
+      text: svc.name + ' 先行予約完了'
+    }));
+    modal.appendChild(el('div', {
+      className: 'reservation-note',
+      text: 'かよママさんから、LINE で直接ご連絡が届きます。\n少しお待ちくださいね♡'
+    }));
+    var closeBtn = el('button', {
+      type: 'button',
+      className: 'btn btn-primary btn-block',
+      text: '閉じる'
+    });
+    closeBtn.style.marginTop = '20px';
+    closeBtn.addEventListener('click', function () { overlay.remove(); });
+    modal.appendChild(closeBtn);
+    overlay.appendChild(modal);
   }
 
   // ============================================================
