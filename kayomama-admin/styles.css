@@ -261,3 +261,20 @@ body {
   margin-right: 10px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ v1.1 追加: 関心表明用 ============ */
+.badge-inprogress { background: #fff5cd; color: #a08420; }
+.status-btn-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+.status-btn-row button {
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}

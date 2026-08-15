@@ -1,5 +1,5 @@
 // ============================================================
-// かよママ管理アプリ app.js
+// かよママ管理アプリ app.js (v1.1: 先行予約→関心リスト)
 // ============================================================
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
@@ -7,10 +7,10 @@ import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/fireb
 
 // ============ State ============
 const state = {
-  tab: 'dashboard',   // dashboard | users | reservations | settings
+  tab: 'dashboard',   // dashboard | users | interests | settings
   stats: null,
   users: null,
-  reservations: null,
+  interests: null,
   loading: false,
   fcmToken: null,
   authed: false,
@@ -18,20 +18,18 @@ const state = {
 
 const LS_TOKEN = 'kayomama_admin_token';
 
+const INTEREST_STATUSES = ['新規', 'LINE連絡済', '対応中', '成約', '見送り'];
+
 // ============ Boot ============
 async function boot() {
-  // URLパラメータで来たら保存
   const urlToken = new URLSearchParams(location.search).get('t');
   if (urlToken) {
     localStorage.setItem(LS_TOKEN, urlToken);
-    // クリーンなURLに書き換え
     history.replaceState({}, '', location.pathname);
   }
   const saved = localStorage.getItem(LS_TOKEN);
-  // config.jsのデフォルト値を優先しつつ、URLで上書きされたらそちら
   if (saved) window.ADMIN_TOKEN = saved;
 
-  // ADMIN_TOKEN が未設定 or プレースホルダなら認証画面
   const t = window.ADMIN_TOKEN || '';
   if (!t || t.indexOf('ここに') === 0) {
     renderAuth();
@@ -43,7 +41,7 @@ async function boot() {
   render();
 }
 
-// ============ Auth (トークン入力) ============
+// ============ Auth ============
 function renderAuth(errMsg) {
   const el = document.getElementById('app');
   el.innerHTML = `
@@ -58,7 +56,6 @@ function renderAuth(errMsg) {
   document.getElementById('tok-submit').addEventListener('click', async () => {
     const v = document.getElementById('tok-input').value.trim();
     if (!v) return;
-    // pingしてトークン検証
     const r = await callGas('admin_stats', { admin_token: v });
     if (!r || !r.ok) {
       renderAuth('トークンが正しくないみたい💦 もう一度確認してね');
@@ -78,33 +75,27 @@ async function initFCM() {
   try {
     const app = initializeApp(window.FIREBASE_CONFIG);
     const messaging = getMessaging(app);
-    // Service Worker 登録
     const swReg = await navigator.serviceWorker.register('firebase-messaging-sw.js');
-    // 通知許可
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') {
       console.warn('通知が許可されませんでした');
       return;
     }
-    // トークン取得
     const token = await getToken(messaging, {
       vapidKey: window.FCM_VAPID_KEY,
       serviceWorkerRegistration: swReg
     });
     if (token) {
       state.fcmToken = token;
-      // GAS に登録
       const saved = localStorage.getItem('kayomama_admin_fcm_saved');
       if (saved !== token) {
         const r = await callGas('admin_register_token', { fcm_token: token });
         if (r && r.ok) localStorage.setItem('kayomama_admin_fcm_saved', token);
       }
     }
-    // フォアグラウンド受信
     onMessage(messaging, (payload) => {
       const n = payload.notification || {};
       showToast(`🔔 ${n.title || ''}`);
-      // ダッシュボード自動リロード
       refreshAll().then(render);
     });
   } catch (e) {
@@ -119,8 +110,6 @@ async function callGas(action, extra) {
   const isAdmin = action.indexOf('admin_') === 0;
   if (isAdmin) {
     params.set('admin_token', (extra && extra.admin_token) || window.ADMIN_TOKEN);
-  } else {
-    params.set('token', window.GAS_TOKEN || '');
   }
   for (const k in (extra || {})) {
     if (k === 'admin_token') continue;
@@ -139,14 +128,14 @@ async function callGas(action, extra) {
 async function refreshAll() {
   state.loading = true;
   render();
-  const [s, u, r] = await Promise.all([
+  const [s, u, i] = await Promise.all([
     callGas('admin_stats'),
     callGas('admin_list_users'),
-    callGas('admin_list_reservations')
+    callGas('admin_list_interests')
   ]);
   state.stats = (s && s.ok) ? s.stats : null;
   state.users = (u && u.ok) ? u.users : [];
-  state.reservations = (r && r.ok) ? r.reservations : [];
+  state.interests = (i && i.ok) ? i.interests : [];
   state.loading = false;
 }
 
@@ -157,10 +146,10 @@ function render() {
   el.innerHTML = `
     ${renderHeader()}
     ${state.loading ? '<div class="loading">読み込み中...</div>' :
-      state.tab === 'dashboard'    ? renderDashboard() :
-      state.tab === 'users'        ? renderUsers() :
-      state.tab === 'reservations' ? renderReservations() :
-      state.tab === 'settings'     ? renderSettings() : ''}
+      state.tab === 'dashboard' ? renderDashboard() :
+      state.tab === 'users'     ? renderUsers() :
+      state.tab === 'interests' ? renderInterests() :
+      state.tab === 'settings'  ? renderSettings() : ''}
     ${renderTabs()}
   `;
   bindEvents();
@@ -181,7 +170,7 @@ function renderHeader() {
 }
 
 function renderTabs() {
-  const newRes = (state.reservations || []).filter(r => r.status === '新規').length;
+  const newInt = (state.interests || []).filter(r => r.status === '新規').length;
   return `
     <div class="tabs">
       <button data-tab="dashboard" class="${state.tab === 'dashboard' ? 'active' : ''}">
@@ -190,8 +179,8 @@ function renderTabs() {
       <button data-tab="users" class="${state.tab === 'users' ? 'active' : ''}">
         <span class="ico">👥</span>受講者
       </button>
-      <button data-tab="reservations" class="${state.tab === 'reservations' ? 'active' : ''} ${newRes > 0 ? 'badge' : ''}">
-        <span class="ico">🌸</span>先行予約${newRes > 0 ? '(' + newRes + ')' : ''}
+      <button data-tab="interests" class="${state.tab === 'interests' ? 'active' : ''} ${newInt > 0 ? 'badge' : ''}">
+        <span class="ico">💬</span>関心${newInt > 0 ? '(' + newInt + ')' : ''}
       </button>
       <button data-tab="settings" class="${state.tab === 'settings' ? 'active' : ''}">
         <span class="ico">⚙️</span>設定
@@ -204,12 +193,12 @@ function renderTabs() {
 function renderDashboard() {
   const s = state.stats;
   if (!s) return '<div class="empty">データがまだありません</div>';
-  const newRes = (state.reservations || []).filter(r => r.status === '新規').length;
+  const newInt = (state.interests || []).filter(r => r.status === '新規').length;
   return `
     <div class="stat-grid">
-      <div class="stat-card big ${newRes > 0 ? 'alert' : ''}">
-        <p class="num">🌸 ${s.reservations_new}</p>
-        <p class="lbl">未対応の先行予約</p>
+      <div class="stat-card big ${newInt > 0 ? 'alert' : ''}">
+        <p class="num">💬 ${s.interests_new}</p>
+        <p class="lbl">未対応の関心表明</p>
       </div>
       <div class="stat-card">
         <p class="num">${s.total}</p>
@@ -232,7 +221,7 @@ function renderDashboard() {
       <div class="funnel-row"><span class="lbl">レポート閲覧</span><span class="num">${s.report_viewed} 人</span></div>
       <div class="funnel-row"><span class="lbl">オファー閲覧</span><span class="num">${s.offer_viewed} 人</span></div>
       <div class="funnel-row"><span class="lbl">オファークリック</span><span class="num">${s.offer_clicked} 人</span></div>
-      <div class="funnel-row"><span class="lbl">🌸 先行予約 (合計)</span><span class="num">${s.reservations} 件</span></div>
+      <div class="funnel-row"><span class="lbl">💬 関心表明 (合計)</span><span class="num">${s.interests} 件</span></div>
     </div>
   `;
 }
@@ -250,24 +239,29 @@ function renderUsers() {
   `).join('');
 }
 
-// ============ Reservations ============
-function renderReservations() {
-  const list = state.reservations || [];
-  if (!list.length) return '<div class="empty">まだ先行予約はありません</div>';
-  return list.map(r => `
-    <div class="list-item" data-res-row="${r.row}">
-      <p class="name">${escape_(r.name || '（匿名）')} <span class="badge ${badgeClass_(r.status)}">${escape_(r.status)}</span></p>
-      <p class="type">${escape_(r.service_label)}</p>
-      <p class="meta">${escape_(r.type_display)}｜${escape_(r.reserved_at)}</p>
+// ============ Interests ============
+function renderInterests() {
+  const list = state.interests || [];
+  if (!list.length) return '<div class="empty">まだ関心表明はありません</div>';
+  return `
+    <div class="info-note" style="background:#fff5f7; padding:10px 12px; border-radius:8px; font-size:12px; color:#666; margin-bottom:10px;">
+      💡 コピーしたメッセージがLINEに届いてるはずです。かよママさんはそちらで対応→ここでステータス更新してください♡
+    </div>
+  ` + list.map(r => `
+    <div class="list-item" data-int-row="${r.row}">
+      <p class="name">${escape_(r.service_label)} <span class="badge ${badgeClass_(r.status)}">${escape_(r.status)}</span></p>
+      <p class="type">${escape_(r.name || '（名前未設定）')}｜${escape_(r.type_display)}</p>
+      <p class="meta">${escape_(r.expressed_at)}</p>
     </div>
   `).join('');
 }
 
 function badgeClass_(status) {
-  if (status === '新規') return 'badge-new';
-  if (status === '連絡済') return 'badge-contacted';
-  if (status === '成約') return 'badge-closed';
-  if (status === 'キャンセル') return 'badge-cancel';
+  if (status === '新規')       return 'badge-new';
+  if (status === 'LINE連絡済') return 'badge-contacted';
+  if (status === '対応中')     return 'badge-inprogress';
+  if (status === '成約')       return 'badge-closed';
+  if (status === '見送り')     return 'badge-cancel';
   return '';
 }
 
@@ -299,7 +293,7 @@ function renderSettings() {
   `;
 }
 
-// ============ Modal (user/reservation detail) ============
+// ============ Modal ============
 async function openUserModal(uid) {
   showLoading();
   const r = await callGas('admin_get_user', { uid: uid });
@@ -338,45 +332,66 @@ async function openUserModal(uid) {
   `);
 }
 
-async function openReservationModal(row) {
-  const res = (state.reservations || []).find(r => String(r.row) === String(row));
-  if (!res) return;
+async function openInterestModal(row) {
+  const int = (state.interests || []).find(r => String(r.row) === String(row));
+  if (!int) return;
+  const statusBtns = INTEREST_STATUSES.map(s => `
+    <button class="${s === int.status ? 'btn-primary' : 'btn-sub'}" data-int-status="${s}" data-int-row="${int.row}">${s}</button>
+  `).join('');
   showModal(`
     <button class="close" data-close>×</button>
-    <h3>🌸 先行予約詳細</h3>
-    <div class="field"><label>お名前</label><div class="val">${escape_(res.name || '（匿名）')}</div></div>
-    <div class="field"><label>タイプ</label><div class="val">${escape_(res.type_display)}</div></div>
-    <div class="field"><label>サービス</label><div class="val">${escape_(res.service_label)}</div></div>
-    <div class="field"><label>予約日時</label><div class="val">${escape_(res.reserved_at)}</div></div>
-    <div class="field"><label>ステータス</label><div class="val"><span class="badge ${badgeClass_(res.status)}">${escape_(res.status)}</span></div></div>
-    <div class="field"><label>UID</label><div class="val" style="font-family: monospace; font-size: 12px;">${escape_(res.uid)}</div></div>
+    <h3>💬 関心表明の詳細</h3>
+    <div class="field"><label>サービス</label><div class="val">${escape_(int.service_label)}</div></div>
+    <div class="field"><label>お名前</label><div class="val">${escape_(int.name || '（名前未設定）')}</div></div>
+    <div class="field"><label>タイプ</label><div class="val">${escape_(int.type_display)}</div></div>
+    <div class="field"><label>表明日時</label><div class="val">${escape_(int.expressed_at)}</div></div>
+    <div class="field"><label>LINEに届いてるはずのメッセージ</label>
+      <div class="val" style="background:#fff5f7; padding:10px; border-radius:8px; font-weight:600;">「${escape_(int.message)}」</div>
+    </div>
+    <div class="field"><label>UID</label><div class="val" style="font-family: monospace; font-size: 11px; word-break: break-all;">${escape_(int.uid)}</div></div>
+    <div class="field"><label>ステータス</label>
+      <div class="status-btn-row">${statusBtns}</div>
+    </div>
     <div class="field"><label>メモ</label>
-      <textarea id="res-memo" style="width: 100%; min-height: 60px; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">${escape_(res.memo || '')}</textarea>
+      <textarea id="int-memo" style="width: 100%; min-height: 60px; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">${escape_(int.memo || '')}</textarea>
     </div>
     <div class="actions">
       <button class="btn-sub" data-close>閉じる</button>
-      <button class="btn-primary" data-res-status="連絡済" data-res-row="${res.row}">連絡済にする</button>
-    </div>
-    <div class="actions">
-      <button class="btn-primary" data-res-status="成約" data-res-row="${res.row}">✅ 成約</button>
-      <button class="btn-danger" data-res-status="キャンセル" data-res-row="${res.row}">キャンセル</button>
+      <button class="btn-primary" data-save-memo data-int-row="${int.row}">メモ保存</button>
     </div>
   `);
 }
 
-async function updateReservationStatus(row, status) {
-  const memoEl = document.getElementById('res-memo');
+async function updateInterestStatus(row, status) {
+  const memoEl = document.getElementById('int-memo');
   const memo = memoEl ? memoEl.value : '';
   showLoading();
-  const r = await callGas('admin_update_reservation', { row: row, status: status, memo: memo });
+  const r = await callGas('admin_update_interest', { row: row, status: status, memo: memo });
   hideLoading();
   if (r && r.ok) {
-    closeModal();
-    showToast('更新しました');
+    showToast(`「${status}」に更新しました`);
     await refreshAll();
     render();
+    // モーダル閉じる
+    closeModal();
   } else {
     showToast('更新失敗');
+  }
+}
+
+async function saveInterestMemo(row) {
+  const memoEl = document.getElementById('int-memo');
+  if (!memoEl) return;
+  showLoading();
+  const r = await callGas('admin_update_interest', { row: row, memo: memoEl.value });
+  hideLoading();
+  if (r && r.ok) {
+    showToast('メモを保存しました');
+    await refreshAll();
+    render();
+    closeModal();
+  } else {
+    showToast('保存失敗');
   }
 }
 
@@ -394,10 +409,13 @@ function showModal(html) {
     if (e.target === ov) closeModal();
   });
   ov.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
-  ov.querySelectorAll('[data-res-status]').forEach(b => {
+  ov.querySelectorAll('[data-int-status]').forEach(b => {
     b.addEventListener('click', () => {
-      updateReservationStatus(b.dataset.resRow, b.dataset.resStatus);
+      updateInterestStatus(b.dataset.intRow, b.dataset.intStatus);
     });
+  });
+  ov.querySelectorAll('[data-save-memo]').forEach(b => {
+    b.addEventListener('click', () => saveInterestMemo(b.dataset.intRow));
   });
 }
 function closeModal() {
@@ -449,9 +467,9 @@ function bindEvents() {
   document.querySelectorAll('[data-uid]').forEach(el => {
     el.addEventListener('click', () => openUserModal(el.dataset.uid));
   });
-  document.querySelectorAll('[data-res-row]').forEach(el => {
+  document.querySelectorAll('[data-int-row]').forEach(el => {
     if (el.tagName === 'DIV') {
-      el.addEventListener('click', () => openReservationModal(el.dataset.resRow));
+      el.addEventListener('click', () => openInterestModal(el.dataset.intRow));
     }
   });
   const tp = document.getElementById('test-push');

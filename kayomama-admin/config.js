@@ -22,4 +22,4 @@ window.FIREBASE_CONFIG = {
 window.FCM_VAPID_KEY = 'BB-lAiUem7A-yQIfc_D498UcayyYYuy0JZVsbY9gC6r8g_S3fagjRBEdI9vuRqSy1Iw189cjFt4OBAreAHxviXQ';
 
 // アプリのバージョン（キャッシュバスター）
-window.APP_VERSION = '1.0.0';
+window.APP_VERSION = '1.1.0';
