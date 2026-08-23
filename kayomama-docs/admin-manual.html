@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>かよママさん｜管理アプリ 操作マニュアル</title>
+<style>
+  :root {
+    --pink: #d47a95;
+    --pink-soft: #ffe4e9;
+    --pink-bg: #fff5f7;
+    --ink: #333;
+    --ink-soft: #6a6a6a;
+    --rule: #ede0e4;
+    --new: #d47a95;
+    --contacted: #4a7ba0;
+    --inprogress: #a08420;
+    --closed: #4a8555;
+    --cancel: #999;
+    --warn: #c0503f;
+    --warn-soft: #fdf0ed;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 12px 60px;
+    background: #faf3f5;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "メイリオ", sans-serif;
+    line-height: 1.7;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .hdr {
+    text-align: center;
+    padding: 28px 20px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(212,122,149,0.08);
+    margin-bottom: 24px;
+  }
+  .hdr .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background: var(--pink-soft);
+    color: var(--pink);
+    border-radius: 12px;
+    font-size: 12px; font-weight: 700; margin-bottom: 12px;
+  }
+  .hdr h1 { margin: 0 0 8px; font-size: 24px; color: var(--pink); }
+  .hdr p { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+  /* TOC */
+  .toc {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .toc h3 { margin: 0 0 10px; font-size: 15px; color: var(--pink); }
+  .toc ol { margin: 0; padding-left: 20px; font-size: 13px; }
+  .toc ol li { padding: 3px 0; }
+  .toc a { color: var(--pink); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* Section */
+  .sec {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .sec-num {
+    position: absolute;
+    top: -12px; left: 22px;
+    background: var(--pink); color: #fff;
+    padding: 4px 14px;
+    border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+  }
+  .sec h2 {
+    margin: 8px 0 6px; font-size: 20px; color: var(--pink);
+  }
+  .sec .lead {
+    margin: 0 0 16px; font-size: 14px; color: var(--ink-soft);
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .sec h4 {
+    margin: 20px 0 8px; font-size: 15px; color: var(--pink);
+  }
+
+  /* Steps */
+  .steps { padding-left: 0; margin: 12px 0; counter-reset: st; }
+  .steps li {
+    list-style: none;
+    padding: 10px 14px 10px 46px;
+    background: #fafafa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    position: relative;
+    font-size: 14px;
+  }
+  .steps li::before {
+    counter-increment: st;
+    content: counter(st);
+    position: absolute;
+    left: 12px; top: 10px;
+    width: 24px; height: 24px;
+    background: var(--pink); color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 13px; font-weight: 700;
+  }
+  .steps li strong { color: var(--pink); }
+  .steps li code {
+    background: #fff;
+    border: 1px solid var(--rule);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--pink);
+    font-family: monospace;
+  }
+
+  /* Screenshot */
+  .shot {
+    margin: 16px 0;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px dashed #ddd;
+  }
+  .shot img {
+    max-width: 100%; height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  .shot .placeholder {
+    color: #aaa; font-size: 13px; padding: 60px 20px;
+  }
+  .shot .caption { font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
+
+  /* Tip / Warn */
+  .tip {
+    margin: 14px 0;
+    padding: 12px 16px;
+    background: #fffaf3;
+    border: 1px solid #f5deae;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #7a5a10;
+  }
+  .tip strong { color: #a67d10; }
+  .warn {
+    margin: 14px 0;
+    padding: 12px 16px;
+    background: var(--warn-soft);
+    border-left: 4px solid var(--warn);
+    border-radius: 6px;
+    font-size: 13px;
+    color: #7a2a1e;
+  }
+  .warn strong { color: var(--warn); }
+
+  /* Status badges */
+  .status-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .status-list .st {
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 12px;
+    background: #fafafa;
+    border: 1px solid var(--rule);
+  }
+  .status-list .st .name {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .st-new .name { background: rgba(212,122,149,0.15); color: var(--new); }
+  .st-contacted .name { background: rgba(74,123,160,0.15); color: var(--contacted); }
+  .st-inprogress .name { background: rgba(160,132,32,0.15); color: var(--inprogress); }
+  .st-closed .name { background: rgba(74,133,85,0.15); color: var(--closed); }
+  .st-cancel .name { background: rgba(153,153,153,0.15); color: var(--cancel); }
+  .status-list .st .desc { color: var(--ink-soft); font-size: 12px; }
+
+  /* Tabs preview */
+  .tab-preview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+    padding: 14px;
+    background: #fff5f7;
+    border-radius: 10px;
+  }
+  .tab-preview .item {
+    text-align: center;
+    padding: 10px 6px;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .tab-preview .item .ico { font-size: 22px; display: block; }
+  .tab-preview .item .name { display: block; font-weight: 700; color: var(--pink); margin-top: 3px; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px 20px;
+    color: #aaa;
+    font-size: 11px;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <span class="badge">🌸 かよママさん専用</span>
+    <h1>管理アプリ 操作マニュアル</h1>
+    <p>iPhoneのホーム画面から起動できる、<br>関心表明の対応と受講者の進捗確認ができる管理ツール</p>
+  </div>
+
+  <div class="toc">
+    <h3>📖 目次</h3>
+    <ol>
+      <li><a href="#s1">初回セットアップ（Safariで開く→ホーム画面追加→通知許可）</a></li>
+      <li><a href="#s2">ホーム画面（未対応関心表明・進捗ファネル）</a></li>
+      <li><a href="#s3">受講者タブ（一覧・詳細）</a></li>
+      <li><a href="#s4">関心タブ（お問い合わせ対応の中心）</a></li>
+      <li><a href="#s5">設定タブ（テスト通知・ログアウト）</a></li>
+      <li><a href="#s6">通知の見え方（バックグラウンド・フォアグラウンド）</a></li>
+      <li><a href="#s7">日々の使い方（1日の流れ）</a></li>
+      <li><a href="#s8">困ったとき</a></li>
+    </ol>
+  </div>
+
+  <!-- ================ S1 ================ -->
+  <div class="sec" id="s1">
+    <span class="sec-num">STEP 1</span>
+    <h2>🚀 初回セットアップ</h2>
+    <p class="lead">iPhoneでSafariから開いて通知許可→ホーム画面に追加。これで以降はホーム画面アイコンから即起動できます。</p>
+
+    <ol class="steps">
+      <li>iPhone <strong>Safari</strong> で <code>https://apps.l-mine.com/kayomama-admin/</code> を開く<br>
+      （初回のみ、とーるさんから受け取った専用URL）</li>
+      <li>画面下の「<strong>共有</strong>」ボタン（□に↑）→「<strong>ホーム画面に追加</strong>」</li>
+      <li>ホーム画面のアイコン🌸をタップして起動</li>
+      <li>「通知を送信します」ダイアログ → <strong>許可</strong> をタップ</li>
+      <li>設定タブの「通知トークン」が<strong>登録済 ✅</strong>になれば準備完了</li>
+    </ol>
+
+    <div class="shot"><div class="placeholder">📷 ホーム画面追加＋通知許可の流れ</div></div>
+
+    <div class="tip">
+      💡 <strong>ホーム画面追加のメリット</strong><br>
+      Safariのタブから開くのと違って、ホーム画面から起動すると全画面表示になり、普通のアプリとほぼ同じ操作感になります。
+    </div>
+  </div>
+
+  <!-- ================ S2 ================ -->
+  <div class="sec" id="s2">
+    <span class="sec-num">STEP 2</span>
+    <h2>📊 ホーム画面</h2>
+    <p class="lead">起動して最初に見える画面。今すぐ対応が必要な件数と、受講者の進捗状況が一目で分かります。</p>
+
+    <div class="shot"><div class="placeholder">📷 ホーム画面（未対応関心表明・進捗ファネル）</div></div>
+
+    <h4>見るべきポイント</h4>
+    <ol class="steps">
+      <li><strong>💬 未対応の関心表明（大きな数字）</strong>：新規に「詳しく知りたい」が入った件数。まずここをチェック</li>
+      <li><strong>登録ユーザー / アプリ開始済</strong>：全体規模の把握</li>
+      <li><strong>📈 進捗ファネル</strong>：診断→アプリ→Day1〜4→レポート→オファーの各段階の人数</li>
+      <li><strong>↻ 更新ボタン</strong>：右上。最新データを取得</li>
+    </ol>
+
+    <div class="tab-preview">
+      <div class="item"><span class="ico">📊</span><span class="name">ホーム</span>いまここ</div>
+      <div class="item"><span class="ico">👥</span><span class="name">受講者</span></div>
+      <div class="item"><span class="ico">💬</span><span class="name">関心</span></div>
+      <div class="item"><span class="ico">⚙️</span><span class="name">設定</span></div>
+    </div>
+  </div>
+
+  <!-- ================ S3 ================ -->
+  <div class="sec" id="s3">
+    <span class="sec-num">STEP 3</span>
+    <h2>👥 受講者タブ</h2>
+    <p class="lead">診断を受けた人・アプリを開始した人の一覧を、最新イベントが新しい順で表示。1件タップで詳細＋イベント履歴100件が見られます。</p>
+
+    <div class="shot"><div class="placeholder">📷 受講者一覧＋詳細モーダル</div></div>
+
+    <h4>できること</h4>
+    <ol class="steps">
+      <li>1件タップ → <strong>詳細モーダル</strong>：名前・タイプ・現在ステータス・各Day完了時刻・イベント履歴</li>
+      <li>ステータスは自動更新（<code>①未診断 → ②診断完了 → ⑤アプリ開始 → ⑥1日目完了 → …</code>）</li>
+      <li>期限切れの人は「（期限切れ）」表示</li>
+    </ol>
+
+    <div class="tip">
+      💡 <strong>個別対応のヒント</strong><br>
+      Day3で止まってる人・Day4まで行ったのにオファー見てない人など、動きが止まってる方をピックアップして個別LINEで声かけできます。
+    </div>
+  </div>
+
+  <!-- ================ S4 ================ -->
+  <div class="sec" id="s4">
+    <span class="sec-num">STEP 4</span>
+    <h2>💬 関心タブ（メインの作業画面）</h2>
+    <p class="lead">「詳しく知りたい♡」を押した方の一覧。ステータス管理＋メモで、対応漏れを防ぎます。</p>
+
+    <div class="shot"><div class="placeholder">📷 関心リスト＋詳細モーダル</div></div>
+
+    <h4>作業フロー</h4>
+    <ol class="steps">
+      <li>新規1件タップ → 詳細モーダル。「LINEに届いてるはずのメッセージ」を確認</li>
+      <li>LINE公式アカウント（<code>@115vaudn</code>）を開き、その方のトークで対応</li>
+      <li>返信したら管理アプリに戻り、ステータスを「<strong>LINE連絡済</strong>」に変更</li>
+      <li>相談中は「<strong>対応中</strong>」、成約したら「<strong>成約</strong>」、他に流れたら「<strong>見送り</strong>」</li>
+      <li>必要ならメモ欄に一言記録 → 「メモ保存」</li>
+    </ol>
+
+    <h4>ステータスの意味</h4>
+    <div class="status-list">
+      <div class="st st-new">
+        <span class="name">新規</span>
+        <div class="desc">まだLINE対応してない状態</div>
+      </div>
+      <div class="st st-contacted">
+        <span class="name">LINE連絡済</span>
+        <div class="desc">1度は返信済み</div>
+      </div>
+      <div class="st st-inprogress">
+        <span class="name">対応中</span>
+        <div class="desc">やり取り継続中</div>
+      </div>
+      <div class="st st-closed">
+        <span class="name">成約</span>
+        <div class="desc">申し込み確定</div>
+      </div>
+      <div class="st st-cancel">
+        <span class="name">見送り</span>
+        <div class="desc">今回は縁がなかった</div>
+      </div>
+    </div>
+
+    <div class="tip">
+      💡 <strong>スプシとの関係</strong><br>
+      ここで変更したステータスは自動でスプシ「関心リスト」シートに反映されます。逆にスプシで直接編集してもOK（管理アプリの更新ボタンで反映）。
+    </div>
+  </div>
+
+  <!-- ================ S5 ================ -->
+  <div class="sec" id="s5">
+    <span class="sec-num">STEP 5</span>
+    <h2>⚙️ 設定タブ</h2>
+    <p class="lead">通知テスト・トークン確認・ログアウトができます。日常的にはあまり触りません。</p>
+
+    <div class="shot"><div class="placeholder">📷 設定画面</div></div>
+
+    <ol class="steps">
+      <li><strong>管理トークン</strong>：現在使用中のトークン（先頭と末尾のみ表示）</li>
+      <li><strong>通知トークン</strong>：<code>登録済 ✅</code>ならOK。「未登録」の場合はいったんログアウト→再度URL開いて通知許可</li>
+      <li><strong>🔔 テスト通知を送る</strong>：通知が届くかテスト。数秒後にiPhoneに届けば正常</li>
+      <li><strong>ログアウト</strong>：機種変更・別デバイス移行のとき使う（普段は不要）</li>
+    </ol>
+  </div>
+
+  <!-- ================ S6 ================ -->
+  <div class="sec" id="s6">
+    <span class="sec-num">STEP 6</span>
+    <h2>🔔 通知の見え方</h2>
+    <p class="lead">「詳しく知りたい♡」が入った瞬間に、iPhoneに通知が届きます。</p>
+
+    <div class="shot"><div class="placeholder">📷 通知の見え方（ロック画面／アプリ内トースト）</div></div>
+
+    <h4>2種類の見え方</h4>
+    <ol class="steps">
+      <li><strong>バックグラウンド時</strong>：アプリを閉じてても、iPhoneのロック画面に「💬 関心表明が入りました♡」が届く。タップで管理アプリが起動</li>
+      <li><strong>アプリを開いている時</strong>：画面下部にトースト表示＋自動リロード</li>
+    </ol>
+
+    <div class="tip">
+      💡 <strong>通知が届かない時</strong><br>
+      iPhoneの「設定」→「通知」→「Safari（またはブラウザ）」で通知が許可になっているか確認。もしくは管理アプリを一度開いて設定タブから「テスト通知」で確認できます。
+    </div>
+  </div>
+
+  <!-- ================ S7 ================ -->
+  <div class="sec" id="s7">
+    <span class="sec-num">STEP 7</span>
+    <h2>🌸 日々の使い方（1日の流れ）</h2>
+    <p class="lead">推奨ルーティン。無理せず1日1〜2回のチェックで大丈夫です。</p>
+
+    <ol class="steps">
+      <li><strong>朝（またはお昼）：</strong>アプリを開いて「💬 関心」タブ→未対応があればLINEで対応→ステータス更新</li>
+      <li><strong>通知が届いたら：</strong>その場でLINE対応 → 管理アプリでステータス「LINE連絡済」に</li>
+      <li><strong>週1回程度：</strong>ホーム画面で全体の進捗ファネルをチェック。Day3で止まってる方などに声かけ</li>
+      <li><strong>月末：</strong>「関心」タブでその月の成約数を確認。手応え把握</li>
+    </ol>
+  </div>
+
+  <!-- ================ S8 ================ -->
+  <div class="sec" id="s8">
+    <span class="sec-num">STEP 8</span>
+    <h2>❓ 困ったとき</h2>
+    <p class="lead">よくあるトラブルと対処法。</p>
+
+    <h4>通知が届かない</h4>
+    <ol class="steps">
+      <li>iPhoneの設定 → 通知 → Safariで通知が有効か確認</li>
+      <li>管理アプリの設定タブで「🔔 テスト通知」→ 届けばOK、届かなければ次へ</li>
+      <li>設定タブで「ログアウト」→ 再度URLを開いて通知を許可し直す</li>
+    </ol>
+
+    <h4>画面が真っ白 or 更新されない</h4>
+    <ol class="steps">
+      <li>ページを下から上へスワイプ（プルダウン更新）</li>
+      <li>右上の「↻ 更新」ボタンをタップ</li>
+      <li>それでもダメならホーム画面のアイコンを長押し→アプリを削除→再度Safariから追加</li>
+    </ol>
+
+    <h4>「invalid admin token」エラーが出た</h4>
+    <div class="warn">
+      <strong>とーるさんに連絡</strong>してください。管理トークンの再発行が必要な状態です（機種変更時などにも発生することがあります）。
+    </div>
+  </div>
+
+  <div class="footer">
+    かよママさん専用 管理アプリ 操作マニュアル / 更新日 2026-08-23<br>
+    公開URL: <code>apps.l-mine.com/kayomama-docs/admin-manual.html</code>
+  </div>
+
+</div>
+</body>
+</html>
