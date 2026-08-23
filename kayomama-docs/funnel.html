@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>かよママさん｜導線マニュアル</title>
+<style>
+  :root {
+    --pink: #d47a95;
+    --pink-soft: #ffe4e9;
+    --pink-bg: #fff5f7;
+    --line: #06C755;
+    --line-soft: rgba(6,199,85,0.08);
+    --sheet: #4a8555;
+    --sheet-soft: #eaf5ef;
+    --admin: #c88a1a;
+    --admin-soft: #fdf4e0;
+    --ink: #333;
+    --ink-soft: #6a6a6a;
+    --rule: #ede0e4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 12px 60px;
+    background: #faf3f5;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "メイリオ", sans-serif;
+    line-height: 1.7;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  /* ============ Header ============ */
+  .hdr {
+    text-align: center;
+    padding: 28px 20px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(212,122,149,0.08);
+    margin-bottom: 24px;
+  }
+  .hdr .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background: var(--pink-soft);
+    color: var(--pink);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .hdr h1 { margin: 0 0 8px; font-size: 24px; color: var(--pink); }
+  .hdr p { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+  /* ============ Overview ============ */
+  .overview {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .overview h2 {
+    margin: 0 0 12px; font-size: 17px; color: var(--pink);
+    padding-bottom: 8px; border-bottom: 2px dashed var(--pink-soft);
+  }
+  .overview .flow {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    padding: 12px 0;
+  }
+  .overview .node {
+    padding: 8px 12px;
+    background: var(--pink-bg);
+    border: 1.5px solid var(--pink);
+    border-radius: 10px;
+    color: var(--pink);
+    font-weight: 700; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .overview .arrow { color: var(--pink); font-weight: 700; align-self: center; }
+  .overview .note { font-size: 12px; color: var(--ink-soft); text-align: center; margin: 8px 0 0; }
+
+  /* ============ Legend ============ */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    padding: 14px 18px;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 12px;
+  }
+  .legend .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 8px; font-weight: 700;
+  }
+  .tag-user { background: var(--pink-soft); color: var(--pink); }
+  .tag-sheet { background: var(--sheet-soft); color: var(--sheet); }
+  .tag-line { background: var(--line-soft); color: var(--line); }
+  .tag-admin { background: var(--admin-soft); color: var(--admin); }
+
+  /* ============ Step ============ */
+  .step {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .step-num {
+    position: absolute;
+    top: -12px; left: 22px;
+    background: var(--pink); color: #fff;
+    padding: 4px 14px;
+    border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+  }
+  .step h3 {
+    margin: 8px 0 6px; font-size: 20px; color: var(--pink);
+  }
+  .step .lead {
+    margin: 0 0 16px; font-size: 14px; color: var(--ink-soft);
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-img {
+    margin: 12px 0;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px dashed #ddd;
+  }
+  .step-img img {
+    max-width: 100%; height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .step-img .placeholder {
+    color: #aaa;
+    font-size: 13px;
+    padding: 48px 20px;
+  }
+
+  /* ============ Sub sections ============ */
+  .sub {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin: 10px 0;
+    font-size: 13px;
+    align-items: start;
+  }
+  .sub-user { background: rgba(212,122,149,0.06); border-left: 3px solid var(--pink); }
+  .sub-sheet { background: var(--sheet-soft); border-left: 3px solid var(--sheet); }
+  .sub-line { background: var(--line-soft); border-left: 3px solid var(--line); }
+  .sub-admin { background: var(--admin-soft); border-left: 3px solid var(--admin); }
+  .sub .label {
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .sub-user .label { background: var(--pink); color: #fff; }
+  .sub-sheet .label { background: var(--sheet); color: #fff; }
+  .sub-line .label { background: var(--line); color: #fff; }
+  .sub-admin .label { background: var(--admin); color: #fff; }
+  .sub .desc { color: var(--ink); }
+  .sub .desc code {
+    background: #f0e8eb;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--pink);
+    font-family: monospace;
+  }
+
+  /* ============ Tips box ============ */
+  .tip {
+    margin: 14px 0 0;
+    padding: 12px 16px;
+    background: #fffaf3;
+    border: 1px solid #f5deae;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #7a5a10;
+  }
+  .tip strong { color: #a67d10; }
+
+  /* ============ Type branch ============ */
+  .branch {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .branch .item {
+    background: var(--pink-bg);
+    border: 1px solid var(--pink);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .branch .item .t {
+    font-weight: 700; color: var(--pink); display: block; margin-bottom: 3px;
+  }
+
+  /* ============ Beacon list ============ */
+  .beacons {
+    background: rgba(140,109,31,0.06);
+    padding: 14px 18px;
+    border-radius: 12px;
+    border-left: 3px solid var(--admin);
+    margin: 14px 0;
+  }
+  .beacons h4 {
+    margin: 0 0 8px; font-size: 14px; color: var(--admin);
+  }
+  .beacon-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 8px 12px;
+    padding: 6px 0;
+    border-top: 1px dashed rgba(140,109,31,0.2);
+    font-size: 12px;
+    align-items: center;
+  }
+  .beacon-row:first-of-type { border-top: none; }
+  .beacon-row .idx {
+    background: var(--admin); color: #fff;
+    padding: 1px 8px; border-radius: 8px;
+    font-weight: 700; font-size: 11px;
+  }
+  .beacon-row .when {
+    color: var(--admin);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ============ Footer ============ */
+  .footer {
+    text-align: center;
+    padding: 24px 20px;
+    color: #aaa;
+    font-size: 11px;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ Header ============ -->
+  <div class="hdr">
+    <span class="badge">🌸 かよママさん専用</span>
+    <h1>導線マニュアル</h1>
+    <p>ユーザーがSNSから関心表明まで、どう動くか<br>その裏でスプシ・LINE・管理アプリに何が起きるか</p>
+  </div>
+
+  <!-- ============ Overview ============ -->
+  <div class="overview">
+    <h2>📍 全体の流れ（8ステップ）</h2>
+    <div class="flow">
+      <span class="node">① SNS</span><span class="arrow">→</span>
+      <span class="node">② 診断LP</span><span class="arrow">→</span>
+      <span class="node">③ LINE追加</span><span class="arrow">→</span>
+      <span class="node">④ アプリ開始</span><span class="arrow">→</span>
+      <span class="node">⑤ Day1〜4</span><span class="arrow">→</span>
+      <span class="node">⑥ レポート</span><span class="arrow">→</span>
+      <span class="node">⑦ オファー</span><span class="arrow">→</span>
+      <span class="node">⑧ 関心表明</span>
+    </div>
+    <p class="note">全ステップでスプシに履歴が残り、必要なタイミングでLINE配信が飛びます</p>
+  </div>
+
+  <!-- ============ Legend ============ -->
+  <div class="legend">
+    <span class="tag tag-user">👤 ユーザーの動き</span>
+    <span class="tag tag-sheet">📊 スプシへの影響</span>
+    <span class="tag tag-line">💬 LINE配信</span>
+    <span class="tag tag-admin">🌸 管理アプリ表示</span>
+  </div>
+
+  <!-- ============ STEP 1 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 1</span>
+    <h3>📱 SNSから診断LPへ</h3>
+    <p class="lead">Instagramなどの投稿から、診断LPへ誘導。「お料理迷子タイプ診断」のリンクをタップしてもらう。</p>
+
+    <div class="step-img"><div class="placeholder">📷 診断LP案内投稿のイメージ（あとで差替）</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">Instagram等の投稿を見て、プロフィールリンクや投稿末尾のリンクから診断LPを開く</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc">まだ記録なし（診断完了時に初めて追記）</div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 2 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 2</span>
+    <h3>🌸 診断LPで10問診断</h3>
+    <p class="lead">10問のクイズに答えると、4タイプ（A/B/C/D）のうちどれに該当するか判定される。</p>
+
+    <div class="step-img"><div class="placeholder">📷 診断LP画面（設問モーダル）</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">「診断する」→設問モーダルが開き、10問に答える→結果ページで自分のタイプが表示される</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc">「ユーザー」シートに <code>diagnosis_at</code>（診断日時）＋<code>type</code>（タイプ）が追記される</div>
+    </div>
+
+    <div class="branch">
+      <div class="item"><span class="t">A タイプ</span>もっとうまく作りたい、遠慮しがちさん</div>
+      <div class="item"><span class="t">B タイプ</span>今日何にしよう、が口ぐせさん</div>
+      <div class="item"><span class="t">C タイプ</span>スマホ片手に、正解探しさん</div>
+      <div class="item"><span class="t">D タイプ</span>もう回ってる、次いきたいさん</div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 3 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 3</span>
+    <h3>💬 タイプ別LINE友だち追加</h3>
+    <p class="lead">診断結果ページの「LINEで詳しく受け取る」ボタンから、タイプに合わせた4種類のLINE URLに友だち追加される。</p>
+
+    <div class="step-img"><div class="placeholder">📷 診断結果ページ・LINE追加ボタン</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">タイプ別URLでLINE友だち追加。プロラインfreeのシナリオが起動</div>
+    </div>
+    <div class="sub sub-line">
+      <span class="label">LINE</span>
+      <div class="desc">タイプ別シナリオ（挨拶＋アプリ案内）が自動配信される。アプリURLに<code>?type=X&uid=[[uid]]</code>が付いて渡る</div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 4 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 4</span>
+    <h3>📱 アプリ開始（Welcome→改善したい→名前入力）</h3>
+    <p class="lead">LINEから来たアプリを開く。詳細結果とアドバイスを見て「改善したい♡」→Check-LINE演出→お名前入力で本格開始。</p>
+
+    <div class="step-img"><div class="placeholder">📷 Welcome画面・Check-LINE演出・名前入力</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">Welcome画面で自分のタイプの詳細結果を読む→「改善したい♡」タップ→演出→お名前入力→ホーム画面</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc"><code>app_started_at</code>＋<code>name</code>＋<code>expired_at</code>（120時間後）が追記される。ステータス「⑤アプリ開始」</div>
+    </div>
+    <div class="sub sub-line">
+      <span class="label">LINE</span>
+      <div class="desc">⑦ <code>app_start_welcome</code> が自動配信「小さな一歩、始まります♡」</div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 5 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 5</span>
+    <h3>📆 Day1〜Day4のワーク進行</h3>
+    <p class="lead">1日1タスク。行動経済学ナッジ（20%スタート／カードX/4／ストリーク🔥／達成演出）で継続をサポート。</p>
+
+    <div class="step-img"><div class="placeholder">📷 Day1〜Day4の進行画面（ホーム／タスク／達成演出）</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">Day1タップ→タスク実行→完了→翌朝Day2解放→…→Day3でカード命名→Day4でレポート生成</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc"><code>day1_at〜day4_at</code>が順に追記される。ステータスも「⑥1日目完了」〜「⑨4日目完了」へ更新</div>
+    </div>
+    <div class="sub sub-line">
+      <span class="label">LINE</span>
+      <div class="desc">毎朝9時と夜21時（未完了時）に励ましメッセージが自動配信される（下の一覧参照）</div>
+    </div>
+
+    <div class="beacons">
+      <h4>⏰ 自動配信スケジュール（プロラインfree call-beacon）</h4>
+      <div class="beacon-row"><span class="idx">⑤</span><span class="when">毎朝9時</span><span>morning_daily「今日も頑張って」</span></div>
+      <div class="beacon-row"><span class="idx">⑥</span><span class="when">Day3完了翌朝</span><span>day4_ready「お待たせ！レポート」</span></div>
+      <div class="beacon-row"><span class="idx">⑦</span><span class="when">アプリ開始時</span><span>app_start_welcome「よろしくね」</span></div>
+      <div class="beacon-row"><span class="idx">⑧</span><span class="when">期限24h前</span><span>expired_soon「あと1日ですよ」</span></div>
+      <div class="beacon-row"><span class="idx">⑨</span><span class="when">夜21時（未完了）</span><span>evening_reminder「今日の1ピース、まだ残ってますよ」</span></div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 6 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 6</span>
+    <h3>📊 最終レポート閲覧</h3>
+    <p class="lead">Day4完了で「あなただけのレポート」が生成される。4日間の記録＋タイプ別まとめが表示される。</p>
+
+    <div class="step-img"><div class="placeholder">📷 レポート画面</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">Day4完了後、レポート画面へ。自分のカード＋4日間の振り返り＋タイプ別総評を読む</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc"><code>report_viewed_at</code>が追記。ステータス「⑩レポート閲覧」</div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 7 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 7</span>
+    <h3>🎁 オファー画面（タイプ別サービス提案）</h3>
+    <p class="lead">レポートの次にオファー画面。タイプ別に「あなたにいちばんおすすめ」のメインサービス＋サブサービス3つが表示される。</p>
+
+    <div class="step-img"><div class="placeholder">📷 オファー画面（メイン＋サブサービス）</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">オファー画面を閲覧。各サービスの内容・価格を見る</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc"><code>offer_viewed_at</code>が追記。ステータス「⑪オファー閲覧」</div>
+    </div>
+
+    <div class="branch">
+      <div class="item"><span class="t">A → ほめられキッチン</span>1年で家族に褒められる定番料理を育てる年間コース</div>
+      <div class="item"><span class="t">B → 献立サポート</span>「今日何にしよう」を仕組みで解決する短期</div>
+      <div class="item"><span class="t">C → 味付けサポート</span>レシピを閉じても味が決まる感覚を育てる短期</div>
+      <div class="item"><span class="t">D → 麹サポート</span>塩麹・醤油麹で体にやさしい台所を作る短期</div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 8 ============ -->
+  <div class="step">
+    <span class="step-num">STEP 8</span>
+    <h3>💬 「詳しく知りたい♡」→ LINEコピペで直接連絡</h3>
+    <p class="lead">気になるサービスの「詳しく知りたい♡」ボタン→モーダル→メッセージコピー→LINE公式アカウントで直接送信。同時に管理アプリに通知が届く。</p>
+
+    <div class="step-img"><div class="placeholder">📷 関心表明モーダル（コピー＋LINE遷移ボタン）</div></div>
+
+    <div class="sub sub-user">
+      <span class="label">ユーザー</span>
+      <div class="desc">「詳しく知りたい♡」タップ→モーダル→「📋 コピーしてLINEを開く」→LINEでかよママさんに直接メッセージ送信</div>
+    </div>
+    <div class="sub sub-sheet">
+      <span class="label">スプシ</span>
+      <div class="desc">「関心リスト」シートに1行追記（サービス名・メッセージ・タイプ・時刻・ステータス「新規」）</div>
+    </div>
+    <div class="sub sub-line">
+      <span class="label">LINE</span>
+      <div class="desc">かよママさんの LINE公式アカウント（@115vaudn）にユーザー本人から「〇〇を詳しく知りたい！」メッセージが届く</div>
+    </div>
+    <div class="sub sub-admin">
+      <span class="label">管理アプリ</span>
+      <div class="desc">iPhoneに🔔プッシュ通知「💬 関心表明が入りました♡」／管理アプリの「関心」タブに新規1件表示</div>
+    </div>
+
+    <div class="tip">
+      💡 <strong>ここが最短動線のミソ</strong><br>
+      予約フォームや決済ページを介さず、<strong>LINE上で直接1対1</strong>に。かよママさんはLINEアプリで対応→管理アプリでステータス更新（新規→LINE連絡済→対応中→成約／見送り）
+    </div>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <div class="footer">
+    かよママさん専用 導線マニュアル / 更新日 2026-08-23<br>
+    このマニュアルは <code>apps.l-mine.com/kayomama-docs/funnel.html</code> で公開されています
+  </div>
+
+</div>
+</body>
+</html>
