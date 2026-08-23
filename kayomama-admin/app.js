@@ -36,7 +36,8 @@ async function boot() {
     return;
   }
   state.authed = true;
-  await initFCM();
+  // FCM初期化はバックグラウンドで（await しない → 通知許可ダイアログ待ちで画面止まらない）
+  initFCM().catch(e => console.warn('FCM init failed', e));
   await refreshAll();
   render();
 }
@@ -64,7 +65,7 @@ function renderAuth(errMsg) {
     localStorage.setItem(LS_TOKEN, v);
     window.ADMIN_TOKEN = v;
     state.authed = true;
-    await initFCM();
+    initFCM().catch(e => console.warn('FCM init failed', e));
     await refreshAll();
     render();
   });
