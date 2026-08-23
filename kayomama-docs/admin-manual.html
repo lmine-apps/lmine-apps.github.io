@@ -30,33 +30,23 @@
   }
   .wrap { max-width: 900px; margin: 0 auto; }
 
-  /* Header */
   .hdr {
-    text-align: center;
-    padding: 28px 20px;
-    background: #fff;
-    border-radius: 16px;
+    text-align: center; padding: 28px 20px;
+    background: #fff; border-radius: 16px;
     box-shadow: 0 4px 20px rgba(212,122,149,0.08);
     margin-bottom: 24px;
   }
   .hdr .badge {
-    display: inline-block;
-    padding: 4px 14px;
-    background: var(--pink-soft);
-    color: var(--pink);
-    border-radius: 12px;
-    font-size: 12px; font-weight: 700; margin-bottom: 12px;
+    display: inline-block; padding: 4px 14px;
+    background: var(--pink-soft); color: var(--pink);
+    border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 12px;
   }
   .hdr h1 { margin: 0 0 8px; font-size: 24px; color: var(--pink); }
   .hdr p { margin: 0; font-size: 13px; color: var(--ink-soft); }
 
-  /* TOC */
   .toc {
-    background: #fff;
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #fff; border-radius: 12px; padding: 18px 22px;
+    margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   .toc h3 { margin: 0 0 10px; font-size: 15px; color: var(--pink); }
   .toc ol { margin: 0; padding-left: 20px; font-size: 13px; }
@@ -64,132 +54,243 @@
   .toc a { color: var(--pink); text-decoration: none; }
   .toc a:hover { text-decoration: underline; }
 
-  /* Section */
   .sec {
-    background: #fff;
-    border-radius: 16px;
-    padding: 28px 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    background: #fff; border-radius: 16px; padding: 28px 24px;
+    margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     position: relative;
   }
   .sec-num {
-    position: absolute;
-    top: -12px; left: 22px;
+    position: absolute; top: -12px; left: 22px;
     background: var(--pink); color: #fff;
-    padding: 4px 14px;
-    border-radius: 10px;
+    padding: 4px 14px; border-radius: 10px;
     font-size: 12px; font-weight: 700;
   }
-  .sec h2 {
-    margin: 8px 0 6px; font-size: 20px; color: var(--pink);
-  }
+  .sec h2 { margin: 8px 0 6px; font-size: 20px; color: var(--pink); }
   .sec .lead {
     margin: 0 0 16px; font-size: 14px; color: var(--ink-soft);
-    padding-bottom: 12px;
-    border-bottom: 1px dashed var(--rule);
+    padding-bottom: 12px; border-bottom: 1px dashed var(--rule);
   }
-  .sec h4 {
-    margin: 20px 0 8px; font-size: 15px; color: var(--pink);
-  }
+  .sec h4 { margin: 20px 0 8px; font-size: 15px; color: var(--pink); }
 
-  /* Steps */
   .steps { padding-left: 0; margin: 12px 0; counter-reset: st; }
   .steps li {
-    list-style: none;
-    padding: 10px 14px 10px 46px;
-    background: #fafafa;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    position: relative;
-    font-size: 14px;
+    list-style: none; padding: 10px 14px 10px 46px;
+    background: #fafafa; border-radius: 8px; margin-bottom: 8px;
+    position: relative; font-size: 14px;
   }
   .steps li::before {
-    counter-increment: st;
-    content: counter(st);
-    position: absolute;
-    left: 12px; top: 10px;
+    counter-increment: st; content: counter(st);
+    position: absolute; left: 12px; top: 10px;
     width: 24px; height: 24px;
-    background: var(--pink); color: #fff;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 24px;
+    background: var(--pink); color: #fff; border-radius: 50%;
+    text-align: center; line-height: 24px;
     font-size: 13px; font-weight: 700;
   }
   .steps li strong { color: var(--pink); }
   .steps li code {
-    background: #fff;
-    border: 1px solid var(--rule);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    color: var(--pink);
-    font-family: monospace;
+    background: #fff; border: 1px solid var(--rule);
+    padding: 1px 6px; border-radius: 4px;
+    font-size: 12px; color: var(--pink); font-family: monospace;
   }
 
-  /* Screenshot */
-  .shot {
-    margin: 16px 0;
+  /* Mock phone */
+  .mock-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
+  .mock-phone {
+    max-width: 300px; width: 100%; margin: 0 auto;
+    border: 8px solid #1a1a1a; border-radius: 28px;
+    background: var(--pink-bg); padding: 24px 0 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    position: relative; overflow: hidden;
+  }
+  .mock-phone::before {
+    content: ''; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%); width: 90px; height: 18px;
+    background: #1a1a1a; border-radius: 0 0 12px 12px;
+  }
+  .mock-phone-body { padding: 6px 14px 4px; font-size: 13px; }
+  .mock-cap {
+    text-align: center; font-size: 12px; color: var(--ink-soft); margin: 6px 0 0;
+  }
+
+  /* Admin app UI mock */
+  .mini-screen {
+    background: #fff; border-radius: 12px; padding: 12px;
+    border: 1px solid var(--rule); margin: 6px 0;
+    text-align: left; font-size: 12px;
+  }
+  .app-hdr {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .app-hdr .title { font-weight: 700; color: var(--pink); font-size: 13px; }
+  .app-hdr .subttl { font-size: 9px; color: #999; }
+  .app-hdr .refresh {
+    font-size: 10px; padding: 3px 8px; border-radius: 10px;
+    border: 1px solid var(--pink); color: var(--pink);
+  }
+  .stat-big {
+    background: linear-gradient(135deg,#fff5f7,#ffe4e9);
+    border-radius: 10px; padding: 12px; text-align: center;
+    margin-bottom: 8px;
+  }
+  .stat-big .num {
+    font-size: 32px; font-weight: 700; color: var(--pink); line-height: 1;
+  }
+  .stat-big .lbl { font-size: 10px; color: #888; margin-top: 4px; }
+  .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  }
+  .stat-cell {
+    background: #fff; border: 1px solid #f0e0e5;
+    border-radius: 8px; padding: 8px; text-align: center;
+  }
+  .stat-cell .num { font-size: 20px; font-weight: 700; color: var(--pink); }
+  .stat-cell .lbl { font-size: 9px; color: #888; }
+  .funnel-mini {
+    background: #fff; border-radius: 8px; padding: 8px 10px;
+    margin-top: 8px;
+  }
+  .funnel-mini .row {
+    display: flex; justify-content: space-between; padding: 3px 0;
+    font-size: 10px; border-bottom: 1px dashed #eee;
+  }
+  .funnel-mini .row:last-child { border-bottom: none; }
+
+  .tab-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: #fff; border-top: 1px solid #eee;
+    padding: 6px 0; margin-top: 8px;
+    border-radius: 0 0 8px 8px;
+  }
+  .tab-bar .item {
+    text-align: center; font-size: 9px; color: #999;
+  }
+  .tab-bar .item .ico { display: block; font-size: 18px; }
+  .tab-bar .item.active { color: var(--pink); font-weight: 700; }
+
+  /* Interest list */
+  .interest-list .item {
+    background: #fff; border: 1px solid #f0e0e5;
+    border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
+  }
+  .interest-list .item .svc {
+    font-weight: 700; font-size: 11px; color: #333;
+  }
+  .interest-list .item .badge {
+    display: inline-block; padding: 1px 6px; border-radius: 6px;
+    font-size: 9px; margin-left: 4px;
+  }
+  .b-new { background: rgba(212,122,149,0.15); color: var(--new); }
+  .b-contacted { background: rgba(74,123,160,0.15); color: var(--contacted); }
+  .b-inprogress { background: rgba(160,132,32,0.15); color: var(--inprogress); }
+  .b-closed { background: rgba(74,133,85,0.15); color: var(--closed); }
+  .interest-list .item .meta {
+    font-size: 9px; color: #888; margin-top: 2px;
+  }
+  .info-box {
+    background: #fff5f7; border-radius: 6px;
+    padding: 8px 10px; font-size: 10px; color: #666;
+    margin-bottom: 8px;
+  }
+
+  /* Modal mock */
+  .modal-mock {
+    background: #fff; border-radius: 12px; padding: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    text-align: left; font-size: 11px;
+  }
+  .modal-mock h4 {
+    margin: 0 0 10px; color: var(--pink); font-size: 13px;
+  }
+  .modal-mock .field { margin-bottom: 8px; }
+  .modal-mock .field label { display: block; font-size: 9px; color: #888; }
+  .modal-mock .field .val { font-size: 11px; color: #333; }
+  .modal-mock .msg-box {
+    background: #fff5f7; padding: 6px 8px; border-radius: 6px;
+    font-weight: 700; font-size: 11px; margin-top: 4px;
+  }
+  .modal-mock .st-buttons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+    margin-top: 8px;
+  }
+  .modal-mock .st-buttons .btn {
+    padding: 5px 6px; border-radius: 5px; text-align: center;
+    font-size: 10px; font-weight: 700;
+  }
+  .btn-pink { background: var(--pink); color: #fff; }
+  .btn-gray { background: #eee; color: #666; }
+
+  /* Notification lock screen */
+  .lock-screen {
+    background: linear-gradient(135deg,#3a5065,#5a7085);
+    border-radius: 20px; padding: 40px 12px 16px;
+    max-width: 300px; margin: 12px auto;
+    color: #fff; text-align: center; position: relative;
+  }
+  .lock-time { font-size: 40px; font-weight: 200; }
+  .lock-date { font-size: 12px; margin-bottom: 20px; opacity: 0.9; }
+  .lock-notif {
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+    border-radius: 12px; padding: 10px; text-align: left;
+    margin: 4px 0; font-size: 11px;
+  }
+  .lock-notif .head {
+    display: flex; align-items: center; gap: 4px; font-size: 9px;
+    opacity: 0.85; margin-bottom: 3px;
+  }
+  .lock-notif .head::before {
+    content: '🌸'; background: var(--pink); padding: 2px 4px;
+    border-radius: 3px;
+  }
+  .lock-notif .title { font-weight: 700; font-size: 12px; margin-bottom: 2px; }
+
+  /* Setup share icons */
+  .safari-mock {
+    background: #f5f5f7; border-radius: 12px; padding: 8px;
     text-align: center;
-    background: #fafafa;
-    border-radius: 10px;
-    padding: 14px;
-    border: 1px dashed #ddd;
   }
-  .shot img {
-    max-width: 100%; height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  .safari-url {
+    background: #fff; padding: 6px 8px; border-radius: 6px;
+    font-size: 10px; color: #333; font-family: monospace;
+    margin-bottom: 8px;
   }
-  .shot .placeholder {
-    color: #aaa; font-size: 13px; padding: 60px 20px;
+  .safari-menu {
+    background: #fff; border-radius: 10px; padding: 8px;
+    text-align: left; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
-  .shot .caption { font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
+  .safari-menu .item {
+    padding: 6px 8px; border-bottom: 1px solid #f0f0f0;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .safari-menu .item.hi {
+    background: #fff5f7; color: var(--pink); font-weight: 700;
+    border-radius: 6px;
+  }
 
-  /* Tip / Warn */
   .tip {
-    margin: 14px 0;
-    padding: 12px 16px;
-    background: #fffaf3;
-    border: 1px solid #f5deae;
-    border-radius: 10px;
-    font-size: 13px;
-    color: #7a5a10;
+    margin: 14px 0; padding: 12px 16px;
+    background: #fffaf3; border: 1px solid #f5deae;
+    border-radius: 10px; font-size: 13px; color: #7a5a10;
   }
   .tip strong { color: #a67d10; }
   .warn {
-    margin: 14px 0;
-    padding: 12px 16px;
-    background: var(--warn-soft);
-    border-left: 4px solid var(--warn);
-    border-radius: 6px;
-    font-size: 13px;
-    color: #7a2a1e;
+    margin: 14px 0; padding: 12px 16px;
+    background: var(--warn-soft); border-left: 4px solid var(--warn);
+    border-radius: 6px; font-size: 13px; color: #7a2a1e;
   }
   .warn strong { color: var(--warn); }
 
-  /* Status badges */
   .status-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-    margin: 14px 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px; margin: 14px 0;
   }
   .status-list .st {
-    padding: 12px;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 12px;
-    background: #fafafa;
-    border: 1px solid var(--rule);
+    padding: 12px; border-radius: 10px; text-align: center;
+    font-size: 12px; background: #fafafa; border: 1px solid var(--rule);
   }
   .status-list .st .name {
-    display: inline-block;
-    padding: 3px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 13px;
-    margin-bottom: 6px;
+    display: inline-block; padding: 3px 12px; border-radius: 8px;
+    font-weight: 700; font-size: 13px; margin-bottom: 6px;
   }
   .st-new .name { background: rgba(212,122,149,0.15); color: var(--new); }
   .st-contacted .name { background: rgba(74,123,160,0.15); color: var(--contacted); }
@@ -198,33 +299,12 @@
   .st-cancel .name { background: rgba(153,153,153,0.15); color: var(--cancel); }
   .status-list .st .desc { color: var(--ink-soft); font-size: 12px; }
 
-  /* Tabs preview */
-  .tab-preview {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin: 12px 0;
-    padding: 14px;
-    background: #fff5f7;
-    border-radius: 10px;
-  }
-  .tab-preview .item {
-    text-align: center;
-    padding: 10px 6px;
-    background: #fff;
-    border-radius: 8px;
-    font-size: 12px;
-  }
-  .tab-preview .item .ico { font-size: 22px; display: block; }
-  .tab-preview .item .name { display: block; font-weight: 700; color: var(--pink); margin-top: 3px; }
-
-  /* Footer */
   .footer {
-    text-align: center;
-    padding: 24px 20px;
-    color: #aaa;
-    font-size: 11px;
-    margin-top: 24px;
+    text-align: center; padding: 24px 20px;
+    color: #aaa; font-size: 11px; margin-top: 24px;
+  }
+  .footer code {
+    background: #fff; padding: 2px 6px; border-radius: 3px; color: var(--pink);
   }
 </style>
 </head>
@@ -255,10 +335,10 @@
   <div class="sec" id="s1">
     <span class="sec-num">STEP 1</span>
     <h2>🚀 初回セットアップ</h2>
-    <p class="lead">iPhoneでSafariから開いて通知許可→ホーム画面に追加。これで以降はホーム画面アイコンから即起動できます。</p>
+    <p class="lead">iPhoneでSafariから開いて通知許可→ホーム画面に追加。以降はホーム画面アイコンから即起動できます。</p>
 
     <ol class="steps">
-      <li>iPhone <strong>Safari</strong> で <code>https://apps.l-mine.com/kayomama-admin/</code> を開く<br>
+      <li>iPhone <strong>Safari</strong> で <code>apps.l-mine.com/kayomama-admin/</code> を開く<br>
       （初回のみ、とーるさんから受け取った専用URL）</li>
       <li>画面下の「<strong>共有</strong>」ボタン（□に↑）→「<strong>ホーム画面に追加</strong>」</li>
       <li>ホーム画面のアイコン🌸をタップして起動</li>
@@ -266,11 +346,40 @@
       <li>設定タブの「通知トークン」が<strong>登録済 ✅</strong>になれば準備完了</li>
     </ol>
 
-    <div class="shot"><div class="placeholder">📷 ホーム画面追加＋通知許可の流れ</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="safari-mock">
+            <div style="font-size:9px;color:#666;margin-bottom:4px;">Safari</div>
+            <div class="safari-url">apps.l-mine.com/kayomama-admin/</div>
+            <div class="safari-menu">
+              <div class="item">📋 コピー</div>
+              <div class="item hi">➕ ホーム画面に追加</div>
+              <div class="item">🔖 ブックマーク</div>
+              <div class="item">📤 送信</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen" style="text-align:center;">
+            <div style="font-size:40px;">🔔</div>
+            <div style="font-weight:700;color:#333;font-size:12px;">"kayomama-admin"は通知の送信を求めています</div>
+            <div style="font-size:10px;color:#666;margin:6px 0;">通知はアラート、サウンド、Appアイコンバッジが利用可能です</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+              <div style="padding:6px;background:#eee;border-radius:6px;font-size:11px;">許可しない</div>
+              <div style="padding:6px;background:var(--pink);color:#fff;border-radius:6px;font-size:11px;font-weight:700;">許可</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ ホーム画面追加 ／ 通知許可ダイアログ</div>
 
     <div class="tip">
       💡 <strong>ホーム画面追加のメリット</strong><br>
-      Safariのタブから開くのと違って、ホーム画面から起動すると全画面表示になり、普通のアプリとほぼ同じ操作感になります。
+      Safariタブから開くのと違って、ホーム画面から起動すると全画面表示になり、普通のアプリとほぼ同じ操作感になります。
     </div>
   </div>
 
@@ -280,7 +389,44 @@
     <h2>📊 ホーム画面</h2>
     <p class="lead">起動して最初に見える画面。今すぐ対応が必要な件数と、受講者の進捗状況が一目で分かります。</p>
 
-    <div class="shot"><div class="placeholder">📷 ホーム画面（未対応関心表明・進捗ファネル）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen" style="padding:8px;">
+            <div class="app-hdr">
+              <div>
+                <div class="title">🌸 かよママ管理</div>
+                <div class="subttl">更新 14:23</div>
+              </div>
+              <div class="refresh">↻ 更新</div>
+            </div>
+            <div class="stat-big">
+              <div class="num">💬 3</div>
+              <div class="lbl">未対応の関心表明</div>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-cell"><div class="num">28</div><div class="lbl">登録ユーザー</div></div>
+              <div class="stat-cell"><div class="num">15</div><div class="lbl">アプリ開始済</div></div>
+            </div>
+            <div class="funnel-mini">
+              <div style="font-size:10px;color:var(--pink);font-weight:700;margin-bottom:4px;">📈 進捗ファネル</div>
+              <div class="row"><span>診断完了</span><span><b>22 人</b></span></div>
+              <div class="row"><span>アプリ開始</span><span><b>15 人</b></span></div>
+              <div class="row"><span>Day1完了</span><span><b>13 人</b></span></div>
+              <div class="row"><span>Day4完了</span><span><b>8 人</b></span></div>
+              <div class="row"><span>💬 関心表明</span><span><b>5 件</b></span></div>
+            </div>
+            <div class="tab-bar">
+              <div class="item active"><span class="ico">📊</span>ホーム</div>
+              <div class="item"><span class="ico">👥</span>受講者</div>
+              <div class="item"><span class="ico">💬</span>関心</div>
+              <div class="item"><span class="ico">⚙️</span>設定</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ ホーム画面（未対応件数＋進捗ファネル）</div>
 
     <h4>見るべきポイント</h4>
     <ol class="steps">
@@ -289,13 +435,6 @@
       <li><strong>📈 進捗ファネル</strong>：診断→アプリ→Day1〜4→レポート→オファーの各段階の人数</li>
       <li><strong>↻ 更新ボタン</strong>：右上。最新データを取得</li>
     </ol>
-
-    <div class="tab-preview">
-      <div class="item"><span class="ico">📊</span><span class="name">ホーム</span>いまここ</div>
-      <div class="item"><span class="ico">👥</span><span class="name">受講者</span></div>
-      <div class="item"><span class="ico">💬</span><span class="name">関心</span></div>
-      <div class="item"><span class="ico">⚙️</span><span class="name">設定</span></div>
-    </div>
   </div>
 
   <!-- ================ S3 ================ -->
@@ -304,14 +443,61 @@
     <h2>👥 受講者タブ</h2>
     <p class="lead">診断を受けた人・アプリを開始した人の一覧を、最新イベントが新しい順で表示。1件タップで詳細＋イベント履歴100件が見られます。</p>
 
-    <div class="shot"><div class="placeholder">📷 受講者一覧＋詳細モーダル</div></div>
-
-    <h4>できること</h4>
-    <ol class="steps">
-      <li>1件タップ → <strong>詳細モーダル</strong>：名前・タイプ・現在ステータス・各Day完了時刻・イベント履歴</li>
-      <li>ステータスは自動更新（<code>①未診断 → ②診断完了 → ⑤アプリ開始 → ⑥1日目完了 → …</code>）</li>
-      <li>期限切れの人は「（期限切れ）」表示</li>
-    </ol>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen" style="padding:8px;">
+            <div class="app-hdr">
+              <div><div class="title">🌸 かよママ管理</div><div class="subttl">更新 14:25</div></div>
+              <div class="refresh">↻</div>
+            </div>
+            <div class="interest-list">
+              <div class="item">
+                <div class="svc">みほ</div>
+                <div style="font-size:10px;color:var(--pink);">今日何にしよう、が口ぐせさん</div>
+                <div class="meta">⑨4日目完了｜最終 14:23</div>
+              </div>
+              <div class="item">
+                <div class="svc">ゆき</div>
+                <div style="font-size:10px;color:var(--pink);">スマホ片手に、正解探しさん</div>
+                <div class="meta">⑥1日目完了｜最終 09:12</div>
+              </div>
+              <div class="item">
+                <div class="svc">ちえ</div>
+                <div style="font-size:10px;color:var(--pink);">もっとうまく作りたい、遠慮しがちさん</div>
+                <div class="meta">②診断完了｜最終 昨日</div>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="item"><span class="ico">📊</span>ホーム</div>
+              <div class="item active"><span class="ico">👥</span>受講者</div>
+              <div class="item"><span class="ico">💬</span>関心</div>
+              <div class="item"><span class="ico">⚙️</span>設定</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="modal-mock">
+            <h4>みほ</h4>
+            <div class="field"><label>タイプ</label><div class="val">今日何にしよう、が口ぐせさん</div></div>
+            <div class="field"><label>ステータス</label><div class="val">⑨4日目完了</div></div>
+            <div class="field"><label>進捗</label>
+              <div style="font-size:10px;line-height:1.6;color:#555;">
+                診断: 08/19 09:12<br>
+                開始: 08/19 09:33<br>
+                Day1: 08/20 21:15 ✓<br>
+                Day2: 08/21 20:30 ✓<br>
+                Day3: 08/22 08:20 ✓<br>
+                Day4: 08/23 14:00 ✓
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ 受講者一覧 ／ タップで詳細モーダル</div>
 
     <div class="tip">
       💡 <strong>個別対応のヒント</strong><br>
@@ -323,9 +509,68 @@
   <div class="sec" id="s4">
     <span class="sec-num">STEP 4</span>
     <h2>💬 関心タブ（メインの作業画面）</h2>
-    <p class="lead">「詳しく知りたい♡」を押した方の一覧。ステータス管理＋メモで、対応漏れを防ぎます。</p>
+    <p class="lead">「詳しく知りたい♡」を押した方の一覧。ステータス管理＋メモで対応漏れを防ぎます。</p>
 
-    <div class="shot"><div class="placeholder">📷 関心リスト＋詳細モーダル</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen" style="padding:8px;">
+            <div class="app-hdr">
+              <div><div class="title">🌸 かよママ管理</div><div class="subttl">更新 14:25</div></div>
+              <div class="refresh">↻</div>
+            </div>
+            <div class="info-box">
+              💡 コピーしたメッセージがLINEに届いてるはずです。かよママさんはそちらで対応→ここでステータス更新
+            </div>
+            <div class="interest-list">
+              <div class="item">
+                <div class="svc">献立サポート <span class="badge b-new">新規</span></div>
+                <div style="font-size:10px;color:var(--pink);">みほ｜今日何にしよう…</div>
+                <div class="meta">2026/08/23 14:23</div>
+              </div>
+              <div class="item">
+                <div class="svc">味付けサポート <span class="badge b-contacted">LINE連絡済</span></div>
+                <div style="font-size:10px;color:var(--pink);">ゆき｜スマホ片手に…</div>
+                <div class="meta">2026/08/22 20:15</div>
+              </div>
+              <div class="item">
+                <div class="svc">ほめられキッチン <span class="badge b-closed">成約</span></div>
+                <div style="font-size:10px;color:var(--pink);">ちえ｜もっとうまく…</div>
+                <div class="meta">2026/08/20 11:03</div>
+              </div>
+            </div>
+            <div class="tab-bar">
+              <div class="item"><span class="ico">📊</span>ホーム</div>
+              <div class="item"><span class="ico">👥</span>受講者</div>
+              <div class="item active"><span class="ico">💬</span>関心</div>
+              <div class="item"><span class="ico">⚙️</span>設定</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="modal-mock">
+            <h4>💬 関心表明の詳細</h4>
+            <div class="field"><label>サービス</label><div class="val">献立サポート</div></div>
+            <div class="field"><label>お名前</label><div class="val">みほ</div></div>
+            <div class="field"><label>タイプ</label><div class="val">今日何にしよう、が口ぐせさん</div></div>
+            <div class="field"><label>LINEに届いてるはずのメッセージ</label>
+              <div class="msg-box">「献立サポートを詳しく知りたい！」</div>
+            </div>
+            <div class="field"><label>ステータス</label>
+              <div class="st-buttons">
+                <div class="btn btn-pink">新規</div>
+                <div class="btn btn-gray">LINE連絡済</div>
+                <div class="btn btn-gray">対応中</div>
+                <div class="btn btn-gray">成約</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ 関心リスト ／ 詳細＋ステータス変更モーダル</div>
 
     <h4>作業フロー</h4>
     <ol class="steps">
@@ -338,26 +583,11 @@
 
     <h4>ステータスの意味</h4>
     <div class="status-list">
-      <div class="st st-new">
-        <span class="name">新規</span>
-        <div class="desc">まだLINE対応してない状態</div>
-      </div>
-      <div class="st st-contacted">
-        <span class="name">LINE連絡済</span>
-        <div class="desc">1度は返信済み</div>
-      </div>
-      <div class="st st-inprogress">
-        <span class="name">対応中</span>
-        <div class="desc">やり取り継続中</div>
-      </div>
-      <div class="st st-closed">
-        <span class="name">成約</span>
-        <div class="desc">申し込み確定</div>
-      </div>
-      <div class="st st-cancel">
-        <span class="name">見送り</span>
-        <div class="desc">今回は縁がなかった</div>
-      </div>
+      <div class="st st-new"><span class="name">新規</span><div class="desc">まだLINE対応してない状態</div></div>
+      <div class="st st-contacted"><span class="name">LINE連絡済</span><div class="desc">1度は返信済み</div></div>
+      <div class="st st-inprogress"><span class="name">対応中</span><div class="desc">やり取り継続中</div></div>
+      <div class="st st-closed"><span class="name">成約</span><div class="desc">申し込み確定</div></div>
+      <div class="st st-cancel"><span class="name">見送り</span><div class="desc">今回は縁がなかった</div></div>
     </div>
 
     <div class="tip">
@@ -372,12 +602,41 @@
     <h2>⚙️ 設定タブ</h2>
     <p class="lead">通知テスト・トークン確認・ログアウトができます。日常的にはあまり触りません。</p>
 
-    <div class="shot"><div class="placeholder">📷 設定画面</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen" style="padding:8px;">
+            <div class="app-hdr">
+              <div><div class="title">🌸 かよママ管理</div><div class="subttl">更新 14:25</div></div>
+              <div class="refresh">↻</div>
+            </div>
+            <div class="funnel-mini">
+              <div style="font-size:10px;color:var(--pink);font-weight:700;margin-bottom:4px;">⚙️ 設定</div>
+              <div class="row"><span>管理トークン</span><span style="font-family:monospace;">admin-c6...8032</span></div>
+              <div class="row"><span>通知トークン</span><span><b>登録済 ✅</b></span></div>
+            </div>
+            <div style="margin:10px 0;text-align:center;">
+              <div style="padding:8px;background:#fff;border:1px solid var(--pink);color:var(--pink);border-radius:20px;font-size:11px;font-weight:700;">🔔 テスト通知を送る</div>
+            </div>
+            <div style="margin:10px 0;text-align:center;">
+              <div style="padding:8px;background:#fff;border:1px solid #f5c5c5;color:#a44;border-radius:20px;font-size:11px;font-weight:700;">ログアウト</div>
+            </div>
+            <div class="tab-bar">
+              <div class="item"><span class="ico">📊</span>ホーム</div>
+              <div class="item"><span class="ico">👥</span>受講者</div>
+              <div class="item"><span class="ico">💬</span>関心</div>
+              <div class="item active"><span class="ico">⚙️</span>設定</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ 設定画面</div>
 
     <ol class="steps">
       <li><strong>管理トークン</strong>：現在使用中のトークン（先頭と末尾のみ表示）</li>
-      <li><strong>通知トークン</strong>：<code>登録済 ✅</code>ならOK。「未登録」の場合はいったんログアウト→再度URL開いて通知許可</li>
-      <li><strong>🔔 テスト通知を送る</strong>：通知が届くかテスト。数秒後にiPhoneに届けば正常</li>
+      <li><strong>通知トークン</strong>：<code>登録済 ✅</code>ならOK</li>
+      <li><strong>🔔 テスト通知を送る</strong>：通知が届くかテスト</li>
       <li><strong>ログアウト</strong>：機種変更・別デバイス移行のとき使う（普段は不要）</li>
     </ol>
   </div>
@@ -388,11 +647,26 @@
     <h2>🔔 通知の見え方</h2>
     <p class="lead">「詳しく知りたい♡」が入った瞬間に、iPhoneに通知が届きます。</p>
 
-    <div class="shot"><div class="placeholder">📷 通知の見え方（ロック画面／アプリ内トースト）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="lock-screen">
+            <div class="lock-time">14:23</div>
+            <div class="lock-date">土曜日, 8月23日</div>
+            <div class="lock-notif">
+              <div class="head">かよママ管理 · たった今</div>
+              <div class="title">💬 関心表明が入りました♡</div>
+              <div style="font-size:10px;">献立サポート<br>（LINEに「献立サポートを詳しく知りたい！」が届くはず）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ iPhoneロック画面での通知</div>
 
     <h4>2種類の見え方</h4>
     <ol class="steps">
-      <li><strong>バックグラウンド時</strong>：アプリを閉じてても、iPhoneのロック画面に「💬 関心表明が入りました♡」が届く。タップで管理アプリが起動</li>
+      <li><strong>バックグラウンド時</strong>：アプリを閉じてても、iPhoneのロック画面に通知が届く。タップで管理アプリが起動</li>
       <li><strong>アプリを開いている時</strong>：画面下部にトースト表示＋自動リロード</li>
     </ol>
 

@@ -11,13 +11,17 @@
     --pink-bg: #fff5f7;
     --line: #06C755;
     --line-soft: rgba(6,199,85,0.08);
-    --sheet: #4a8555;
+    --line-bg: #7a9dc9;
+    --sheet-green: #4a8555;
     --sheet-soft: #eaf5ef;
     --admin: #c88a1a;
     --admin-soft: #fdf4e0;
     --ink: #333;
     --ink-soft: #6a6a6a;
     --rule: #ede0e4;
+    --grid: #d8dde3;
+    --grid-head: #f1f3f4;
+    --grid-ink: #3c4043;
   }
   * { box-sizing: border-box; }
   body {
@@ -29,237 +33,305 @@
   }
   .wrap { max-width: 900px; margin: 0 auto; }
 
-  /* ============ Header ============ */
   .hdr {
-    text-align: center;
-    padding: 28px 20px;
-    background: #fff;
-    border-radius: 16px;
+    text-align: center; padding: 28px 20px;
+    background: #fff; border-radius: 16px;
     box-shadow: 0 4px 20px rgba(212,122,149,0.08);
     margin-bottom: 24px;
   }
   .hdr .badge {
-    display: inline-block;
-    padding: 4px 14px;
-    background: var(--pink-soft);
-    color: var(--pink);
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 12px;
+    display: inline-block; padding: 4px 14px;
+    background: var(--pink-soft); color: var(--pink);
+    border-radius: 12px; font-size: 12px; font-weight: 700; margin-bottom: 12px;
   }
   .hdr h1 { margin: 0 0 8px; font-size: 24px; color: var(--pink); }
   .hdr p { margin: 0; font-size: 13px; color: var(--ink-soft); }
 
-  /* ============ Overview ============ */
   .overview {
-    background: #fff;
-    border-radius: 16px;
-    padding: 22px 20px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    background: #fff; border-radius: 16px; padding: 22px 20px;
+    margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
   }
   .overview h2 {
     margin: 0 0 12px; font-size: 17px; color: var(--pink);
     padding-bottom: 8px; border-bottom: 2px dashed var(--pink-soft);
   }
   .overview .flow {
-    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-    padding: 12px 0;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 12px 0;
   }
   .overview .node {
-    padding: 8px 12px;
-    background: var(--pink-bg);
-    border: 1.5px solid var(--pink);
-    border-radius: 10px;
-    color: var(--pink);
-    font-weight: 700; font-size: 13px;
-    display: inline-flex; align-items: center; gap: 4px;
+    padding: 8px 12px; background: var(--pink-bg);
+    border: 1.5px solid var(--pink); border-radius: 10px;
+    color: var(--pink); font-weight: 700; font-size: 13px;
   }
   .overview .arrow { color: var(--pink); font-weight: 700; align-self: center; }
   .overview .note { font-size: 12px; color: var(--ink-soft); text-align: center; margin: 8px 0 0; }
 
-  /* ============ Legend ============ */
   .legend {
     display: flex; flex-wrap: wrap; gap: 10px;
-    padding: 14px 18px;
-    background: #fff;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    font-size: 12px;
+    padding: 14px 18px; background: #fff; border-radius: 12px;
+    margin-bottom: 24px; font-size: 12px;
   }
   .legend .tag {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 4px 10px; border-radius: 8px; font-weight: 700;
   }
   .tag-user { background: var(--pink-soft); color: var(--pink); }
-  .tag-sheet { background: var(--sheet-soft); color: var(--sheet); }
+  .tag-sheet { background: var(--sheet-soft); color: var(--sheet-green); }
   .tag-line { background: var(--line-soft); color: var(--line); }
   .tag-admin { background: var(--admin-soft); color: var(--admin); }
 
-  /* ============ Step ============ */
   .step {
-    background: #fff;
-    border-radius: 16px;
-    padding: 24px 22px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    background: #fff; border-radius: 16px; padding: 24px 22px;
+    margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     position: relative;
   }
   .step-num {
-    position: absolute;
-    top: -12px; left: 22px;
+    position: absolute; top: -12px; left: 22px;
     background: var(--pink); color: #fff;
-    padding: 4px 14px;
-    border-radius: 10px;
+    padding: 4px 14px; border-radius: 10px;
     font-size: 12px; font-weight: 700;
   }
-  .step h3 {
-    margin: 8px 0 6px; font-size: 20px; color: var(--pink);
-  }
+  .step h3 { margin: 8px 0 6px; font-size: 20px; color: var(--pink); }
   .step .lead {
     margin: 0 0 16px; font-size: 14px; color: var(--ink-soft);
-    padding-bottom: 12px;
-    border-bottom: 1px dashed var(--rule);
+    padding-bottom: 12px; border-bottom: 1px dashed var(--rule);
   }
-  .step-img {
-    margin: 12px 0;
-    text-align: center;
-    background: #fafafa;
-    border-radius: 10px;
-    padding: 14px;
-    border: 1px dashed #ddd;
+
+  /* ============ Mock: Phone frame ============ */
+  .mock-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
+  .mock-phone {
+    max-width: 300px; width: 100%; margin: 0 auto;
+    border: 8px solid #1a1a1a; border-radius: 28px;
+    background: var(--pink-bg); padding: 24px 0 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    position: relative; overflow: hidden;
   }
-  .step-img img {
-    max-width: 100%; height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  .mock-phone::before {
+    content: ''; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%); width: 90px; height: 18px;
+    background: #1a1a1a; border-radius: 0 0 12px 12px;
   }
-  .step-img .placeholder {
-    color: #aaa;
-    font-size: 13px;
-    padding: 48px 20px;
+  .mock-phone-body { padding: 8px 14px 4px; font-size: 13px; }
+  .mock-cap {
+    text-align: center; font-size: 12px; color: var(--ink-soft);
+    margin: 6px 0 0;
   }
+
+  /* ============ Mock: LINE talk ============ */
+  .mock-line {
+    background: var(--line-bg); padding: 10px 8px 12px;
+    border-radius: 8px; min-height: 120px;
+  }
+  .mock-line-head {
+    text-align: center; font-size: 11px; color: #fff;
+    padding: 4px 0 6px; opacity: 0.9;
+  }
+  .mock-line-bubble {
+    background: #fff; padding: 8px 12px; border-radius: 14px;
+    max-width: 80%; margin: 4px 0; font-size: 12px; color: #333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .mock-line-bubble.mine {
+    background: #a3d977; margin-left: auto; color: #1a3010;
+  }
+  .mock-line-time { font-size: 9px; color: #e7f0f8; margin: 0 4px; }
+
+  /* ============ Mock: iPhone notification ============ */
+  .mock-notif {
+    background: rgba(28,28,30,0.88);
+    color: #fff; padding: 10px 12px;
+    border-radius: 14px; max-width: 300px; margin: 8px auto;
+    font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+  }
+  .mock-notif .head {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; opacity: 0.8; margin-bottom: 4px;
+  }
+  .mock-notif .head::before {
+    content: '🌸'; background: var(--pink);
+    padding: 3px 5px; border-radius: 4px;
+  }
+  .mock-notif .title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+
+  /* ============ Mock: Google Sheet ============ */
+  .mock-sheet {
+    border: 1px solid var(--rule); border-radius: 8px;
+    background: #fff; overflow: hidden; margin: 10px 0;
+  }
+  .mock-sheet-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 12px; background: #f8fafc;
+    border-bottom: 1px solid var(--rule);
+    font-size: 12px; color: var(--ink-soft);
+  }
+  .mock-sheet-bar::before {
+    content: ''; width: 9px; height: 9px; border-radius: 50%;
+    background: #0f9d58; flex: none;
+  }
+  .mock-sheet-scroll { overflow-x: auto; }
+  table.grid {
+    border-collapse: collapse; width: 100%;
+    font-family: Arial, sans-serif; font-size: 11px;
+    color: var(--grid-ink); white-space: nowrap;
+  }
+  table.grid th, table.grid td {
+    border: 1px solid var(--grid); padding: 5px 8px; text-align: left;
+  }
+  table.grid .colh {
+    background: var(--grid-head); text-align: center;
+    color: #666; font-weight: 400; font-size: 10px;
+  }
+  table.grid .rowh {
+    background: var(--grid-head); text-align: center;
+    color: #666; font-weight: 400; width: 26px;
+  }
+  table.grid .head { background: #fff5f7; font-weight: 700; }
+  table.grid .new {
+    background: #fff8e1; color: #a67d10; font-weight: 700;
+  }
+  table.grid .done { background: #e8f5e9; }
 
   /* ============ Sub sections ============ */
   .sub {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px 14px;
-    padding: 12px 14px;
-    border-radius: 10px;
-    margin: 10px 0;
-    font-size: 13px;
-    align-items: start;
+    display: grid; grid-template-columns: auto 1fr; gap: 10px 14px;
+    padding: 12px 14px; border-radius: 10px; margin: 10px 0;
+    font-size: 13px; align-items: start;
   }
   .sub-user { background: rgba(212,122,149,0.06); border-left: 3px solid var(--pink); }
-  .sub-sheet { background: var(--sheet-soft); border-left: 3px solid var(--sheet); }
+  .sub-sheet { background: var(--sheet-soft); border-left: 3px solid var(--sheet-green); }
   .sub-line { background: var(--line-soft); border-left: 3px solid var(--line); }
   .sub-admin { background: var(--admin-soft); border-left: 3px solid var(--admin); }
   .sub .label {
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    white-space: nowrap;
+    font-weight: 700; padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; white-space: nowrap;
   }
   .sub-user .label { background: var(--pink); color: #fff; }
-  .sub-sheet .label { background: var(--sheet); color: #fff; }
+  .sub-sheet .label { background: var(--sheet-green); color: #fff; }
   .sub-line .label { background: var(--line); color: #fff; }
   .sub-admin .label { background: var(--admin); color: #fff; }
-  .sub .desc { color: var(--ink); }
   .sub .desc code {
-    background: #f0e8eb;
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    color: var(--pink);
-    font-family: monospace;
+    background: #f0e8eb; padding: 1px 6px; border-radius: 4px;
+    font-size: 12px; color: var(--pink); font-family: monospace;
   }
 
-  /* ============ Tips box ============ */
   .tip {
-    margin: 14px 0 0;
-    padding: 12px 16px;
-    background: #fffaf3;
-    border: 1px solid #f5deae;
-    border-radius: 10px;
-    font-size: 13px;
-    color: #7a5a10;
+    margin: 14px 0 0; padding: 12px 16px;
+    background: #fffaf3; border: 1px solid #f5deae;
+    border-radius: 10px; font-size: 13px; color: #7a5a10;
   }
   .tip strong { color: #a67d10; }
 
-  /* ============ Type branch ============ */
   .branch {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin: 12px 0;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 8px; margin: 12px 0;
   }
   .branch .item {
-    background: var(--pink-bg);
-    border: 1px solid var(--pink);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 12px;
+    background: var(--pink-bg); border: 1px solid var(--pink);
+    border-radius: 8px; padding: 10px 12px; font-size: 12px;
   }
   .branch .item .t {
     font-weight: 700; color: var(--pink); display: block; margin-bottom: 3px;
   }
 
-  /* ============ Beacon list ============ */
   .beacons {
-    background: rgba(140,109,31,0.06);
-    padding: 14px 18px;
-    border-radius: 12px;
-    border-left: 3px solid var(--admin);
-    margin: 14px 0;
+    background: rgba(140,109,31,0.06); padding: 14px 18px;
+    border-radius: 12px; border-left: 3px solid var(--admin); margin: 14px 0;
   }
-  .beacons h4 {
-    margin: 0 0 8px; font-size: 14px; color: var(--admin);
-  }
+  .beacons h4 { margin: 0 0 8px; font-size: 14px; color: var(--admin); }
   .beacon-row {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    gap: 8px 12px;
-    padding: 6px 0;
+    display: grid; grid-template-columns: auto auto 1fr;
+    gap: 8px 12px; padding: 6px 0;
     border-top: 1px dashed rgba(140,109,31,0.2);
-    font-size: 12px;
-    align-items: center;
+    font-size: 12px; align-items: center;
   }
   .beacon-row:first-of-type { border-top: none; }
   .beacon-row .idx {
     background: var(--admin); color: #fff;
-    padding: 1px 8px; border-radius: 8px;
-    font-weight: 700; font-size: 11px;
+    padding: 1px 8px; border-radius: 8px; font-weight: 700; font-size: 11px;
   }
   .beacon-row .when {
-    color: var(--admin);
-    font-weight: 700;
-    white-space: nowrap;
+    color: var(--admin); font-weight: 700; white-space: nowrap;
   }
 
-  /* ============ Footer ============ */
-  .footer {
+  /* Mini phone screens */
+  .mini-screen {
+    background: #fff; border-radius: 12px; padding: 12px;
+    border: 1px solid var(--rule); margin: 6px 0;
+    text-align: center; font-size: 12px;
+  }
+  .mini-screen .title {
+    font-weight: 700; color: var(--pink); margin-bottom: 4px; font-size: 13px;
+  }
+  .btn-mock {
+    display: inline-block; padding: 8px 16px;
+    background: var(--pink); color: #fff;
+    border-radius: 20px; font-weight: 700; font-size: 12px;
+    margin: 6px 0; box-shadow: 0 2px 6px rgba(212,122,149,0.3);
+  }
+  .btn-mock.sec { background: #eee; color: #666; }
+  .type-card {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    margin: 8px 0;
+  }
+  .type-card .tc {
+    background: var(--pink-bg); border: 1px solid var(--pink);
+    border-radius: 8px; padding: 6px; font-size: 10px; color: var(--pink);
+    font-weight: 700;
+  }
+  .day-list {
+    display: flex; flex-direction: column; gap: 4px; margin: 8px 0;
+  }
+  .day-list .day-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 10px; background: var(--pink-bg);
+    border-radius: 6px; font-size: 11px;
+  }
+  .day-list .day-item.done { background: #e8f5e9; color: #4a8555; }
+  .day-list .day-item.done::after { content: '✓'; }
+  .day-list .day-item.now { background: var(--pink); color: #fff; }
+  .progress-bar {
+    height: 6px; background: #eee; border-radius: 3px;
+    margin: 6px 0; overflow: hidden;
+  }
+  .progress-bar > div {
+    height: 100%; background: var(--pink);
+  }
+
+  /* Interest modal mock */
+  .mock-modal {
+    background: #fff; border-radius: 14px; padding: 16px;
+    border: 1px solid var(--rule); margin: 8px 0;
     text-align: center;
-    padding: 24px 20px;
-    color: #aaa;
-    font-size: 11px;
-    margin-top: 24px;
+  }
+  .mock-modal .icon { font-size: 28px; }
+  .mock-modal .modal-title {
+    font-weight: 700; color: var(--pink); margin: 6px 0 8px; font-size: 14px;
+  }
+  .mock-modal .copy-box {
+    background: var(--pink-bg); border: 2px dashed var(--pink);
+    padding: 10px; border-radius: 8px;
+    font-size: 12px; font-weight: 700; margin: 8px 0;
+  }
+
+  .footer {
+    text-align: center; padding: 24px 20px;
+    color: #aaa; font-size: 11px; margin-top: 24px;
+  }
+  .footer code {
+    background: #fff; padding: 2px 6px; border-radius: 3px; color: var(--pink);
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- ============ Header ============ -->
   <div class="hdr">
     <span class="badge">🌸 かよママさん専用</span>
     <h1>導線マニュアル</h1>
     <p>ユーザーがSNSから関心表明まで、どう動くか<br>その裏でスプシ・LINE・管理アプリに何が起きるか</p>
   </div>
 
-  <!-- ============ Overview ============ -->
   <div class="overview">
     <h2>📍 全体の流れ（8ステップ）</h2>
     <div class="flow">
@@ -275,7 +347,6 @@
     <p class="note">全ステップでスプシに履歴が残り、必要なタイミングでLINE配信が飛びます</p>
   </div>
 
-  <!-- ============ Legend ============ -->
   <div class="legend">
     <span class="tag tag-user">👤 ユーザーの動き</span>
     <span class="tag tag-sheet">📊 スプシへの影響</span>
@@ -287,17 +358,28 @@
   <div class="step">
     <span class="step-num">STEP 1</span>
     <h3>📱 SNSから診断LPへ</h3>
-    <p class="lead">Instagramなどの投稿から、診断LPへ誘導。「お料理迷子タイプ診断」のリンクをタップしてもらう。</p>
+    <p class="lead">Instagram等の投稿から、診断LPへ誘導。「お料理迷子タイプ診断」のリンクをタップしてもらう。</p>
 
-    <div class="step-img"><div class="placeholder">📷 診断LP案内投稿のイメージ（あとで差替）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen" style="background:#fafafa;">
+            <div style="font-weight:700;font-size:11px;color:#666;">Instagram @kayocookingclass</div>
+            <div style="height:120px;background:linear-gradient(135deg,#ffd6e0,#ffe5b0);border-radius:8px;margin:8px 0;display:flex;align-items:center;justify-content:center;color:#a04868;font-weight:700;font-size:13px;">🌸 診断投稿</div>
+            <div style="text-align:left;font-size:11px;color:#333;">「あなたはどのお料理迷子タイプ？」<br>プロフィールリンクから診断してね♡</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ Instagram等の投稿→リンクをタップ</div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
-      <div class="desc">Instagram等の投稿を見て、プロフィールリンクや投稿末尾のリンクから診断LPを開く</div>
+      <div class="desc">SNSの投稿を見て、プロフィールリンクや投稿末尾のリンクから診断LPを開く</div>
     </div>
     <div class="sub sub-sheet">
       <span class="label">スプシ</span>
-      <div class="desc">まだ記録なし（診断完了時に初めて追記）</div>
+      <div class="desc">まだ記録なし（診断完了時に初めて追記される）</div>
     </div>
   </div>
 
@@ -307,22 +389,83 @@
     <h3>🌸 診断LPで10問診断</h3>
     <p class="lead">10問のクイズに答えると、4タイプ（A/B/C/D）のうちどれに該当するか判定される。</p>
 
-    <div class="step-img"><div class="placeholder">📷 診断LP画面（設問モーダル）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div class="title">🌸 お料理迷子タイプ診断</div>
+            <div style="font-size:11px;color:#666;">10問で分かるあなたのタイプ</div>
+            <div style="margin:12px 0 8px;padding:10px;background:var(--pink-bg);border-radius:8px;font-size:11px;">
+              Q3. 献立を決めるとき、あなたは？<br>
+              <div style="text-align:left;margin-top:6px;line-height:1.6;">
+                ○ ネットで調べる<br>
+                ● 定番から選ぶ<br>
+                ○ 冷蔵庫を見て決める
+              </div>
+            </div>
+            <div class="progress-bar"><div style="width:30%"></div></div>
+            <div style="font-size:10px;color:#888;">3 / 10</div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div class="title">✨ 診断結果</div>
+            <div style="margin:8px 0;padding:12px;background:linear-gradient(135deg,#fff5f7,#ffe4e9);border-radius:10px;">
+              <div style="font-size:22px;">🌸</div>
+              <div style="font-weight:700;color:var(--pink);font-size:13px;margin:4px 0;">Bタイプ</div>
+              <div style="font-size:11px;">今日何にしよう、が口ぐせさん</div>
+            </div>
+            <div class="btn-mock" style="font-size:11px;">💬 LINEで詳しく受け取る</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ 設問→タイプ判定→LINE誘導</div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
-      <div class="desc">「診断する」→設問モーダルが開き、10問に答える→結果ページで自分のタイプが表示される</div>
+      <div class="desc">「診断する」→設問モーダルで10問→結果ページで自分のタイプ表示</div>
     </div>
     <div class="sub sub-sheet">
       <span class="label">スプシ</span>
-      <div class="desc">「ユーザー」シートに <code>diagnosis_at</code>（診断日時）＋<code>type</code>（タイプ）が追記される</div>
+      <div class="desc">「ユーザー」シートに <code>diagnosis_at</code>＋<code>type</code>が追記される</div>
     </div>
 
+    <div class="mock-sheet">
+      <div class="mock-sheet-bar">かよママアプリ_ユーザー管理 ／ <b>ユーザー</b></div>
+      <div class="mock-sheet-scroll">
+        <table class="grid">
+          <tr>
+            <th class="colh"></th><th class="colh">A</th><th class="colh">B</th><th class="colh">C</th>
+            <th class="colh">D</th><th class="colh">M</th><th class="colh">S</th>
+          </tr>
+          <tr>
+            <td class="rowh">1</td>
+            <td class="head">UID</td><td class="head">タイプ</td>
+            <td class="head new">診断日時</td><td class="head">開始日時</td>
+            <td class="head">ステータス</td><td class="head">名前</td>
+          </tr>
+          <tr>
+            <td class="rowh">2</td>
+            <td>U12abc...</td>
+            <td class="new">今日何にしよう、が口ぐせさん</td>
+            <td class="new">2026/08/23 14:05</td>
+            <td>—</td>
+            <td>②診断完了</td>
+            <td>—</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="mock-cap">▲ スプシに1行追記（黄色ハイライト部分が今回入る値）</div>
+
     <div class="branch">
-      <div class="item"><span class="t">A タイプ</span>もっとうまく作りたい、遠慮しがちさん</div>
-      <div class="item"><span class="t">B タイプ</span>今日何にしよう、が口ぐせさん</div>
-      <div class="item"><span class="t">C タイプ</span>スマホ片手に、正解探しさん</div>
-      <div class="item"><span class="t">D タイプ</span>もう回ってる、次いきたいさん</div>
+      <div class="item"><span class="t">Aタイプ</span>もっとうまく作りたい、遠慮しがちさん</div>
+      <div class="item"><span class="t">Bタイプ</span>今日何にしよう、が口ぐせさん</div>
+      <div class="item"><span class="t">Cタイプ</span>スマホ片手に、正解探しさん</div>
+      <div class="item"><span class="t">Dタイプ</span>もう回ってる、次いきたいさん</div>
     </div>
   </div>
 
@@ -330,17 +473,28 @@
   <div class="step">
     <span class="step-num">STEP 3</span>
     <h3>💬 タイプ別LINE友だち追加</h3>
-    <p class="lead">診断結果ページの「LINEで詳しく受け取る」ボタンから、タイプに合わせた4種類のLINE URLに友だち追加される。</p>
+    <p class="lead">結果ページのボタンから、タイプに合わせた4種類のLINE URLに友だち追加される。プロラインfreeのシナリオが自動起動。</p>
 
-    <div class="step-img"><div class="placeholder">📷 診断結果ページ・LINE追加ボタン</div></div>
+    <div class="mock-line" style="max-width:340px;margin:12px auto;">
+      <div class="mock-line-head">🌸 かよママ｜料理迷子サポート</div>
+      <div class="mock-line-bubble">
+        Bタイプさん、はじめまして♡<br>
+        「今日何にしよう」から抜け出すヒントを4日間でお届けしますね🌸
+      </div>
+      <div class="mock-line-bubble">
+        まずは下のアプリで詳しい結果とアドバイスを見てね<br><br>
+        👉 <span style="color:var(--pink);text-decoration:underline;">apps.l-mine.com/kayomama-trial-app/?type=B&uid=U12abc...</span>
+      </div>
+    </div>
+    <div class="mock-cap">▲ プロラインのシナリオが自動送信</div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
-      <div class="desc">タイプ別URLでLINE友だち追加。プロラインfreeのシナリオが起動</div>
+      <div class="desc">タイプ別URLでLINE追加。プロラインfreeのシナリオが起動</div>
     </div>
     <div class="sub sub-line">
       <span class="label">LINE</span>
-      <div class="desc">タイプ別シナリオ（挨拶＋アプリ案内）が自動配信される。アプリURLに<code>?type=X&uid=[[uid]]</code>が付いて渡る</div>
+      <div class="desc">タイプ別シナリオ（挨拶＋アプリ案内）が自動配信。アプリURLに<code>?type=X&uid=[[uid]]</code>付与</div>
     </div>
   </div>
 
@@ -350,11 +504,48 @@
     <h3>📱 アプリ開始（Welcome→改善したい→名前入力）</h3>
     <p class="lead">LINEから来たアプリを開く。詳細結果とアドバイスを見て「改善したい♡」→Check-LINE演出→お名前入力で本格開始。</p>
 
-    <div class="step-img"><div class="placeholder">📷 Welcome画面・Check-LINE演出・名前入力</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div class="title">✨ Bタイプさんの詳細</div>
+            <div style="padding:8px;background:var(--pink-bg);border-radius:6px;text-align:left;font-size:11px;margin:6px 0;">
+              「今日何にしよう」が口ぐせなあなたへ。<br>
+              献立を"仕組み"にすることで、毎日の決断疲れから解放されます。
+            </div>
+            <div class="btn-mock" style="font-size:11px;">🌸 改善したい♡</div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div style="font-size:22px;margin:20px 0 12px;">✨</div>
+            <div class="title">準備できましたっ✨</div>
+            <div style="font-size:11px;color:#666;margin:12px 0;">
+              LINEでも一緒に伴走します♡
+            </div>
+            <div class="progress-bar"><div style="width:100%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div class="title">お名前を教えてね♡</div>
+            <div style="padding:8px 12px;background:#fff;border:2px solid var(--pink);border-radius:8px;margin:12px 0;font-size:13px;text-align:left;">
+              みほ<span style="animation:blink 1s infinite;">|</span>
+            </div>
+            <div class="btn-mock" style="font-size:11px;">はじめる🌸</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ Welcome → Check-LINE演出 → お名前入力</div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
-      <div class="desc">Welcome画面で自分のタイプの詳細結果を読む→「改善したい♡」タップ→演出→お名前入力→ホーム画面</div>
+      <div class="desc">詳細結果を読む→「改善したい♡」→演出→お名前入力→ホーム画面</div>
     </div>
     <div class="sub sub-sheet">
       <span class="label">スプシ</span>
@@ -372,7 +563,38 @@
     <h3>📆 Day1〜Day4のワーク進行</h3>
     <p class="lead">1日1タスク。行動経済学ナッジ（20%スタート／カードX/4／ストリーク🔥／達成演出）で継続をサポート。</p>
 
-    <div class="step-img"><div class="placeholder">📷 Day1〜Day4の進行画面（ホーム／タスク／達成演出）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div class="title">みほさんのホーム 🌸</div>
+            <div style="font-size:10px;color:#666;">4日間ワーク・Bタイプ</div>
+            <div class="progress-bar"><div style="width:50%"></div></div>
+            <div style="font-size:10px;color:#666;margin-bottom:6px;">🔥 2日連続 ／ カード 2/4</div>
+            <div class="day-list">
+              <div class="day-item done">Day1 献立の仕組み</div>
+              <div class="day-item done">Day2 定番リスト作り</div>
+              <div class="day-item now">Day3 カード命名 →</div>
+              <div class="day-item">Day4 レポート生成</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div style="font-size:40px;animation:none;">🎉</div>
+            <div class="title">Day2 完了！</div>
+            <div style="font-size:11px;color:#666;">カードが増えました 🎴 2/4</div>
+            <div style="margin:12px 0;padding:12px;background:linear-gradient(135deg,#fff5f7,#ffe4e9);border-radius:10px;">
+              <div style="font-size:11px;color:var(--pink);font-weight:700;">🔥 2日連続</div>
+              <div style="font-size:10px;color:#666;margin-top:4px;">明日もこの調子で♡</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ ホーム（進捗ナッジ表示） ／ 達成演出</div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
@@ -381,10 +603,6 @@
     <div class="sub sub-sheet">
       <span class="label">スプシ</span>
       <div class="desc"><code>day1_at〜day4_at</code>が順に追記される。ステータスも「⑥1日目完了」〜「⑨4日目完了」へ更新</div>
-    </div>
-    <div class="sub sub-line">
-      <span class="label">LINE</span>
-      <div class="desc">毎朝9時と夜21時（未完了時）に励ましメッセージが自動配信される（下の一覧参照）</div>
     </div>
 
     <div class="beacons">
@@ -403,11 +621,31 @@
     <h3>📊 最終レポート閲覧</h3>
     <p class="lead">Day4完了で「あなただけのレポート」が生成される。4日間の記録＋タイプ別まとめが表示される。</p>
 
-    <div class="step-img"><div class="placeholder">📷 レポート画面</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div class="title">✨ みほさんのレポート</div>
+            <div style="font-size:10px;color:#666;">4日間の振り返り</div>
+            <div style="margin:8px 0;padding:10px;background:#fff5f7;border-radius:8px;font-size:11px;text-align:left;">
+              🎴 <strong>あなたのカード</strong><br>
+              「うちの定番、育つ食卓」<br>
+              <br>
+              📆 <strong>4日間の記録</strong><br>
+              Day1: 献立の仕組み ✓<br>
+              Day2: 定番リスト ✓<br>
+              Day3: カード命名 ✓<br>
+              Day4: レポート生成 ✓
+            </div>
+            <div class="btn-mock" style="font-size:11px;">次のステップを見る →</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
-      <div class="desc">Day4完了後、レポート画面へ。自分のカード＋4日間の振り返り＋タイプ別総評を読む</div>
+      <div class="desc">レポート画面で自分のカード＋4日間の振り返り＋タイプ別総評を読む</div>
     </div>
     <div class="sub sub-sheet">
       <span class="label">スプシ</span>
@@ -421,7 +659,24 @@
     <h3>🎁 オファー画面（タイプ別サービス提案）</h3>
     <p class="lead">レポートの次にオファー画面。タイプ別に「あなたにいちばんおすすめ」のメインサービス＋サブサービス3つが表示される。</p>
 
-    <div class="step-img"><div class="placeholder">📷 オファー画面（メイン＋サブサービス）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mini-screen">
+            <div style="font-size:10px;color:#888;">— NEXT STEP —</div>
+            <div class="title">あなたにいちばんおすすめ</div>
+            <div style="margin:8px 0;padding:12px;background:linear-gradient(135deg,#fff5f7,#ffe4e9);border-radius:10px;">
+              <div style="font-weight:700;color:var(--pink);font-size:14px;">献立サポート</div>
+              <div style="font-size:10px;color:#666;">「今日何にしよう」を仕組みで解決</div>
+              <div style="font-size:11px;color:var(--pink);font-weight:700;margin-top:6px;">30,000円</div>
+            </div>
+            <div class="btn-mock" style="font-size:11px;">🌸 献立サポートを詳しく知りたい♡</div>
+            <div style="font-size:9px;color:#888;margin-top:10px;">他にもこんなサポートあります</div>
+            <div style="font-size:10px;color:var(--pink);margin-top:4px;">・ほめられキッチン<br>・味付けサポート<br>・麹サポート</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
@@ -444,26 +699,92 @@
   <div class="step">
     <span class="step-num">STEP 8</span>
     <h3>💬 「詳しく知りたい♡」→ LINEコピペで直接連絡</h3>
-    <p class="lead">気になるサービスの「詳しく知りたい♡」ボタン→モーダル→メッセージコピー→LINE公式アカウントで直接送信。同時に管理アプリに通知が届く。</p>
+    <p class="lead">「詳しく知りたい♡」→モーダル→メッセージコピー→LINE公式アカウントで直接送信。同時に管理アプリに通知が届く。</p>
 
-    <div class="step-img"><div class="placeholder">📷 関心表明モーダル（コピー＋LINE遷移ボタン）</div></div>
+    <div class="mock-row">
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mock-modal">
+            <div class="icon">💬</div>
+            <div class="modal-title">かよママさんに聞いてみよう♡</div>
+            <div style="font-size:11px;color:#666;">下のメッセージをコピーして、<br>かよママさんのLINEに送ってね♡</div>
+            <div class="copy-box">献立サポートを詳しく知りたい！</div>
+            <div style="font-size:10px;color:#888;">ステップ1：メッセージをコピー</div>
+            <div class="btn-mock" style="font-size:11px;">📋 コピーしてLINEを開く</div>
+            <div class="btn-mock sec" style="font-size:11px;">あとで送る</div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-phone">
+        <div class="mock-phone-body">
+          <div class="mock-line">
+            <div class="mock-line-head">🌸 かよママ｜料理迷子サポート</div>
+            <div class="mock-line-bubble mine">
+              献立サポートを詳しく知りたい！
+              <div class="mock-line-time" style="text-align:right;color:#888;">14:23 既読</div>
+            </div>
+            <div class="mock-line-bubble">
+              みほさん♡ ありがとうございます🌸<br>
+              献立サポートの詳細、いまお送りしますね〜
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mock-cap">▲ 関心表明モーダル ／ LINEでかよママさんに直接届く</div>
 
     <div class="sub sub-user">
       <span class="label">ユーザー</span>
-      <div class="desc">「詳しく知りたい♡」タップ→モーダル→「📋 コピーしてLINEを開く」→LINEでかよママさんに直接メッセージ送信</div>
+      <div class="desc">「詳しく知りたい♡」→モーダル→「📋 コピーしてLINEを開く」→LINEでかよママさんに直接送信</div>
     </div>
     <div class="sub sub-sheet">
       <span class="label">スプシ</span>
-      <div class="desc">「関心リスト」シートに1行追記（サービス名・メッセージ・タイプ・時刻・ステータス「新規」）</div>
+      <div class="desc">「関心リスト」シートに1行追記</div>
     </div>
+
+    <div class="mock-sheet">
+      <div class="mock-sheet-bar">かよママアプリ_ユーザー管理 ／ <b>関心リスト</b></div>
+      <div class="mock-sheet-scroll">
+        <table class="grid">
+          <tr>
+            <th class="colh"></th><th class="colh">A</th><th class="colh">C</th><th class="colh">E</th>
+            <th class="colh">F</th><th class="colh">G</th><th class="colh">H</th>
+          </tr>
+          <tr>
+            <td class="rowh">1</td>
+            <td class="head">表明日時</td><td class="head">名前</td>
+            <td class="head">サービスキー</td><td class="head">サービス名</td>
+            <td class="head">メッセージ</td><td class="head">ステータス</td>
+          </tr>
+          <tr>
+            <td class="rowh">2</td>
+            <td class="new">2026/08/23 14:23</td>
+            <td class="new">みほ</td>
+            <td class="new">kondate</td>
+            <td class="new">献立サポート</td>
+            <td class="new">献立サポートを詳しく知りたい！</td>
+            <td class="new">新規</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="mock-cap">▲ スプシ「関心リスト」シートに自動追記</div>
+
     <div class="sub sub-line">
       <span class="label">LINE</span>
-      <div class="desc">かよママさんの LINE公式アカウント（@115vaudn）にユーザー本人から「〇〇を詳しく知りたい！」メッセージが届く</div>
+      <div class="desc">かよママさんのLINE公式アカウント（@115vaudn）にユーザー本人から「〇〇を詳しく知りたい！」メッセージが届く</div>
     </div>
     <div class="sub sub-admin">
       <span class="label">管理アプリ</span>
-      <div class="desc">iPhoneに🔔プッシュ通知「💬 関心表明が入りました♡」／管理アプリの「関心」タブに新規1件表示</div>
+      <div class="desc">iPhoneに🔔プッシュ通知／管理アプリの「関心」タブに新規1件表示</div>
     </div>
+
+    <div class="mock-notif">
+      <div class="head">かよママ管理 · たった今</div>
+      <div class="title">💬 関心表明が入りました♡</div>
+      <div>献立サポート<br>（LINEに「献立サポートを詳しく知りたい！」が届くはず）</div>
+    </div>
+    <div class="mock-cap">▲ かよママさんのiPhoneに届く通知</div>
 
     <div class="tip">
       💡 <strong>ここが最短動線のミソ</strong><br>
@@ -471,12 +792,12 @@
     </div>
   </div>
 
-  <!-- ============ Footer ============ -->
   <div class="footer">
     かよママさん専用 導線マニュアル / 更新日 2026-08-23<br>
-    このマニュアルは <code>apps.l-mine.com/kayomama-docs/funnel.html</code> で公開されています
+    公開URL: <code>apps.l-mine.com/kayomama-docs/funnel.html</code>
   </div>
 
 </div>
+<style>@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}</style>
 </body>
 </html>
