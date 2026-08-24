@@ -589,7 +589,16 @@
 
     trackEvent('app_viewed', { type: ct });
 
-    var screen = el('section', { className: 'screen active' });
+    var screen = el('section', { className: 'screen active screen-welcome-visual' });
+
+    screen.appendChild(el('img', {
+      className: 'welcome-visual',
+      src: 'assets/img/welcome-header.webp',
+      alt: 'やさしい朝の光に包まれた和朝食',
+      width: '600',
+      height: '400',
+      loading: 'eager'
+    }));
 
     // ---------- ①診断結果ヘッダー ----------
     screen.appendChild(el('div', { className: 'eyebrow', text: '— YOUR RESULT —' }));
@@ -923,7 +932,7 @@
       return renderExpired(root, true);
     }
 
-    var screen = el('section', { className: 'screen active' });
+    var screen = el('section', { className: 'screen active screen-home-visual' });
 
     // Header
     var header = el('div', { className: 'home-header' });
@@ -1969,6 +1978,15 @@
       text: 'ホームへ戻る'
     });
     screen.appendChild(back);
+
+    screen.appendChild(el('img', {
+      className: 'report-visual',
+      src: 'assets/img/report-medal.webp',
+      alt: '',
+      width: '220',
+      height: '220',
+      loading: 'lazy'
+    }));
 
     screen.appendChild(el('div', { className: 'eyebrow', text: '— REPORT —' }));
     screen.appendChild(el('h1', { className: 'page-title', text: COMMON.reportHeading }));

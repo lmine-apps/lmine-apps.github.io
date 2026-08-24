@@ -60,3 +60,4 @@ window.APP_CONFIG = {
   gasWebhookUrl: "https://script.google.com/macros/s/AKfycbwyy_kIboj_EnyxbJSIhPFlUJOgITE1iSBMoHGLyoDyaMGkfbNd7PNaFf91xMnI-ZTb/exec",
   gasToken:      "kayomama-app-tk8n3r5p2x9m7w4"
 };
+

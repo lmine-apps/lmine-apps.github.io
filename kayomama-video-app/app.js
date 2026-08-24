@@ -125,9 +125,10 @@ function renderList() {
 
 function renderCard(v) {
   const isFav = state.favorites.includes(v.no);
+  const fallbackNo = (Math.abs(Number(v.no) || 1) - 1) % 5 + 1;
   return `
     <article class="card" data-video="${v.no}">
-      <div class="thumb">
+      <div class="thumb" style="--thumb-image:url('img/thumb-default-${fallbackNo}.webp')">
         <div class="thumb-inner">
           <span class="play-icon">▶</span>
         </div>

@@ -852,3 +852,4 @@ window.TYPE_CONTENT = {
     subOffers: ["ほめられキッチン", "献立サポート", "味付けサポート"]
   }
 };
+

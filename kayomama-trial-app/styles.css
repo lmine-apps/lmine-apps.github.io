@@ -61,7 +61,11 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: url('assets/img/bg-app-organic-wash.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--sans);
   line-height: 1.8;
@@ -83,10 +87,44 @@ body {
   margin: 0 auto;
   min-height: 100vh;
   min-height: 100dvh;
-  background: var(--bg);
+  background: rgba(250, 244, 235, 0.93);
   position: relative;
   padding-left: var(--safe-left);
   padding-right: var(--safe-right);
+}
+
+.welcome-visual {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 230px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.screen-home-visual::before {
+  content: '';
+  display: block;
+  height: 104px;
+  margin: -4px 0 18px;
+  border-radius: var(--radius-lg);
+  background: url('assets/img/bg-app-soft-table.jpg') center / cover no-repeat;
+  opacity: 0.78;
+}
+
+.report-visual {
+  display: block;
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+}
+
+@media (prefers-reduced-data: reduce) {
+  body { background-image: none; }
+  .screen-home-visual::before { background-image: none; background-color: var(--bg-light); }
 }
 
 /* ============= Screens ============= */
