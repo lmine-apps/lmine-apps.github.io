@@ -334,3 +334,149 @@ body {
   font-size: 12px;
 }
 .ftr small { color: #ccc; }
+
+/* ============================================================
+   v0.2.0 追加スタイル（閲覧者管理・お知らせ・設定・ログイン）
+   ============================================================ */
+
+/* ---------- Header 拡張 ---------- */
+.hdr { position: relative; }
+.hdr-inner { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.hdr-btn {
+  position: absolute; top: 14px; right: 14px;
+  background: rgba(255,255,255,.85); border: 1.5px solid var(--pink-soft);
+  color: var(--pink-hi); width: 40px; height: 40px; border-radius: 50%;
+  font-size: 20px; cursor: pointer; box-shadow: var(--shadow);
+}
+.hdr-btn:hover { background: #fff; }
+
+/* ---------- お知らせバナー ---------- */
+.notice-banner {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #fff5cd, #ffe4e9);
+  border: 1.5px solid #f5c74a;
+  border-radius: 12px; padding: 10px 14px;
+  margin: 0 4px 12px; cursor: pointer;
+  box-shadow: var(--shadow);
+  font-size: 13px; color: #6a4c00;
+  transition: transform .15s;
+}
+.notice-banner:hover { transform: translateY(-1px); }
+.notice-icon { font-size: 18px; }
+.notice-title { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notice-more { font-size: 11px; background: #f5a30c; color: #fff; padding: 2px 8px; border-radius: 10px; }
+.notice-arrow { font-size: 18px; opacity: .6; }
+
+/* ---------- お知らせ一覧 ---------- */
+.notice-list { display: flex; flex-direction: column; gap: 12px; padding: 0 4px; }
+.notice-item {
+  background: #fff; border-radius: 12px; padding: 16px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--pink);
+}
+.notice-item h3 { margin: 4px 0 8px; color: var(--ink); font-size: 15px; }
+.notice-ts { margin: 0; font-size: 11px; color: var(--ink-soft); }
+.notice-body { margin: 0; font-size: 13px; line-height: 1.7; color: var(--ink); }
+
+/* ---------- ガイド/登録画面 ---------- */
+.guide-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.guide-card {
+  background: #fff; max-width: 420px; width: 100%;
+  padding: 32px 24px; border-radius: 18px;
+  box-shadow: var(--shadow-hi);
+  text-align: center;
+}
+.guide-icon { font-size: 48px; margin-bottom: 8px; }
+.guide-card h1, .guide-card h2 { color: var(--pink-hi); margin: 8px 0 16px; font-size: 20px; }
+.guide-lead { margin: 0 0 20px; color: var(--ink); font-size: 14px; line-height: 1.7; }
+.guide-body { margin: 0 0 24px; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+.guide-btn {
+  display: inline-block; width: 100%;
+  background: var(--pink); color: #fff; border: none;
+  padding: 14px 24px; border-radius: 24px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  text-decoration: none; box-shadow: 0 4px 12px rgba(212,122,149,0.3);
+  margin: 8px 0;
+}
+.guide-btn:active { transform: scale(.98); }
+.guide-note { font-size: 11px; color: var(--ink-soft); margin: 16px 0 0; line-height: 1.6; }
+.guide-note-small { font-size: 10px; color: #999; margin: 4px 0 0; }
+.guide-card hr { border: none; border-top: 1px dashed var(--rule); margin: 24px 0 16px; }
+.guide-test-btn {
+  background: transparent; border: 1.5px dashed var(--pink);
+  color: var(--pink); padding: 10px 20px; border-radius: 20px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.guide-test-btn:active { background: var(--pink-soft); }
+
+/* ---------- フォーム ---------- */
+.form-lbl {
+  display: block; text-align: left; margin: 12px 0 4px;
+  font-size: 12px; font-weight: 700; color: var(--ink);
+}
+.form-lbl .req { color: #d94040; margin-left: 4px; }
+.form-lbl small { color: var(--ink-soft); font-weight: 500; }
+#register-form input[type=text],
+#register-form input[type=email],
+.settings-card input[type=text],
+.settings-card input[type=email] {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid var(--pink-soft); border-radius: 10px;
+  font-size: 14px; box-sizing: border-box;
+}
+#register-form input:focus,
+.settings-card input:focus { outline: 2px solid var(--pink); }
+.form-check {
+  display: flex; align-items: center; gap: 8px;
+  margin: 12px 0; font-size: 13px; color: var(--ink);
+  text-align: left; cursor: pointer;
+}
+.form-check input { width: 18px; height: 18px; }
+
+/* ---------- 設定画面 ---------- */
+.settings-main { padding: 12px; max-width: 700px; margin: 0 auto; }
+.settings-title { color: var(--pink); margin: 12px 0 20px; font-size: 20px; text-align: center; }
+.settings-card {
+  background: #fff; padding: 20px; border-radius: 14px;
+  margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.settings-card h3 {
+  margin: 0 0 16px; font-size: 15px; color: var(--pink);
+  padding-bottom: 8px; border-bottom: 2px dashed var(--pink-soft);
+}
+.settings-card p { margin: 8px 0; font-size: 13px; color: var(--ink); }
+.settings-card .tag {
+  display: inline-block; background: var(--pink-soft); color: var(--pink-hi);
+  padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 700;
+}
+.settings-card .btn-recipe { margin-top: 16px; width: 100%; }
+.btn-outline {
+  background: transparent; border: 1.5px solid var(--ink-soft);
+  color: var(--ink-soft); padding: 10px 20px; border-radius: 20px;
+  font-size: 13px; cursor: pointer; width: 100%;
+}
+.settings-card .hint { font-size: 11px; color: var(--ink-soft); margin-top: 8px; }
+
+/* ---------- いいねボタン（カウント表示） ---------- */
+.thumb .fav em {
+  font-style: normal; font-size: 10px; font-weight: 700;
+  margin-left: 3px; color: var(--pink-hi);
+}
+.thumb .fav.on em { color: #d94040; }
+.thumb .fav.on { color: #d94040; background: rgba(255,255,255,.95); }
+
+/* ---------- お気に入りフィルタボタン ---------- */
+.fav-btn.on { background: #f5a30c; }
+
+/* ---------- レスポンシブ調整 ---------- */
+@media (max-width: 430px) {
+  .hdr h1 { font-size: 18px; }
+  .hdr-btn { top: 10px; right: 10px; width: 36px; height: 36px; font-size: 18px; }
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-bar select, .filter-bar button { width: 100%; }
+  .guide-card { padding: 24px 18px; }
+  .guide-card h1, .guide-card h2 { font-size: 18px; }
+}

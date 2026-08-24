@@ -278,3 +278,32 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
+
+/* v1.2: 動画タブ関連 */
+.video-subtabs {
+  display: flex; gap: 6px; padding: 8px 12px 12px;
+  background: #fff; border-bottom: 1px solid #eee;
+  overflow-x: auto;
+}
+.video-subtabs button {
+  flex: 1; padding: 8px 10px; border-radius: 20px;
+  background: #f6ecef; border: 1.5px solid transparent;
+  color: #a86680; font-size: 12px; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+}
+.video-subtabs button.active {
+  background: #d47a95; color: #fff; border-color: #d47a95;
+}
+
+/* お知らせ投稿モーダルのtextarea */
+#modal-ov .field textarea {
+  width: 100%; padding: 10px 12px; box-sizing: border-box;
+  border: 1.5px solid #f5c7d3; border-radius: 10px;
+  font-size: 14px; font-family: inherit; resize: vertical;
+}
+#modal-ov .field textarea:focus { outline: 2px solid #d47a95; }
+#modal-ov .field select {
+  width: 100%; padding: 10px 12px; box-sizing: border-box;
+  border: 1.5px solid #f5c7d3; border-radius: 10px;
+  font-size: 14px; background: #fff;
+}

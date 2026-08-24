@@ -7,10 +7,14 @@ import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/fireb
 
 // ============ State ============
 const state = {
-  tab: 'dashboard',   // dashboard | users | interests | settings
+  tab: 'dashboard',   // dashboard | users | interests | videos | settings
+  videoSubTab: 'viewers', // viewers | stats | notices
   stats: null,
   users: null,
   interests: null,
+  viewers: null,       // v1.2: 視聴アプリ閲覧者
+  videoStats: null,    // v1.2: 動画別視聴/いいね
+  notices: null,       // v1.2: お知らせ管理
   loading: false,
   fcmToken: null,
   authed: false,
@@ -129,14 +133,20 @@ async function callGas(action, extra) {
 async function refreshAll() {
   state.loading = true;
   render();
-  const [s, u, i] = await Promise.all([
+  const [s, u, i, vw, vs, nt] = await Promise.all([
     callGas('admin_stats'),
     callGas('admin_list_users'),
-    callGas('admin_list_interests')
+    callGas('admin_list_interests'),
+    callGas('admin_list_viewers'),
+    callGas('admin_video_stats'),
+    callGas('admin_list_notices')
   ]);
   state.stats = (s && s.ok) ? s.stats : null;
   state.users = (u && u.ok) ? u.users : [];
   state.interests = (i && i.ok) ? i.interests : [];
+  state.viewers = (vw && vw.ok) ? vw.viewers : [];
+  state.videoStats = (vs && vs.ok) ? vs.videos : [];
+  state.notices = (nt && nt.ok) ? nt.notices : [];
   state.loading = false;
 }
 
@@ -150,6 +160,7 @@ function render() {
       state.tab === 'dashboard' ? renderDashboard() :
       state.tab === 'users'     ? renderUsers() :
       state.tab === 'interests' ? renderInterests() :
+      state.tab === 'videos'    ? renderVideos() :
       state.tab === 'settings'  ? renderSettings() : ''}
     ${renderTabs()}
   `;
@@ -182,6 +193,9 @@ function renderTabs() {
       </button>
       <button data-tab="interests" class="${state.tab === 'interests' ? 'active' : ''} ${newInt > 0 ? 'badge' : ''}">
         <span class="ico">💬</span>関心${newInt > 0 ? '(' + newInt + ')' : ''}
+      </button>
+      <button data-tab="videos" class="${state.tab === 'videos' ? 'active' : ''}">
+        <span class="ico">🎬</span>動画
       </button>
       <button data-tab="settings" class="${state.tab === 'settings' ? 'active' : ''}">
         <span class="ico">⚙️</span>設定
@@ -264,6 +278,169 @@ function badgeClass_(status) {
   if (status === '成約')       return 'badge-closed';
   if (status === '見送り')     return 'badge-cancel';
   return '';
+}
+
+// ============ Videos (v1.2) ============
+function renderVideos() {
+  const sub = state.videoSubTab || 'viewers';
+  const viewers = state.viewers || [];
+  const stats = state.videoStats || [];
+  const notices = state.notices || [];
+  const totalViews = stats.reduce((s, v) => s + (v.views || 0), 0);
+  const totalLikes = stats.reduce((s, v) => s + (v.likes || 0), 0);
+  return `
+    <div class="video-subtabs">
+      <button data-vsub="viewers" class="${sub==='viewers'?'active':''}">👥 閲覧者(${viewers.length})</button>
+      <button data-vsub="stats"   class="${sub==='stats'?'active':''}">📊 動画分析</button>
+      <button data-vsub="notices" class="${sub==='notices'?'active':''}">📢 お知らせ(${notices.length})</button>
+    </div>
+    ${sub === 'viewers' ? renderVideoViewers_(viewers) : ''}
+    ${sub === 'stats'   ? renderVideoStatsList_(stats, totalViews, totalLikes) : ''}
+    ${sub === 'notices' ? renderVideoNotices_(notices) : ''}
+  `;
+}
+
+function renderVideoViewers_(viewers) {
+  if (!viewers.length) return '<div class="empty">まだ閲覧者はいません<br><small>LINE→視聴アプリに入った方がここに表示されます</small></div>';
+  const sorted = viewers.slice().sort((a, b) => (b.view_count||0) - (a.view_count||0));
+  return sorted.map(v => `
+    <div class="list-item" data-viewer-uid="${escape_(v.uid)}">
+      <p class="name">${escape_(v.name || '（名前未設定）')} <span class="badge badge-inprogress">${v.view_count||0}本視聴</span> <span class="badge">${v.like_count||0}♥</span></p>
+      <p class="type">${escape_(v.tags || '未設定')}${v.email?' ・ '+escape_(v.email):''}</p>
+      <p class="meta">登録 ${escape_(v.created_at || '-')} ・ 最終 ${escape_(v.last_access || '-')}</p>
+    </div>
+  `).join('');
+}
+
+function renderVideoStatsList_(stats, totalViews, totalLikes) {
+  if (!stats.length) return '<div class="empty">動画データがありません</div>';
+  const byViews = stats.slice().sort((a,b)=>(b.views||0)-(a.views||0));
+  const byLikes = stats.slice().sort((a,b)=>(b.likes||0)-(a.likes||0));
+  return `
+    <div class="stat-grid">
+      <div class="stat-card"><p class="num">${totalViews}</p><p class="lbl">総視聴数</p></div>
+      <div class="stat-card"><p class="num">${totalLikes}</p><p class="lbl">総いいね数</p></div>
+      <div class="stat-card"><p class="num">${stats.length}</p><p class="lbl">動画数</p></div>
+    </div>
+    <div class="funnel-box">
+      <h3>👀 視聴数ランキング TOP10</h3>
+      ${byViews.slice(0, 10).map((v,i) => `
+        <div class="funnel-row">
+          <span class="lbl">${i+1}位. ${escape_(v.title || '')}</span>
+          <span class="num">${v.views||0}回</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="funnel-box">
+      <h3>♥ いいね数ランキング TOP10</h3>
+      ${byLikes.slice(0, 10).map((v,i) => `
+        <div class="funnel-row">
+          <span class="lbl">${i+1}位. ${escape_(v.title || '')}</span>
+          <span class="num">${v.likes||0}♥</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderVideoNotices_(notices) {
+  return `
+    <button class="refresh-btn" id="btn-new-notice" style="display:block; margin:8px auto 16px; padding: 10px 24px;">＋ 新しいお知らせを投稿</button>
+    ${notices.length ? notices.map(n => `
+      <div class="list-item" data-notice-id="${escape_(n.id)}">
+        <p class="name">${escape_(n.title)} <span class="badge ${n.status==='公開'?'badge-closed':'badge-cancel'}">${escape_(n.status)}</span></p>
+        <p class="type">${escape_(n.body).substring(0, 60)}${n.body.length>60?'...':''}</p>
+        <p class="meta">${escape_(n.timestamp)}${n.target_tags?' ・ 対象: '+escape_(n.target_tags):''}</p>
+      </div>
+    `).join('') : '<div class="empty">まだお知らせがありません</div>'}
+  `;
+}
+
+function openNoticeCreateModal_() {
+  showModal(`
+    <button class="close" data-close>×</button>
+    <h3>📢 お知らせを投稿</h3>
+    <div class="field"><label>タイトル<span style="color:#d94040">*</span></label>
+      <input id="nt-title" type="text" placeholder="例：9月新作動画アップしました♡" maxlength="60">
+    </div>
+    <div class="field"><label>本文<span style="color:#d94040">*</span></label>
+      <textarea id="nt-body" rows="5" placeholder="お知らせ本文（改行OK）"></textarea>
+    </div>
+    <div class="field"><label>対象タグ <small>（空欄=全員）</small></label>
+      <input id="nt-tags" type="text" placeholder="例：サブスク,無料　※カンマ区切り">
+    </div>
+    <div class="field"><label>公開状態</label>
+      <select id="nt-status">
+        <option value="公開">公開</option>
+        <option value="下書き">下書き</option>
+      </select>
+    </div>
+    <button class="refresh-btn" id="nt-submit" style="display:block; margin:16px auto; padding: 12px 32px;">投稿する</button>
+  `);
+  document.getElementById('nt-submit').addEventListener('click', async () => {
+    const title = document.getElementById('nt-title').value.trim();
+    const body = document.getElementById('nt-body').value.trim();
+    const target_tags = document.getElementById('nt-tags').value.trim();
+    const status = document.getElementById('nt-status').value;
+    if (!title || !body) { showToast('タイトルと本文は必須です'); return; }
+    showLoading();
+    const r = await callGas('admin_post_notice', { title, body, target_tags, status });
+    hideLoading();
+    if (r && r.ok) {
+      showToast('投稿しました♡');
+      closeModal();
+      await refreshAll(); render();
+    } else {
+      showToast('投稿失敗：' + (r && r.error || 'unknown'));
+    }
+  });
+}
+
+async function deleteNotice_(id) {
+  if (!confirm('このお知らせを削除しますか？')) return;
+  showLoading();
+  const r = await callGas('admin_delete_notice', { id });
+  hideLoading();
+  if (r && r.ok) { showToast('削除しました'); await refreshAll(); render(); }
+  else showToast('削除失敗');
+}
+
+function openViewerModal_(uid) {
+  const v = (state.viewers || []).find(x => String(x.uid) === String(uid));
+  if (!v) return;
+  showModal(`
+    <button class="close" data-close>×</button>
+    <h3>${escape_(v.name || '（名前未設定）')}</h3>
+    <div class="field"><label>UID</label><div class="val" style="font-family: monospace; font-size: 12px;">${escape_(v.uid)}</div></div>
+    <div class="field"><label>名前</label><input id="vw-name" type="text" value="${escape_(v.name||'')}" maxlength="30"></div>
+    <div class="field"><label>メール</label><input id="vw-email" type="email" value="${escape_(v.email||'')}"></div>
+    <div class="field"><label>通知希望</label>
+      <label style="display:flex; align-items:center; gap:8px; padding: 8px 0;">
+        <input id="vw-notify" type="checkbox" ${v.notify?'checked':''}> メール通知を送る
+      </label>
+    </div>
+    <div class="field"><label>タグ<small>（カンマ区切り）</small></label>
+      <input id="vw-tags" type="text" value="${escape_(v.tags||'')}" placeholder="例：サブスク,無料">
+    </div>
+    <div class="field"><label>視聴数 / いいね数</label>
+      <div class="val">${v.view_count||0}本 ・ ${v.like_count||0}♥</div>
+    </div>
+    <div class="field"><label>登録日 / 最終アクセス</label>
+      <div class="val">${escape_(v.created_at||'-')} / ${escape_(v.last_access||'-')}</div>
+    </div>
+    <button class="refresh-btn" id="vw-save" style="display:block; margin:16px auto; padding:12px 32px;">💾 保存</button>
+  `);
+  document.getElementById('vw-save').addEventListener('click', async () => {
+    const name = document.getElementById('vw-name').value.trim();
+    const email = document.getElementById('vw-email').value.trim();
+    const notify = document.getElementById('vw-notify').checked;
+    const tags = document.getElementById('vw-tags').value.trim();
+    showLoading();
+    const r = await callGas('admin_update_viewer', { uid, name, email, notify: String(notify), tags });
+    hideLoading();
+    if (r && r.ok) { showToast('保存しました'); closeModal(); await refreshAll(); render(); }
+    else showToast('保存失敗');
+  });
 }
 
 // ============ Settings ============
@@ -487,6 +664,19 @@ function bindEvents() {
     localStorage.removeItem(LS_TOKEN);
     localStorage.removeItem('kayomama_admin_fcm_saved');
     location.reload();
+  });
+
+  // v1.2: 動画タブ
+  document.querySelectorAll('[data-vsub]').forEach(b => {
+    b.addEventListener('click', () => { state.videoSubTab = b.dataset.vsub; render(); });
+  });
+  document.querySelectorAll('[data-viewer-uid]').forEach(el => {
+    el.addEventListener('click', () => openViewerModal_(el.dataset.viewerUid));
+  });
+  const nn = document.getElementById('btn-new-notice');
+  if (nn) nn.addEventListener('click', openNoticeCreateModal_);
+  document.querySelectorAll('[data-notice-id]').forEach(el => {
+    el.addEventListener('click', () => deleteNotice_(el.dataset.noticeId));
   });
 }
 
