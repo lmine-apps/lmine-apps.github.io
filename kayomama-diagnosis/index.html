@@ -70,6 +70,25 @@
 .kayo-shindan .progress-label { font-size: 12px !important; }
 .kayo-shindan .section-label { font-size: 12.5px !important; }
 .kayo-shindan .q-count { font-size: 13px !important; }
+/* 変な位置での改行を防ぐ（かよママ要望 v1.3） */
+.kayo-shindan .q-text,
+.kayo-shindan .section-title,
+.kayo-shindan .hero-title,
+.kayo-shindan .hero-lead,
+.kayo-shindan .message-body p,
+.kayo-shindan .final-msg,
+.kayo-shindan .choice,
+.kayo-shindan .ks-result-summary,
+.kayo-shindan .ks-load-msg {
+  word-break: auto-phrase;  /* Chrome 119+ / Safari 17.4+ : 日本語フレーズ単位で改行 */
+  overflow-wrap: normal;
+  line-break: strict;
+  text-wrap: pretty;        /* 改行位置の自動バランシング */
+  hanging-punctuation: allow-end;
+}
+/* 質問カードのpadding広めで余裕を持たせる */
+.kayo-shindan .q-card { padding-left: 20px !important; padding-right: 20px !important; }
+.kayo-shindan .q-text { padding: 0 4px !important; }
 .kayo-shindan .serif {
   font-family: 'Hiragino Mincho Pro', 'Yu Mincho', 'Noto Serif JP', 'Times New Roman', serif;
   font-weight: 500;
@@ -1008,7 +1027,7 @@
       <!-- Q4 A -->
       <div class="q-card" data-type="A" data-idx="3">
         <div class="q-num">Q 4 / 15</div>
-        <div class="q-text serif">家族に "美味しい？" と聞くとき、心のどこかで少しドキッとする</div>
+        <div class="q-text serif">家族に "美味しい？" と聞くとき、心がザワザワする</div>
         <div class="q-choices">
           <button class="q-choice strong" onclick="ksAnswer(2)">よくある</button>
           <button class="q-choice" onclick="ksAnswer(1)">たまにある</button>
