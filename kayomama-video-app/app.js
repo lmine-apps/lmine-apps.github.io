@@ -27,6 +27,7 @@ const state = {
 async function boot() {
   const params = new URLSearchParams(location.search);
   let uid = params.get('uid');
+  const lineName = params.get('ln') || params.get('line_name') || '';
   const isTest = params.get('test') === '1';
 
   if (isTest) {
@@ -37,6 +38,8 @@ async function boot() {
   } else {
     uid = localStorage.getItem(LS_KEY_UID) || null;
   }
+  if (lineName) localStorage.setItem('kayomama_line_name', lineName);
+  state.lineName = lineName || localStorage.getItem('kayomama_line_name') || '';
 
   if (!uid) {
     state.view = 'guide';
@@ -47,7 +50,7 @@ async function boot() {
   state.uid = uid;
   // 閲覧者チェック
   try {
-    const r = await gasGet_('check_viewer', { uid });
+    const r = await gasGet_('check_viewer', { uid, ln: state.lineName || '' });
     if (r.ok && r.registered) {
       state.viewer = r.viewer;
       // テスト時はタグを強制付与
@@ -476,6 +479,7 @@ function bindRegister() {
     try {
       const r = await gasPost_('register_viewer', {
         uid: state.uid, name, email, notify: String(notify),
+        ln: state.lineName || '',
         tags: (state.uid === window.TEST_UID) ? window.TEST_TAGS : 'サブスク'
       });
       if (!r.ok) throw new Error(r.error||'unknown');

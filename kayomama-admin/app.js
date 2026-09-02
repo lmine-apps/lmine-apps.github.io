@@ -306,13 +306,17 @@ function renderVideos() {
 function renderVideoViewers_(viewers) {
   if (!viewers.length) return '<div class="empty">まだ閲覧者はいません<br><small>LINE→視聴アプリに入った方がここに表示されます</small></div>';
   const sorted = viewers.slice().sort((a, b) => (b.view_count||0) - (a.view_count||0));
-  return sorted.map(v => `
+  return sorted.map(v => {
+    const primary = v.line_name || v.name || '（名前未設定）';
+    const sub = (v.line_name && v.name && v.line_name !== v.name) ? ` <small style="color:#999">（自己申告: ${escape_(v.name)}）</small>` : '';
+    return `
     <div class="list-item" data-viewer-uid="${escape_(v.uid)}">
-      <p class="name">${escape_(v.name || '（名前未設定）')} <span class="badge badge-inprogress">${v.view_count||0}本視聴</span> <span class="badge">${v.like_count||0}♥</span></p>
+      <p class="name">${escape_(primary)}${sub} <span class="badge badge-inprogress">${v.view_count||0}本視聴</span> <span class="badge">${v.like_count||0}♥</span></p>
       <p class="type">${escape_(v.tags || '未設定')}${v.email?' ・ '+escape_(v.email):''}</p>
       <p class="meta">登録 ${escape_(v.created_at || '-')} ・ 最終 ${escape_(v.last_access || '-')}</p>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function renderVideoStatsList_(stats, totalViews, totalLikes) {
@@ -413,9 +417,10 @@ function openViewerModal_(uid) {
   if (!v) return;
   showModal(`
     <button class="close" data-close>×</button>
-    <h3>${escape_(v.name || '（名前未設定）')}</h3>
+    <h3>${escape_(v.line_name || v.name || '（名前未設定）')}</h3>
     <div class="field"><label>UID</label><div class="val" style="font-family: monospace; font-size: 12px;">${escape_(v.uid)}</div></div>
-    <div class="field"><label>名前</label><input id="vw-name" type="text" value="${escape_(v.name||'')}" maxlength="30"></div>
+    <div class="field"><label>LINE表示名</label><div class="val">${escape_(v.line_name||'（未取得）')}</div></div>
+    <div class="field"><label>自己申告名</label><input id="vw-name" type="text" value="${escape_(v.name||'')}" maxlength="30"></div>
     <div class="field"><label>メール</label><input id="vw-email" type="email" value="${escape_(v.email||'')}"></div>
     <div class="field"><label>通知希望</label>
       <label style="display:flex; align-items:center; gap:8px; padding: 8px 0;">
