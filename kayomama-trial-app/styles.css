@@ -895,11 +895,14 @@ body:has(.debug-bar.active) { padding-bottom: 40vh; }
 
 /* ============= Check-line stage animation ============= */
 .check-line-screen {
-  min-height: 70vh;
+  /* 画面上下中央に配置（かよママ要望） */
+  min-height: 100vh;
+  min-height: 100dvh;   /* iOS Safari用 */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 20px !important;
+  box-sizing: border-box;
 }
 .stage-box {
   width: 100%;
