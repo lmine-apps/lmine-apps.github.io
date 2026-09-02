@@ -9,7 +9,7 @@ window.GAS_TOKEN = 'kayomama-app-tk8n3r5p2x9m7w4';
 // テスト用の固定UID（?test=1 or 「テストログイン」ボタン時に使う）
 window.TEST_UID = 'test-uid-001';
 window.TEST_NAME = 'テストユーザー';
-window.TEST_TAGS = 'サブスク,無料,テスト';
+window.TEST_TAGS = 'サブスク,無料,テスト,管理者';
 
 window.APP_VERSION = '0.2.0';
 window.LINE_ADD_URL = 'https://line.me/R/ti/p/@115vaudn';

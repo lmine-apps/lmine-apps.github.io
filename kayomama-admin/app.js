@@ -176,7 +176,10 @@ function renderHeader() {
         <h1>🌸 かよママ管理</h1>
         <div class="subttl">更新 ${t}</div>
       </div>
-      <button class="refresh-btn" id="refresh">↻ 更新</button>
+      <div class="hdr-actions">
+        <a class="refresh-btn hdr-video-btn" href="../kayomama-video-app/" title="視聴アプリへ">🎬 視聴</a>
+        <button class="refresh-btn" id="refresh">↻ 更新</button>
+      </div>
     </div>
   `;
 }

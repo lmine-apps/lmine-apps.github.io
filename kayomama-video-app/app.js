@@ -128,15 +128,23 @@ function render() {
 }
 
 // ============ Views ============
+function isAdmin_() {
+  return !!(state.viewer && state.viewer.tags && state.viewer.tags.indexOf('管理者') >= 0);
+}
+
 function renderHeader() {
   const name = state.viewer && state.viewer.name ? state.viewer.name : '';
   const greet = name ? `${escape_(name)}さん、こんにちは♡` : 'ようこそ♡';
+  const adminBtn = isAdmin_()
+    ? `<a class="hdr-btn hdr-admin" href="../kayomama-admin/" title="管理アプリへ">📊</a>`
+    : '';
   return `
     <header class="hdr">
       <div class="hdr-inner">
         <h1>🌸 かよママの動画レッスン</h1>
         <p class="sub">${greet}</p>
       </div>
+      ${adminBtn}
       <button class="hdr-btn" data-view="settings" title="設定">⚙</button>
     </header>
   `;

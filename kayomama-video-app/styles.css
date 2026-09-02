@@ -480,3 +480,10 @@ body {
   .guide-card { padding: 24px 18px; }
   .guide-card h1, .guide-card h2 { font-size: 18px; }
 }
+
+/* 管理者用アイコン */
+.hdr-admin { text-decoration: none; }
+.hdr-admin { right: 60px !important; }
+@media (max-width: 430px) {
+  .hdr-admin { right: 52px !important; }
+}
