@@ -299,11 +299,12 @@
     console.log('[event]', eventName, payload);
     // GAS Web Appへ非同期送信（uidが取れてる場合のみ）
     sendToGas_('record_event', {
-      uid:     getLineUid(),
-      type:    state.assignedType || '',
-      name:    state.name || '',    // ★お名前も同送
-      event:   eventName,
-      payload: payload
+      uid:       getLineUid(),
+      type:      state.assignedType || '',
+      name:      state.name || '',      // 自己申告名（アプリ内モーダル）
+      line_name: getLineName(),         // ★v3.10：LINE友だち名（URLの?ln=[[name]]から）
+      event:     eventName,
+      payload:   payload
     });
   }
 
@@ -318,6 +319,17 @@
       return q;
     }
     try { return localStorage.getItem(LINE_UID_STORAGE_KEY) || ''; } catch (e) { return ''; }
+  }
+
+  // v3.10：LINE友だち名（?ln=[[name]] または ?line_name= から）
+  var LINE_NAME_STORAGE_KEY = 'kayomama_line_name';
+  function getLineName() {
+    var q = getQueryParam('ln') || getQueryParam('line_name');
+    if (q) {
+      try { localStorage.setItem(LINE_NAME_STORAGE_KEY, q); } catch (e) {}
+      return q;
+    }
+    try { return localStorage.getItem(LINE_NAME_STORAGE_KEY) || ''; } catch (e) { return ''; }
   }
 
   // ------------------------------------------------------------
