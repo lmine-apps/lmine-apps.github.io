@@ -410,6 +410,20 @@
       renderStorageError();
       return;
     }
+
+    // ?reset=1 が付いていたら localStorage を全消しして reset なしでリロード（一からやり直し）
+    if (getQueryParam('reset') === '1') {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(LINE_UID_STORAGE_KEY);
+        localStorage.removeItem(LINE_NAME_STORAGE_KEY);
+      } catch (e) {}
+      var newUrl = location.pathname + location.search.replace(/[?&]reset=1/, '').replace(/^&/, '?') + location.hash;
+      if (newUrl === location.pathname + location.hash) newUrl = location.pathname + location.hash;
+      location.replace(newUrl);
+      return;
+    }
+
     loadState();
 
     // URLに uid はあるが type がない or 保存済み type もない場合、GASから type を引き当てる
