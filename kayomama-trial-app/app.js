@@ -17,6 +17,9 @@
   // ------------------------------------------------------------
   var VALID_TYPES = ['A', 'B', 'C', 'D'];
 
+  // 管理者UID（リセットボタン表示対象・一般ユーザーには非表示）
+  var ADMIN_UIDS = ['bayxtq', 'itlfra'];
+
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 
@@ -321,6 +324,38 @@
     try { return localStorage.getItem(LINE_UID_STORAGE_KEY) || ''; } catch (e) { return ''; }
   }
 
+  // 管理者判定：現在のUIDがADMIN_UIDSに含まれるか
+  function isAdmin() {
+    var uid = getLineUid();
+    return !!uid && ADMIN_UIDS.indexOf(uid) >= 0;
+  }
+
+  // 管理者用リセットボタンを右下に浮かべる（一般ユーザーには非表示）
+  function ensureAdminResetButton() {
+    if (!isAdmin()) {
+      var existing = document.getElementById('admin-reset-btn');
+      if (existing) existing.parentNode.removeChild(existing);
+      return;
+    }
+    if (document.getElementById('admin-reset-btn')) return;
+    var btn = document.createElement('button');
+    btn.id = 'admin-reset-btn';
+    btn.type = 'button';
+    btn.textContent = '🔄 リセット';
+    btn.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:9999;padding:8px 12px;font-size:12px;background:rgba(93,74,60,0.85);color:#fff;border:none;border-radius:20px;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;font-family:inherit;';
+    btn.addEventListener('click', function () {
+      if (!confirm('データを全て消して最初からやり直しますか？')) return;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(LINE_UID_STORAGE_KEY);
+        localStorage.removeItem(LINE_NAME_STORAGE_KEY);
+      } catch (e) {}
+      var sep = location.search ? '&' : '?';
+      location.href = location.pathname + location.search + sep + 'reset=1' + location.hash;
+    });
+    document.body.appendChild(btn);
+  }
+
   // v3.10：LINE友だち名（?ln=[[name]] または ?line_name= から）
   var LINE_NAME_STORAGE_KEY = 'kayomama_line_name';
   function getLineName() {
@@ -510,6 +545,8 @@
       case 'invalid-type': renderInvalidType(app); break;
       default: renderHome(app);
     }
+    // 管理者UIDの場合のみ右下にリセットボタンを表示（一般ユーザーには非表示）
+    try { ensureAdminResetButton(); } catch (e) {}
   }
 
   // ============================================================
