@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>かよママ 全画面プレビュー</title>
+<style>
+:root{--bg:#FAF4EB;--ink:#4A3628;--ink-mid:#8B7A6B;--card:#fff;--accent:#C77B5E;--accent-soft:#E9D5C6;--line:#E5D9C9;}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;line-height:1.7;-webkit-text-size-adjust:100%}
+.container{max-width:900px;margin:0 auto;padding:32px 20px 80px}
+header{text-align:center;padding:24px 0 12px;border-bottom:1px solid var(--line);margin-bottom:32px}
+header h1{font-family:'Hiragino Mincho ProN','Yu Mincho',serif;font-size:26px;letter-spacing:0.05em;margin:0 0 8px;font-weight:500}
+header .sub{font-size:13px;color:var(--ink-mid);letter-spacing:0.08em}
+section{margin-bottom:36px}
+section h2{font-family:'Hiragino Mincho ProN',serif;font-size:18px;margin:0 0 4px;padding-left:12px;border-left:3px solid var(--accent);letter-spacing:0.05em}
+section .note{font-size:12px;color:var(--ink-mid);margin:4px 0 16px 12px}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px;transition:transform .15s,box-shadow .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(74,54,40,0.08);border-color:var(--accent-soft)}
+.card .title{font-size:15px;font-weight:600;color:var(--ink)}
+.card .desc{font-size:12px;color:var(--ink-mid);line-height:1.5}
+.card .badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:var(--accent-soft);color:var(--ink);letter-spacing:0.05em;margin-top:6px;align-self:flex-start}
+.card .badge.type-a{background:#F4D6C4}.card .badge.type-b{background:#D6E4F4}.card .badge.type-c{background:#DBE9D6}.card .badge.type-d{background:#EEDCE9}
+.card .badge.admin{background:#3D3630;color:#fff}.card .badge.debug{background:#F0E5C7;color:#6B5A3E}
+footer{text-align:center;font-size:11px;color:var(--ink-mid);margin-top:48px;padding-top:20px;border-top:1px dashed var(--line);letter-spacing:0.05em}
+.row-help{background:#FFFDF9;border:1px dashed var(--accent-soft);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--ink-mid);margin-bottom:24px;line-height:1.7}
+.row-help b{color:var(--ink)}
+</style></head>
+<body><div class="container">
+<header><h1>かよママ 全画面プレビュー</h1><div class="sub">Diagnostic / Trial App / Video / Admin — Quick Access Hub</div></header>
+<div class="row-help"><b>使い方：</b> 各カードをタップすると新規タブで開きます。トライアルアプリは preview-XX というダミーUIDで開くので実運用ユーザーには影響しません。</div>
+<section><h2>1. 診断LP</h2><div class="note">お料理迷子タイプ診断（6問）→ 結果 → LINE友だち追加</div><div class="cards">
+<a class="card" href="https://apps.l-mine.com/kayomama-diagnosis/" target="_blank" rel="noopener"><div class="title">診断LP（本番）</div><div class="desc">6問診断→結果→LINE誘導</div></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-diagnosis/?debug=1" target="_blank" rel="noopener"><div class="title">診断LP（debug）</div><div class="desc">デバッグバー表示</div><span class="badge debug">?debug=1</span></a>
+</div></section>
+<section><h2>2. 4日間トライアルアプリ</h2><div class="note">診断後LINE経由でユーザーが開く本編</div><div class="cards">
+<a class="card" href="https://apps.l-mine.com/kayomama-trial-app/?uid=preview-A&type=A&ln=プレビュー" target="_blank" rel="noopener"><div class="title">Aタイプ｜自信レス迷子</div><div class="desc">褒められ待ち・成功体験不足</div><span class="badge type-a">Type A</span></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-trial-app/?uid=preview-B&type=B&ln=プレビュー" target="_blank" rel="noopener"><div class="title">Bタイプ｜献立フリーズ迷子</div><div class="desc">決断疲れ・脳内パンク</div><span class="badge type-b">Type B</span></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-trial-app/?uid=preview-C&type=C&ln=プレビュー" target="_blank" rel="noopener"><div class="title">Cタイプ｜レシピ依存迷子</div><div class="desc">正解を外に探し続ける</div><span class="badge type-c">Type C</span></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-trial-app/?uid=preview-D&type=D&ln=プレビュー" target="_blank" rel="noopener"><div class="title">Dタイプ｜4番目のタイプ</div><div class="desc">追加タイプ（内容確認用）</div><span class="badge type-d">Type D</span></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-trial-app/?uid=preview-A&type=A&ln=プレビュー&reset=1" target="_blank" rel="noopener"><div class="title">Aタイプ（リセット付き）</div><div class="desc">開くたびに1日目から強制やり直し</div><span class="badge debug">?reset=1</span></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-trial-app/?uid=preview-A&type=A&ln=プレビュー&debug=1" target="_blank" rel="noopener"><div class="title">Aタイプ（debug）</div><div class="desc">デバッグバーで日付/状態を強制操作</div><span class="badge debug">?debug=1</span></a>
+</div></section>
+<section><h2>3. 動画視聴アプリ</h2><div class="note">単発動画・月毎シリーズを閲覧するアプリ</div><div class="cards">
+<a class="card" href="https://apps.l-mine.com/kayomama-video-app/" target="_blank" rel="noopener"><div class="title">動画視聴アプリ（本番）</div><div class="desc">ログイン→動画一覧→視聴</div></a>
+<a class="card" href="https://apps.l-mine.com/kayomama-video-app/?test=1" target="_blank" rel="noopener"><div class="title">動画視聴アプリ（test）</div><div class="desc">テストモード</div><span class="badge debug">?test=1</span></a>
+</div></section>
+<section><h2>4. 管理アプリ（かよママ専用）</h2><div class="note">受講者一覧・関心表明・お知らせ投稿・動画分析</div><div class="cards">
+<a class="card" href="https://apps.l-mine.com/kayomama-admin/" target="_blank" rel="noopener"><div class="title">管理アプリ（本番）</div><div class="desc">ダッシュボード／ユーザー一覧／関心リスト</div><span class="badge admin">Admin</span></a>
+</div></section>
+<section><h2>5. データソース（Googleスプシ）</h2><div class="note">アプリの裏側で使っているスプシ</div><div class="cards">
+<a class="card" href="https://docs.google.com/spreadsheets/d/1kS3t_J3rEaOnmS5sXicVqWO9nz-a0oMsG-kXVnSc11o/edit" target="_blank" rel="noopener"><div class="title">ユーザー管理スプシ</div><div class="desc">ユーザー／イベントログ／配信履歴／関心リスト</div><span class="badge admin">Sheets</span></a>
+</div></section>
+<footer>かよママ案件 プレビューハブ ／ apps.l-mine.com/kayomama-preview/</footer>
+</div></body></html>
