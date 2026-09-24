@@ -1,0 +1,4061 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#C97551">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>味付け道場 | かよママ</title>
+<style>
+/* ============================================================
+   AJITSUKE DOJO — 一生ものの味付け道場
+   ============================================================ */
+
+:root {
+  /* Color tokens */
+  --c-bg:        #F8F1E3;
+  --c-bg-grad-1: #FFF9EC;
+  --c-bg-grad-2: #F5EDD9;
+  --c-surface:   #FFFFFF;
+  --c-surface-2: #FFFBF2;
+  --c-surface-3: #F8F1E3;
+  --c-border:    #E8DBC8;
+  --c-border-2:  #F0E5D2;
+  --c-divider:   #EFE4D2;
+
+  --c-ink:       #2E2118;
+  --c-text:      #3D2C1F;
+  --c-text-2:    #6B5644;
+  --c-text-3:    #9B856E;
+
+  --c-accent:    #C97551;
+  --c-accent-d:  #A65A3A;
+  --c-accent-l:  #FFE4D6;
+
+  --c-gold:      #B89254;
+  --c-gold-d:    #8A6A2F;
+  --c-gold-l:    #F5E6BF;
+
+  --c-tsuyu:     #8B5E3C;
+  --c-su:        #B86E55;
+  --c-dashi:     #B89254;
+
+  --c-good:      #6E8B6E;
+  --c-warn:      #C68B47;
+
+  /* Shadows */
+  --sh-1: 0 1px 2px rgba(61,44,31,0.04), 0 2px 6px rgba(61,44,31,0.05);
+  --sh-2: 0 2px 4px rgba(61,44,31,0.05), 0 6px 16px rgba(61,44,31,0.08);
+  --sh-3: 0 4px 8px rgba(61,44,31,0.06), 0 16px 32px rgba(61,44,31,0.10);
+  --sh-inset: inset 0 1px 0 rgba(255,255,255,0.7);
+
+  /* Spacing 8px grid */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+
+  /* Radius */
+  --r-1: 8px;
+  --r-2: 12px;
+  --r-3: 16px;
+  --r-4: 20px;
+  --r-pill: 999px;
+
+  /* Type */
+  --f-serif: 'Hiragino Mincho ProN', 'Hiragino Mincho Pro', 'Yu Mincho', 'YuMincho', serif;
+  --f-sans:  'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--f-sans);
+  font-size: 15px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(255,210,150,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(184,146,84,0.10) 0%, transparent 70%),
+    radial-gradient(circle at 10% 30%, rgba(201,117,81,0.05) 0%, transparent 35%),
+    radial-gradient(circle at 90% 70%, rgba(184,146,84,0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #FFF8EC 0%, #FAF4EB 30%, #F5EDD9 100%);
+  background-attachment: fixed;
+}
+
+/* Paper grain (SVG noise) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+  background-size: 220px 220px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.42  0 0 0 0 0.32  0 0 0 0 0.22  0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Subtle decorative dots (washi feel) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(circle 1.2px at 18% 22%, rgba(184,146,84,0.22) 0%, transparent 100%),
+    radial-gradient(circle 1px at 67% 41%, rgba(201,117,81,0.16) 0%, transparent 100%),
+    radial-gradient(circle 1.4px at 33% 78%, rgba(184,146,84,0.22) 0%, transparent 100%),
+    radial-gradient(circle 1px at 89% 18%, rgba(201,117,81,0.14) 0%, transparent 100%),
+    radial-gradient(circle 1.2px at 12% 88%, rgba(184,146,84,0.20) 0%, transparent 100%),
+    radial-gradient(circle 1px at 78% 92%, rgba(184,146,84,0.16) 0%, transparent 100%);
+  background-size: 360px 360px;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; }
+img { display: block; max-width: 100%; }
+
+.serif { font-family: var(--f-serif); font-weight: 500; }
+.mono-cap { letter-spacing: 0.22em; text-transform: uppercase; font-feature-settings: 'palt'; }
+
+/* ============================================================
+   APP CONTAINER
+   ============================================================ */
+.app {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 80px;
+  z-index: 1;
+  background: var(--c-bg);
+}
+.app > * { position: relative; z-index: 1; }
+
+/* スクリーン上部のバナー（taitoru系画像） */
+.screen-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 0 0 18px;
+  box-shadow: 0 2px 10px rgba(74,56,41,0.10);
+}
+
+/* ============================================================
+   ADMIN BAR
+   ============================================================ */
+.admin-bar {
+  background: #2A2018;
+  color: #F5E6BF;
+  padding: 8px 14px;
+  display: none;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.admin-bar.on { display: flex; }
+.admin-bar button {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+}
+.admin-bar .tag { margin-left: auto; opacity: 0.5; letter-spacing: 0.15em; font-size: 10px; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.app-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255,251,242,0.94);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 1px solid var(--c-border-2);
+  padding: 14px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-char {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border-2);
+}
+.brand-text { line-height: 1.1; }
+.brand-eng {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: var(--c-text-3);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.brand-jp {
+  font-family: var(--f-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--c-ink);
+  letter-spacing: 0.04em;
+}
+.btn-sos {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--c-accent);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(201,117,81,0.3);
+}
+.btn-sos svg { width: 14px; height: 14px; }
+
+/* ============================================================
+   SCREENS / MAIN
+   ============================================================ */
+.app-main {
+  flex: 1;
+  padding: 20px 20px 24px;
+}
+.screen {
+  display: none;
+  animation: screenIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  background-position: top center;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+}
+.screen.active { display: block; }
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 画面別の背景イラスト（3枚をローテーション） */
+.screen[data-screen="home"]     { background-image: url('https://columns.l-mine.com/assets/backgrounds/haikei1.png'); }
+.screen[data-screen="sisters"]  { background-image: url('https://columns.l-mine.com/assets/backgrounds/haikei3.png'); }
+.screen[data-screen="recipes"]  { background-image: url('https://columns.l-mine.com/assets/backgrounds/haikei2.png'); }
+.screen[data-screen="badges"]   { background-image: url('https://columns.l-mine.com/assets/backgrounds/haikei1.png'); }
+.screen[data-screen="usage"]    { background-image: url('https://columns.l-mine.com/assets/backgrounds/haikei3.png'); }
+.screen[data-screen="farewell"] { background-image: url('https://columns.l-mine.com/assets/backgrounds/haikei2.png'); }
+/* 背景の上に薄いベール（文字の可読性確保） */
+.screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(250,244,235,0.55) 0%,
+    rgba(250,244,235,0.82) 16%,
+    rgba(250,244,235,0.96) 28%,
+    var(--c-bg) 42%);
+  pointer-events: none;
+  z-index: 0;
+}
+.screen > * { position: relative; z-index: 1; }
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--c-text-2);
+  font-size: 13px;
+  margin-bottom: var(--s-4);
+  padding: 4px 0;
+}
+.back svg { width: 14px; height: 14px; }
+
+.page-h {
+  font-family: var(--f-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--c-ink);
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 0 rgba(250,244,235,0.85);
+}
+.page-sub {
+  font-size: 13px;
+  color: var(--c-text-2);
+  line-height: 1.9;
+  margin-bottom: var(--s-5);
+  text-shadow: 0 1px 0 rgba(250,244,235,0.85);
+}
+
+.section-h {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: var(--s-5) 0 var(--s-4);
+  color: var(--c-text-3);
+}
+.section-h::before, .section-h::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-divider), transparent);
+}
+.section-h-text {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  font-weight: 600;
+}
+
+/* ============================================================
+   HOME
+   ============================================================ */
+.greeting {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-3);
+  padding: 18px 20px 16px;
+  margin-bottom: var(--s-4);
+  box-shadow: var(--sh-1);
+  position: relative;
+  overflow: hidden;
+}
+.greeting::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c-gold) 50%, transparent);
+  opacity: 0.6;
+}
+.greeting-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.34em;
+  color: var(--c-gold-d);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.greeting-name {
+  font-family: var(--f-serif);
+  font-size: 18px;
+  color: var(--c-ink);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.greeting-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  align-items: center;
+}
+.chip {
+  background: var(--c-surface-3);
+  color: var(--c-text-2);
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 500;
+}
+.chip.accent { background: var(--c-accent-l); color: var(--c-accent-d); }
+.chip.gold { background: var(--c-gold-l); color: var(--c-gold-d); }
+.chip.warn { background: #FFE0D6; color: var(--c-accent-d); }
+
+/* Feature card (dynamic) */
+.feature {
+  background: linear-gradient(135deg, var(--c-surface) 0%, var(--c-surface-2) 100%);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-3);
+  padding: 20px;
+  margin-bottom: var(--s-5);
+  box-shadow: var(--sh-2);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.feature::after {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(201,117,81,0.06) 0%, transparent 65%);
+}
+.feature-char {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--c-surface-3);
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--c-border-2);
+}
+.feature-body { flex: 1; position: relative; z-index: 1; }
+.feature-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: var(--c-accent-d);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.feature-title {
+  font-family: var(--f-serif);
+  font-size: 15px;
+  color: var(--c-ink);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* Progress cards */
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.prog {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-3);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  width: 100%;
+  box-shadow: var(--sh-1);
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+.prog:hover { box-shadow: var(--sh-2); border-color: var(--c-border); }
+.prog:active { transform: scale(0.99); }
+.prog-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-2);
+  background: var(--c-surface-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--c-accent-d);
+}
+.prog-icon svg { width: 22px; height: 22px; }
+.prog-body { flex: 1; min-width: 0; }
+.prog-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--c-text);
+  margin-bottom: 2px;
+}
+.prog-sub {
+  font-size: 11px;
+  color: var(--c-text-3);
+  margin-bottom: 8px;
+}
+.prog-bar {
+  height: 4px;
+  background: var(--c-surface-3);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-gold), var(--c-accent));
+  width: 0%;
+  border-radius: var(--r-pill);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.prog-meta {
+  text-align: right;
+  flex-shrink: 0;
+}
+.prog-count {
+  font-family: var(--f-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--c-ink);
+  line-height: 1;
+}
+.prog-count small { font-size: 11px; color: var(--c-text-3); font-weight: 400; }
+
+/* Community card */
+.community {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-3);
+  padding: 16px 20px;
+  margin-top: 10px;
+  text-align: left;
+  box-shadow: var(--sh-1);
+  transition: transform 0.15s;
+}
+.community:active { transform: scale(0.99); }
+.community-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--c-accent-l);
+  color: var(--c-accent-d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.community-icon svg { width: 18px; height: 18px; }
+.community-body { flex: 1; min-width: 0; }
+.community-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.community-sub {
+  font-size: 11px;
+  color: var(--c-text-3);
+}
+.community-arrow {
+  color: var(--c-text-3);
+}
+.community-arrow svg { width: 16px; height: 16px; }
+
+/* ============================================================
+   3 SISTERS SCREEN
+   ============================================================ */
+.sister {
+  background: var(--c-surface);
+  border-radius: var(--r-3);
+  padding: 22px 20px 20px;
+  margin-bottom: 12px;
+  border: 1px solid var(--c-border-2);
+  box-shadow: var(--sh-1);
+  position: relative;
+  overflow: hidden;
+}
+.sister::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 18px;
+  width: 3px; height: 28px;
+  border-radius: 0 2px 2px 0;
+  background: var(--c-tsuyu);
+}
+.sister[data-id="osuko"]::before { background: var(--c-su); }
+.sister[data-id="dashiko"]::before { background: var(--c-dashi); }
+
+.sister-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.sister-name {
+  font-family: var(--f-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--c-ink);
+  letter-spacing: 0.06em;
+}
+.sister-tag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--c-gold-d);
+  background: var(--c-gold-l);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+}
+.sister-desc {
+  font-size: 12px;
+  color: var(--c-text-2);
+  line-height: 1.85;
+  margin-bottom: 16px;
+}
+.sister-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  margin-bottom: 12px;
+}
+.sister-state .dot { width: 6px; height: 6px; border-radius: 50%; }
+.sister-state.unmade { background: var(--c-surface-3); color: var(--c-text-2); }
+.sister-state.unmade .dot { background: var(--c-text-3); }
+.sister-state.making { background: var(--c-gold-l); color: var(--c-gold-d); }
+.sister-state.making .dot { background: var(--c-gold); animation: pulse 1.8s ease-in-out infinite; }
+.sister-state.done { background: #DAE6D5; color: #4F6F4F; }
+.sister-state.done .dot { background: var(--c-good); }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.sister-date {
+  font-size: 11px;
+  color: var(--c-text-3);
+  margin-bottom: 14px;
+}
+.sister-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: var(--r-2);
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.12s, background 0.2s, opacity 0.2s;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary {
+  background: var(--c-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(201,117,81,0.25);
+}
+.btn-secondary {
+  background: var(--c-surface-3);
+  color: var(--c-text);
+}
+
+/* 先行予約 選択モーダル */
+.preorder-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 33, 24, 0.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+.preorder-modal.hidden { display: none; }
+.preorder-modal-card {
+  background: linear-gradient(180deg, #FFF6E6 0%, #FFFFFF 100%);
+  border-radius: var(--r-4);
+  padding: 28px 22px 22px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  border: 1.5px solid var(--c-gold);
+}
+.preorder-modal-emoji {
+  font-size: 36px;
+  margin-bottom: 4px;
+}
+.preorder-modal-title {
+  font-family: var(--f-serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+}
+.preorder-modal-sub {
+  font-size: 12.5px;
+  color: var(--c-text-2);
+  line-height: 1.9;
+  margin-bottom: 18px;
+}
+.preorder-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.preorder-option { display: block; cursor: pointer; }
+.preorder-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.preorder-option-box {
+  background: #fff;
+  border: 2px solid var(--c-border);
+  border-radius: var(--r-2);
+  padding: 14px 46px 14px 14px;
+  text-align: left;
+  transition: all 0.2s;
+  position: relative;
+}
+.preorder-option-box::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 16px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--c-border);
+  border-radius: 50%;
+  transition: all 0.2s;
+  background-size: 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.preorder-option-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.preorder-option-detail {
+  font-size: 11.5px;
+  color: var(--c-text-2);
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  padding-left: 2px;
+}
+.preorder-option input:checked ~ .preorder-option-box {
+  background: linear-gradient(135deg, #FFF6E6 0%, #FFE8DC 100%);
+  border-color: var(--c-accent);
+  box-shadow: 0 2px 10px rgba(212,133,106,0.20);
+}
+.preorder-option input:checked ~ .preorder-option-box::after {
+  background-color: var(--c-accent);
+  border-color: var(--c-accent);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'><polyline points='5 12 10 17 19 8'/></svg>");
+}
+.preorder-option-when {
+  background: var(--c-gold);
+  color: #fff;
+  padding: 4px 11px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.preorder-option-what {
+  font-family: var(--f-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-ink);
+  letter-spacing: 0.03em;
+}
+/* 8月 単発レッスンの告知だけ枠（チェック対象外） */
+.preorder-note {
+  background: rgba(255,251,242,0.9);
+  border: 1px dashed var(--c-gold);
+  border-radius: var(--r-2);
+  padding: 12px 14px;
+  margin: 4px 0 16px;
+  text-align: left;
+}
+.preorder-note-head {
+  font-family: var(--f-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.preorder-note-tag {
+  background: var(--c-gold);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  letter-spacing: 0.05em;
+}
+.preorder-note-body {
+  font-size: 11.5px;
+  color: var(--c-text-2);
+  line-height: 1.7;
+}
+.preorder-note-body a {
+  color: var(--c-accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.preorder-submit {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-d) 100%);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-pill);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  box-shadow: 0 3px 10px rgba(212,133,106,0.3);
+  margin-bottom: 8px;
+}
+.preorder-submit:active { transform: scale(0.98); }
+.preorder-cancel {
+  background: none;
+  border: none;
+  color: var(--c-text-3);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* 先行予約カード（サポート残り3日以内で有効化） */
+.preorder-card {
+  display: none;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #FFF6E6 0%, #FFE8DC 100%);
+  border: 1.5px solid var(--c-accent);
+  border-radius: var(--r-3);
+  padding: 16px 18px 18px;
+  box-shadow: 0 4px 14px rgba(212,133,106,0.20);
+  position: relative;
+  overflow: hidden;
+}
+.preorder-card.on { display: block; animation: preorderSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes preorderSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.preorder-card::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, rgba(212,133,106,0.14) 0%, transparent 70%);
+}
+.preorder-eyebrow {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--c-accent-d);
+  font-weight: 600;
+  margin-bottom: 6px;
+  position: relative;
+}
+.preorder-title {
+  font-family: var(--f-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.preorder-msg {
+  font-size: 12px;
+  color: var(--c-text-2);
+  line-height: 1.8;
+  margin-bottom: 14px;
+  position: relative;
+}
+.preorder-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-d) 100%);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-pill);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(212,133,106,0.3);
+  transition: transform 0.15s;
+  position: relative;
+}
+.preorder-btn:active { transform: scale(0.98); }
+.preorder-btn.done {
+  background: var(--c-surface-3);
+  color: var(--c-text-2);
+  box-shadow: none;
+  cursor: default;
+}
+.preorder-btn.done::before { content: '✓ '; }
+
+/* 3姉妹レシピ（アコーディオン） */
+.recipe-toggle {
+  width: 100%;
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-2);
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.recipe-toggle:active { background: var(--c-surface-3); transform: scale(0.99); }
+.recipe-toggle .rt-arrow {
+  font-size: 9px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--c-accent-d);
+}
+.recipe-toggle.open .rt-arrow { transform: rotate(180deg); }
+.recipe-toggle .rt-icon { font-size: 14px; }
+
+.recipe-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.recipe-detail.open {
+  max-height: 2400px;
+  margin-top: 10px;
+}
+.recipe-inner {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-2);
+  padding: 16px 16px 14px;
+}
+.recipe-subtitle {
+  font-family: var(--f-serif);
+  font-size: 12px;
+  color: var(--c-gold-d);
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--c-divider);
+}
+.recipe-section { margin-bottom: 14px; }
+.recipe-section:last-child { margin-bottom: 0; }
+.recipe-section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--f-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 8px;
+}
+.recipe-section-label .rl-icon { font-size: 13px; }
+.recipe-list, .recipe-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.recipe-list li {
+  font-size: 12px;
+  color: var(--c-text);
+  padding: 3px 0 3px 14px;
+  position: relative;
+  line-height: 1.7;
+}
+.recipe-list li::before {
+  content: '・';
+  position: absolute;
+  left: 0;
+  color: var(--c-gold);
+  font-weight: 700;
+}
+.recipe-steps {
+  counter-reset: rstep;
+}
+.recipe-steps li {
+  font-size: 12px;
+  color: var(--c-text);
+  padding: 5px 0 5px 24px;
+  position: relative;
+  line-height: 1.75;
+  counter-increment: rstep;
+}
+.recipe-steps li::before {
+  content: counter(rstep);
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 17px;
+  height: 17px;
+  background: var(--c-accent);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 9.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.recipe-notes {
+  background: rgba(184,146,84,0.06);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.recipe-notes ul { list-style: none; padding: 0; margin: 0; }
+.recipe-notes li {
+  font-size: 11px;
+  color: var(--c-text-2);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.75;
+}
+.recipe-notes li + li { margin-top: 4px; }
+.recipe-notes li::before {
+  content: '※';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--c-warn);
+  font-size: 10px;
+  font-weight: 700;
+}
+.recipe-alt {
+  background: rgba(212,133,106,0.06);
+  border: 1px solid rgba(212,133,106,0.20);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 10px;
+}
+.recipe-alt-title {
+  font-family: var(--f-serif);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--c-accent-d);
+  margin-bottom: 4px;
+}
+.recipe-alt-text {
+  font-size: 11.5px;
+  color: var(--c-text-2);
+  line-height: 1.8;
+}
+.recipe-storage {
+  background: var(--c-gold-l);
+  color: var(--c-gold-d);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   GOLDEN RATIOS
+   ============================================================ */
+.ratio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.ratio {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-2);
+  padding: 18px 12px 16px;
+  text-align: center;
+  min-height: 150px;
+  position: relative;
+  box-shadow: var(--sh-1);
+  transition: transform 0.15s;
+}
+.ratio:active:not(.locked) { transform: scale(0.97); }
+.ratio.locked {
+  background: var(--c-surface-3);
+  cursor: default;
+}
+.ratio.locked .ratio-no,
+.ratio.locked .ratio-name,
+.ratio.locked .ratio-formula,
+.ratio.locked .ratio-use {
+  filter: blur(5px);
+  user-select: none;
+  opacity: 0.6;
+}
+.ratio.locked::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 32px; height: 32px;
+  background: var(--c-surface);
+  border-radius: 50%;
+  box-shadow: var(--sh-2);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239B856E' stroke-width='1.8'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 1 1 8 0v4'/></svg>");
+  background-size: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ratio-no {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--c-gold-d);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.ratio-name {
+  font-family: var(--f-serif);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+}
+.ratio-formula {
+  font-family: var(--f-serif);
+  font-size: 22px;
+  color: var(--c-accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+.ratio-use {
+  font-size: 11px;
+  color: var(--c-text-3);
+  line-height: 1.55;
+}
+
+/* ============================================================
+   RECIPES
+   ============================================================ */
+.recipe-stats {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-3);
+  padding: 18px 20px;
+  margin-bottom: var(--s-4);
+  box-shadow: var(--sh-1);
+}
+.recipe-stats-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.recipe-count {
+  font-family: var(--f-serif);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--c-ink);
+  line-height: 1;
+}
+.recipe-count small { font-size: 13px; color: var(--c-text-3); font-weight: 400; margin-left: 4px; }
+.recipe-pct {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-accent);
+}
+.recipe-bar {
+  height: 6px;
+  background: var(--c-surface-3);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.recipe-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-gold), var(--c-accent));
+  width: 0%;
+  border-radius: var(--r-pill);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.recipe {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-2);
+  padding: 14px 10px 12px;
+  text-align: center;
+  transition: all 0.2s;
+  position: relative;
+}
+.recipe:active { transform: scale(0.96); }
+.recipe.done {
+  background: linear-gradient(135deg, #FFF6E2, #FFEED4);
+  border-color: var(--c-gold);
+}
+.recipe.done::after {
+  content: '';
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 14px; height: 14px;
+  background: var(--c-good);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'><polyline points='5 12 10 17 19 8'/></svg>");
+  background-size: 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.recipe-emoji { font-size: 24px; margin-bottom: 4px; filter: grayscale(0.55) opacity(0.5); }
+.recipe.done .recipe-emoji { filter: none; }
+.recipe-name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--c-text);
+}
+.recipe-tag {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--c-text-3);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge-cat {
+  margin-bottom: 24px;
+}
+.badge-cat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.badge-cat-name {
+  font-family: var(--f-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--c-ink);
+}
+.badge-cat-count {
+  font-size: 11px;
+  color: var(--c-text-3);
+}
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.badge {
+  aspect-ratio: 1;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px 4px;
+  position: relative;
+  transition: transform 0.2s;
+}
+.badge.earned {
+  background: linear-gradient(135deg, #FFF6E2 0%, #FFE9D2 100%);
+  border-color: var(--c-gold);
+  box-shadow: 0 2px 8px rgba(184,146,84,0.18);
+}
+.badge.earned .badge-em { filter: none; animation: pop 0.5s ease; }
+.badge-em { font-size: 24px; margin-bottom: 4px; filter: grayscale(1) opacity(0.35); }
+.badge-name {
+  font-size: 9px;
+  line-height: 1.25;
+  color: var(--c-text-3);
+  font-weight: 500;
+}
+.badge.earned .badge-name { color: var(--c-text); font-weight: 600; }
+@keyframes pop {
+  0% { transform: scale(0.5); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ============================================================
+   USAGE / SETTINGS
+   ============================================================ */
+.usage-card {
+  background: var(--c-surface);
+  border-radius: var(--r-3);
+  padding: 22px;
+  border: 1px solid var(--c-border-2);
+  margin-bottom: 12px;
+  box-shadow: var(--sh-1);
+  text-align: center;
+}
+.usage-step-no {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--c-gold-d);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.usage-char {
+  width: 86px;
+  margin: 0 auto 8px;
+}
+.usage-title {
+  font-family: var(--f-serif);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--c-ink);
+}
+.usage-body {
+  font-size: 12.5px;
+  color: var(--c-text-2);
+  line-height: 1.95;
+  text-align: left;
+}
+
+.settings-card {
+  background: var(--c-surface);
+  border-radius: var(--r-3);
+  border: 1px solid var(--c-border-2);
+  padding: 18px 20px;
+  margin-top: var(--s-5);
+  box-shadow: var(--sh-1);
+}
+.settings-card h3 {
+  font-family: var(--f-serif);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--c-ink);
+}
+.settings-card p {
+  font-size: 11px;
+  color: var(--c-text-3);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid var(--c-divider);
+}
+.settings-row:first-of-type { border-top: none; }
+.settings-row-label { font-size: 13px; color: var(--c-text); }
+.settings-row-value { font-size: 12px; color: var(--c-text-3); }
+.settings-link {
+  font-size: 12px;
+  color: var(--c-accent-d);
+  font-weight: 600;
+}
+
+/* 使い方画面 末尾のクレジット */
+.usage-credits {
+  margin-top: 28px;
+  padding: 18px 18px 8px;
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--c-text-3);
+  line-height: 2.1;
+  letter-spacing: 0.04em;
+  border-top: 1px dashed var(--c-divider);
+}
+.usage-credits .credit-line {
+  display: block;
+}
+.usage-credits a {
+  color: var(--c-text-2);
+  text-decoration: underline;
+  text-decoration-color: rgba(168,144,120,0.35);
+  text-underline-offset: 2px;
+}
+.usage-credits a:hover { color: var(--c-accent); }
+
+/* ============================================================
+   FAREWELL
+   ============================================================ */
+.farewell-hero {
+  background: linear-gradient(180deg, var(--c-gold-l), var(--c-surface));
+  border-radius: var(--r-3);
+  padding: 32px 24px 28px;
+  text-align: center;
+  border: 1px solid var(--c-gold);
+  margin-bottom: var(--s-4);
+  box-shadow: var(--sh-2);
+}
+.farewell-hero img { width: 110px; margin: 0 auto 10px; }
+.farewell-hero h2 {
+  font-family: var(--f-serif);
+  font-size: 22px;
+  color: var(--c-ink);
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+.farewell-hero p { font-size: 12px; color: var(--c-text-2); }
+.farewell-next {
+  background: var(--c-surface);
+  border-radius: var(--r-3);
+  padding: 22px;
+  border: 1px solid var(--c-border-2);
+  box-shadow: var(--sh-1);
+}
+.farewell-next h3 {
+  font-family: var(--f-serif);
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: var(--c-ink);
+}
+.farewell-next p {
+  font-size: 12px;
+  color: var(--c-text-2);
+  line-height: 1.85;
+  margin-bottom: 16px;
+}
+.farewell-btn {
+  display: block;
+  width: 100%;
+  background: var(--c-accent);
+  color: #fff;
+  padding: 13px;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ============================================================
+   BOTTOM NAV
+   ============================================================ */
+.nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: rgba(255,251,242,0.92);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-top: 1px solid var(--c-border-2);
+  display: flex;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 100;
+}
+.nav-item {
+  flex: 1;
+  padding: 10px 0 12px;
+  color: var(--c-text-3);
+  transition: color 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.nav-item.active { color: var(--c-accent); }
+.nav-item svg { width: 20px; height: 20px; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; }
+
+/* ============================================================
+   OPENING VIDEO (first launch only)
+   ============================================================ */
+.opening {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #FBF3E4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: openingFadeIn 0.4s ease-out;
+}
+.opening.hidden { display: none; }
+.opening.leaving { animation: openingFadeOut 0.6s ease-in forwards; }
+@keyframes openingFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes openingFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+/* 動画末尾の白フラッシュ → アプリ画面登場 */
+.opening-flash {
+  position: absolute;
+  inset: 0;
+  background: #FFFFFF;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.opening-flash.on {
+  animation: openingFlashBurst 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes openingFlashBurst {
+  0%   { opacity: 0; transform: scale(1); }
+  35%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 0; transform: scale(1.14); }
+}
+.opening-video {
+  width: 100%;
+  height: 100%;
+  /* デフォルト（PC）は全体表示：黒帯が出ても収まり優先 */
+  object-fit: contain;
+  background: #FBF3E4;
+}
+/* スマホ縦画面はキャラを中心にフルスクリーン */
+@media (max-aspect-ratio: 1/1) {
+  .opening-video {
+    object-fit: cover;
+    /* キャラは動画の中央。左右中央でクロップして表示 */
+    object-position: 50% 50%;
+  }
+}
+.opening-skip {
+  position: absolute;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  right: 18px;
+  background: rgba(58, 42, 30, 0.55);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  animation: openingSkipShow 0.4s ease-out 1.5s forwards;
+}
+@keyframes openingSkipShow {
+  to { opacity: 1; }
+}
+.opening-skip:active { transform: scale(0.96); }
+
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
+.onb {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--c-bg);
+  background:
+    radial-gradient(ellipse at top, var(--c-bg-grad-1) 0%, var(--c-bg) 60%, var(--c-bg-grad-2) 100%);
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top) 20px 20px;
+}
+.onb.hidden { display: none; }
+.onb-top {
+  padding: 16px 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.onb-brand-eng {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  color: var(--c-text-3);
+  font-weight: 600;
+}
+.onb-dots {
+  display: flex;
+  gap: 5px;
+}
+.onb-dot {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--c-border-2);
+  transition: background 0.3s;
+}
+.onb-dot.active { background: var(--c-accent); }
+.onb-dot.done { background: var(--c-text-3); }
+.onb-skip { font-size: 12px; color: var(--c-text-3); padding: 4px 8px; }
+
+.onb-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 4px 20px;
+}
+.onb-char {
+  width: 130px;
+  height: auto;
+  margin: 0 auto 18px;
+}
+.onb-step {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: var(--c-gold-d);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.onb-title {
+  font-family: var(--f-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--c-ink);
+  text-align: center;
+  letter-spacing: 0.04em;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+.onb-body {
+  font-size: 13.5px;
+  color: var(--c-text-2);
+  line-height: 2;
+  text-align: left;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-3);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--sh-1);
+}
+.onb-input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--r-2);
+  border: 1.5px solid var(--c-border);
+  background: var(--c-surface);
+  font-size: 15px;
+  text-align: center;
+  font-family: inherit;
+  color: var(--c-text);
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+.onb-input:focus {
+  outline: none;
+  border-color: var(--c-accent);
+}
+.onb-input::placeholder { color: var(--c-text-3); }
+.onb-hint {
+  font-size: 11px;
+  text-align: center;
+  color: var(--c-accent-d);
+  min-height: 18px;
+  margin-bottom: 12px;
+}
+.onb-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.onb-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--r-pill);
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--c-accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(201,117,81,0.3);
+  transition: transform 0.12s;
+}
+.onb-btn:active { transform: scale(0.98); }
+.onb-btn.ghost {
+  background: transparent;
+  color: var(--c-text-2);
+  box-shadow: none;
+  border: 1.5px solid var(--c-border);
+}
+
+/* ============================================================
+   TOAST / CELEBRATE
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--c-ink);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 2000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast.hidden { display: none; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.celebrate {
+  position: fixed;
+  inset: 0;
+  background: rgba(46,33,24,0.7);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.celebrate.hidden { display: none; }
+.celebrate-card {
+  background: linear-gradient(180deg, #FFF6E2 0%, #FFFFFF 100%);
+  border-radius: var(--r-4);
+  padding: 30px 26px;
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  border: 1px solid var(--c-gold);
+}
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.celebrate-char { width: 130px; margin: 0 auto 8px; }
+.celebrate-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: var(--c-gold-d);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.celebrate-title {
+  font-family: var(--f-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+}
+.celebrate-msg {
+  font-size: 13px;
+  color: var(--c-text-2);
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+.celebrate-btn {
+  background: var(--c-accent);
+  color: #fff;
+  padding: 12px 36px;
+  border-radius: var(--r-pill);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ============================================================
+   EMPTY / UTILS
+   ============================================================ */
+.empty {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--c-text-3);
+  font-size: 13px;
+}
+.empty img { width: 90px; opacity: 0.7; margin-bottom: 12px; }
+
+/* ============================================================
+   ADVANCED ANIMATIONS
+   ============================================================ */
+
+/* Stagger entrance — applied to containers, animates direct children */
+@keyframes staggerSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stagger > * {
+  animation: staggerSlideIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 70ms; }
+.stagger > *:nth-child(3) { animation-delay: 140ms; }
+.stagger > *:nth-child(4) { animation-delay: 210ms; }
+.stagger > *:nth-child(5) { animation-delay: 280ms; }
+.stagger > *:nth-child(6) { animation-delay: 350ms; }
+.stagger > *:nth-child(n+7) { animation-delay: 420ms; }
+
+/* Faster stagger for sub-containers */
+.stagger-fast > * {
+  animation: staggerSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.stagger-fast > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-fast > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-fast > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-fast > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-fast > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-fast > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-fast > *:nth-child(n+7) { animation-delay: 300ms; }
+
+/* Confetti (badge / milestone celebrations) */
+.confetti-piece {
+  position: fixed;
+  width: 8px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 3000;
+  border-radius: 1.5px;
+  animation: confettiFall var(--dur, 2s) cubic-bezier(0.32, 0.72, 0.4, 1) forwards;
+  will-change: transform, opacity;
+}
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 0), calc(var(--dy, 0) + 700px)) rotate(var(--rot, 0));
+  }
+}
+
+/* Badge spring — replaces the older simple "pop" */
+@keyframes badgeSpring {
+  0%   { transform: scale(0.4); opacity: 0; }
+  55%  { transform: scale(1.28); opacity: 1; }
+  78%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.badge.earned .badge-em {
+  animation: badgeSpring 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Recipe icon — refined card with Twemoji image */
+.recipe-emoji {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 6px;
+  object-fit: contain;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+  filter: grayscale(0.55) saturate(0.7) opacity(0.5);
+}
+.recipe.done .recipe-emoji {
+  filter: drop-shadow(0 1px 2px rgba(201,117,81,0.25));
+  transform: scale(1.08);
+}
+
+/* Subtle hover lift for cards (desktop only) */
+@media (hover: hover) {
+  .prog, .ratio:not(.locked), .recipe, .sister, .tile, .community {
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s, border-color 0.18s;
+  }
+  .prog:hover, .ratio:not(.locked):hover, .recipe:hover, .community:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sh-3);
+  }
+}
+
+/* Greeting glow line subtle pulse */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.95; }
+}
+.greeting::before { animation: glowPulse 4s ease-in-out infinite; }
+
+/* Celebrate kayo bounce-in */
+@keyframes celebrateBounce {
+  0% { transform: scale(0.3) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  80% { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+.celebrate-card .celebrate-char {
+  animation: celebrateBounce 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Number tabular figures for clean count-up */
+.greeting-name, .prog-count, .recipe-count, .recipe-pct, .badge-cat-count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Skeleton-ish placeholder for delayed image (not used yet, prepared) */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ============================================================
+   DESIGN REFRESH 2026-07 — あたたかい料理手帖 × 味付け道場
+   機能ロジックを触らず、見た目だけを上書きするCSS
+   ============================================================ */
+
+:root {
+  /* Concept palette: 生成り紙・味噌・だし・梅酢。派手さより“整った台所感” */
+  --c-bg:        #F7EFE3;
+  --c-bg-grad-1: #FFF8EA;
+  --c-bg-grad-2: #EFE1CF;
+  --c-surface:   #FFFDF7;
+  --c-surface-2: #FFF8EC;
+  --c-surface-3: #F1E3D0;
+  --c-border:    #DEC7AF;
+  --c-border-2:  #EAD9C4;
+  --c-divider:   rgba(178, 141, 98, 0.24);
+
+  --c-ink:       #1F160E;
+  --c-text:      #2C1F14;
+  --c-text-2:    #543E2C;
+  --c-text-3:    #7C5E42;
+
+  --c-accent:    #C87552;
+  --c-accent-d:  #985437;
+  --c-accent-l:  #FFE6D9;
+
+  --c-gold:      #B69253;
+  --c-gold-d:    #7C6030;
+  --c-gold-l:    #F4E4BF;
+
+  --c-tsuyu:     #805436;
+  --c-su:        #C87561;
+  --c-dashi:     #B69253;
+  --c-good:      #6F8B69;
+  --c-warn:      #C48643;
+
+  --sh-1: 0 1px 0 rgba(255,255,255,0.82) inset, 0 8px 22px rgba(64,45,29,0.055);
+  --sh-2: 0 1px 0 rgba(255,255,255,0.9) inset, 0 12px 30px rgba(64,45,29,0.085);
+  --sh-3: 0 1px 0 rgba(255,255,255,0.92) inset, 0 18px 42px rgba(64,45,29,0.12);
+
+  --r-1: 10px;
+  --r-2: 15px;
+  --r-3: 22px;
+  --r-4: 28px;
+}
+
+html, body {
+  font-size: 15.5px;
+  line-height: 1.78;
+  letter-spacing: 0.025em;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 86% 54% at 50% -14%, rgba(255, 210, 148, 0.18), transparent 66%),
+    radial-gradient(circle at 13% 24%, rgba(201, 117, 82, 0.06), transparent 26%),
+    radial-gradient(circle at 88% 72%, rgba(182, 146, 83, 0.07), transparent 30%),
+    linear-gradient(180deg, #F5EAD4 0%, #EDE0C7 46%, #E4D3B4 100%);
+}
+
+body::before {
+  opacity: 0.22;
+  background-size: 180px 180px;
+}
+
+body::after {
+  opacity: 0.32;
+  background-size: 420px 420px;
+}
+
+.app {
+  background:
+    linear-gradient(180deg, rgba(255,253,247,0.46) 0%, rgba(247,239,227,0.74) 100%);
+  overflow-x: hidden;
+}
+
+@media (min-width: 520px) {
+  .app {
+    border-inline: 1px solid rgba(222,199,175,0.72);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.42) inset,
+      0 24px 70px rgba(64,45,29,0.16);
+  }
+}
+
+button, .btn, .nav-item, .recipe, .prog, .community, .preorder-option-box {
+  -webkit-tap-highlight-color: rgba(201,117,82,0.10);
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(201,117,82,0.32);
+  outline-offset: 3px;
+}
+
+/* Header: スマホアプリっぽさを残しつつ、料理教室の受付札のように */
+.app-header {
+  padding: calc(env(safe-area-inset-top) + 13px) 18px 12px;
+  background:
+    linear-gradient(180deg, rgba(255,253,247,0.96), rgba(255,248,236,0.90));
+  border-bottom: 1px solid rgba(222,199,175,0.66);
+  box-shadow: 0 8px 22px rgba(64,45,29,0.055);
+}
+
+.brand-char,
+.feature-char {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.78), 0 8px 20px rgba(64,45,29,0.10);
+}
+
+.brand-char {
+  width: 42px;
+  height: 42px;
+  border-color: rgba(182,146,83,0.26);
+}
+
+.brand-eng,
+.feature-eyebrow,
+.greeting-eyebrow,
+.section-h-text,
+.preorder-eyebrow,
+.celebrate-eyebrow,
+.usage-step-no,
+.ratio-no {
+  font-feature-settings: 'palt';
+  letter-spacing: 0.28em;
+}
+
+.brand-jp {
+  font-size: 18px;
+  letter-spacing: 0.075em;
+}
+
+.btn-sos {
+  background:
+    linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent-d) 100%);
+  padding: 9px 15px;
+  box-shadow: 0 8px 20px rgba(201,117,82,0.20);
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s;
+}
+
+.btn-sos:active { transform: translateY(1px) scale(0.98); }
+
+.app-main { padding: 22px 18px 26px; }
+
+.screen {
+  background-size: 108% auto;
+  background-position: 50% -8px;
+}
+
+.screen::before {
+  background:
+    linear-gradient(180deg,
+      rgba(255,248,236,0.50) 0%,
+      rgba(255,248,236,0.84) 14%,
+      rgba(247,239,227,0.96) 32%,
+      rgba(247,239,227,1) 48%);
+}
+
+.screen-banner {
+  border-radius: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(222,199,175,0.70);
+  box-shadow: var(--sh-2);
+  overflow: hidden;
+}
+
+.back {
+  margin-bottom: 14px;
+  padding: 6px 10px 6px 4px;
+  border-radius: var(--r-pill);
+  transition: color .18s, background .18s, transform .18s;
+}
+.back:active { transform: translateX(-2px); }
+@media (hover: hover) {
+  .back:hover { background: rgba(255,253,247,0.72); color: var(--c-accent-d); }
+}
+
+.page-h {
+  position: relative;
+  display: inline-block;
+  font-size: 24px;
+  margin: 4px 0 8px;
+  letter-spacing: 0.075em;
+}
+.page-h::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -10px;
+  bottom: 1px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(244, 201, 142, 0.34);
+  z-index: -1;
+}
+.page-sub {
+  font-size: 13px;
+  line-height: 1.95;
+  margin-bottom: 24px;
+}
+
+.section-h {
+  margin: 28px 0 16px;
+}
+.section-h::before,
+.section-h::after {
+  background: linear-gradient(90deg, transparent, rgba(182,146,83,0.38), transparent);
+}
+.section-h-text {
+  position: relative;
+  padding: 5px 10px 5px 13px;
+  border-radius: var(--r-pill);
+  background: rgba(255,253,247,0.64);
+  border: 1px solid rgba(222,199,175,0.54);
+  color: var(--c-gold-d);
+}
+
+/* Common card rhythm */
+.greeting,
+.feature,
+.prog,
+.community,
+.sister,
+.recipe-stats,
+.recipe,
+.badge,
+.usage-card,
+.settings-card,
+.farewell-hero,
+.farewell-next,
+.preorder-card,
+.recipe-inner,
+.preorder-modal-card,
+.celebrate-card {
+  background:
+    linear-gradient(180deg, rgba(255,253,247,0.98), rgba(255,248,236,0.96));
+  border: 1px solid rgba(222,199,175,0.68);
+  box-shadow: var(--sh-1);
+}
+
+.greeting,
+.feature,
+.recipe-stats,
+.settings-card,
+.farewell-next {
+  border-radius: var(--r-3);
+}
+
+.greeting {
+  padding: 20px 20px 18px;
+  margin-bottom: 16px;
+}
+.greeting::before {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(182,146,83,0.72), rgba(201,117,82,0.58), transparent);
+}
+.greeting-name {
+  font-size: 19px;
+  letter-spacing: 0.06em;
+}
+.greeting-meta { gap: 9px; flex-wrap: wrap; }
+.chip {
+  padding: 5px 11px;
+  border: 1px solid rgba(222,199,175,0.48);
+  background: rgba(241,227,208,0.78);
+}
+.chip.accent {
+  border-color: rgba(201,117,82,0.20);
+  box-shadow: 0 2px 8px rgba(201,117,82,0.08);
+}
+.chip.gold { border-color: rgba(182,146,83,0.24); }
+.chip.warn {
+  background: #FFE1D8;
+  border-color: rgba(201,117,82,0.22);
+}
+
+.feature {
+  min-height: 108px;
+  padding: 19px;
+  border-radius: 26px;
+  gap: 15px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(201,117,82,0.10), transparent 36%),
+    linear-gradient(135deg, rgba(255,253,247,1), rgba(255,244,225,0.96));
+}
+.feature::before {
+  content: '';
+  position: absolute;
+  inset: auto 22px 0 22px;
+  height: 3px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(90deg, var(--c-tsuyu), var(--c-su), var(--c-dashi));
+  opacity: 0.28;
+}
+.feature-char {
+  width: 70px;
+  height: 70px;
+  background: #fff8ec;
+  border-color: rgba(222,199,175,0.7);
+}
+.feature-title {
+  font-size: 15.5px;
+  line-height: 1.72;
+}
+
+/* Progress: “今どこまで進んだか”がひと目でわかるカード */
+.progress-list { gap: 12px; }
+.prog {
+  padding: 18px 17px;
+  border-radius: 22px;
+  align-items: stretch;
+  isolation: isolate;
+}
+.prog::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.42) 42%, transparent 58%);
+  transform: translateX(-120%);
+  opacity: 0;
+  pointer-events: none;
+}
+.prog-icon {
+  width: 48px;
+  height: 48px;
+  align-self: center;
+  border-radius: 17px;
+  color: var(--c-accent-d);
+  background:
+    radial-gradient(circle at 35% 25%, #FFFFFF, transparent 42%),
+    linear-gradient(135deg, #FFF1DF, #F2E2CB);
+  border: 1px solid rgba(222,199,175,0.70);
+  box-shadow: 0 6px 16px rgba(64,45,29,0.07);
+}
+.prog-title { font-size: 14.5px; letter-spacing: 0.035em; }
+.prog-sub { margin-bottom: 10px; }
+.prog-count { font-size: 24px; }
+.prog-bar,
+.recipe-bar {
+  height: 7px;
+  background: rgba(222,199,175,0.46);
+  border: 1px solid rgba(255,255,255,0.58);
+}
+.prog-bar-fill,
+.recipe-bar-fill {
+  position: relative;
+  background: linear-gradient(90deg, var(--c-gold) 0%, #D6A45E 42%, var(--c-accent) 100%);
+  overflow: hidden;
+}
+.prog-bar-fill::after,
+.recipe-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.48), transparent);
+  transform: translateX(-100%);
+  animation: dojoBarSheen 2.4s ease-in-out infinite;
+}
+
+.community {
+  border-radius: 22px;
+  padding: 17px 18px;
+}
+.community-icon {
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,0.70), transparent 40%),
+    linear-gradient(135deg, var(--c-accent-l), #F8DDC8);
+  border: 1px solid rgba(201,117,82,0.18);
+}
+.community-title { font-size: 13.5px; }
+.community-arrow { transition: transform .18s; }
+.community:active .community-arrow { transform: translateX(3px); }
+
+/* 3姉妹カード */
+.sister {
+  --sister-color: var(--c-tsuyu);
+  padding: 23px 20px 20px;
+  margin-bottom: 14px;
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(128, 84, 54, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255,253,247,0.99), rgba(255,248,236,0.96));
+}
+.sister[data-id="tsuyuko"] { --sister-color: var(--c-tsuyu); }
+.sister[data-id="osuko"] { --sister-color: var(--c-su); }
+.sister[data-id="dashiko"] { --sister-color: var(--c-dashi); }
+.sister[data-id="tsuyuko"] {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(128,84,54,0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255,253,247,0.99), rgba(255,248,236,0.96));
+}
+.sister[data-id="osuko"] {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(200,117,97,0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255,253,247,0.99), rgba(255,248,236,0.96));
+}
+.sister[data-id="dashiko"] {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182,146,83,0.13), transparent 36%),
+    linear-gradient(180deg, rgba(255,253,247,0.99), rgba(255,248,236,0.96));
+}
+.sister::before {
+  width: 5px;
+  height: 42px;
+  top: 22px;
+  background: var(--sister-color);
+  opacity: 0.9;
+}
+.sister::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px dashed rgba(182,146,83,0.30);
+  opacity: .36;
+  pointer-events: none;
+}
+.sister-name { font-size: 25px; }
+.sister-tag {
+  color: var(--c-gold-d);
+  background: rgba(244,228,191,0.84);
+  border: 1px solid rgba(182,146,83,0.20);
+}
+.sister-desc { font-size: 12.5px; }
+.sister-state {
+  border: 1px solid rgba(222,199,175,0.46);
+  box-shadow: 0 4px 12px rgba(64,45,29,0.045);
+}
+.sister-state.making {
+  background: #F6E8C8;
+}
+.sister-state.done {
+  background: #DFEBD8;
+  border-color: rgba(111,139,105,0.25);
+}
+
+/* Buttons */
+.btn,
+.onb-btn,
+.preorder-submit,
+.preorder-btn,
+.celebrate-btn,
+.farewell-btn {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(201,117,82,0.18);
+}
+.btn-primary,
+.onb-btn,
+.preorder-submit,
+.preorder-btn,
+.celebrate-btn,
+.farewell-btn {
+  background: linear-gradient(135deg, #D2835F 0%, var(--c-accent) 48%, var(--c-accent-d) 100%);
+}
+.btn-secondary,
+.onb-btn.ghost {
+  background: rgba(241,227,208,0.82);
+  color: var(--c-text);
+  border: 1px solid rgba(222,199,175,0.70);
+  box-shadow: none;
+}
+.btn:disabled {
+  background: rgba(241,227,208,0.64);
+  color: rgba(114,92,72,0.72);
+}
+.btn:not(:disabled):active,
+.onb-btn:active,
+.preorder-submit:active,
+.preorder-btn:active,
+.celebrate-btn:active,
+.farewell-btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.recipe-toggle {
+  background: rgba(255,248,236,0.86);
+  border-color: rgba(222,199,175,0.70);
+  border-radius: 16px;
+}
+.recipe-toggle.open {
+  background: rgba(244,228,191,0.44);
+  border-color: rgba(182,146,83,0.34);
+}
+.recipe-detail.open { margin-top: 11px; }
+.recipe-inner {
+  border-radius: 17px;
+  padding: 17px 16px 15px;
+}
+.recipe-subtitle {
+  color: var(--c-gold-d);
+  border-bottom-color: rgba(182,146,83,0.28);
+}
+.recipe-steps li::before {
+  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-d));
+  box-shadow: 0 3px 8px rgba(201,117,82,0.16);
+}
+.recipe-storage {
+  background: rgba(244,228,191,0.78);
+  border: 1px solid rgba(182,146,83,0.20);
+}
+
+/* Recipe grid: 図鑑感を強める */
+.recipe-stats {
+  padding: 20px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182,146,83,0.11), transparent 34%),
+    linear-gradient(180deg, rgba(255,253,247,0.99), rgba(255,248,236,0.96));
+}
+.recipe-count { font-size: 34px; }
+.recipe-grid {
+  gap: 10px;
+}
+.recipe {
+  min-height: 180px;
+  padding: 10px 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  isolation: isolate;
+  overflow: hidden;
+}
+/* キャラ後ろの白い楕円は削除（キャラの上下に「枠」のように見えてしまうため） */
+.recipe::before { content: none; }
+/* カードの背景を完全不透明に。半透明のままだと body 全体のノイズが透けて
+   キャラの周りに「四角枠っぽい模様」が見えてしまう */
+.recipe { background: #FFFDF7; }
+.recipe.done {
+  background:
+    radial-gradient(circle at 50% 19%, rgba(255,255,255,0.68), transparent 32%),
+    linear-gradient(135deg, #FFF7E4, #FFE7D2);
+}
+.recipe.done::after {
+  width: 18px;
+  height: 18px;
+  top: 8px;
+  right: 8px;
+  box-shadow: 0 5px 12px rgba(111,139,105,0.22);
+}
+.recipe-emoji {
+  width: 108px;
+  height: 108px;
+  margin: -4px auto 2px;
+  object-fit: contain;
+  transform: scale(1.08);
+  transform-origin: center 55%;
+  filter: grayscale(0.4) saturate(0.85) opacity(0.85);
+}
+.recipe.done .recipe-emoji {
+  filter: drop-shadow(0 1px 2px rgba(201,117,81,0.25));
+  transform: scale(1.14);
+}
+.recipe-name { font-size: 12.5px; margin-top: 2px; }
+.recipe-tag {
+  display: inline-flex;
+  align-self: center;
+  margin-top: 7px;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: rgba(241,227,208,0.72);
+  color: var(--c-text-2);
+}
+.recipe.done .recipe-tag {
+  background: rgba(182,146,83,0.18);
+  color: var(--c-gold-d);
+}
+
+/* Badges */
+.badge-cat { margin-bottom: 26px; }
+.badge-cat-head {
+  padding: 0 2px;
+}
+.badge-cat-name { font-size: 15px; }
+.badge-grid { gap: 9px; }
+.badge {
+  border-radius: 19px;
+  background: rgba(255,253,247,0.82);
+}
+.badge.earned {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,0.80), transparent 36%),
+    linear-gradient(135deg, #FFF6E2 0%, #FFE7D2 100%);
+  box-shadow: 0 8px 20px rgba(182,146,83,0.14);
+}
+.badge-em { font-size: 25px; }
+.badge.earned::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 15px;
+  border: 1px dashed rgba(182,146,83,0.34);
+  pointer-events: none;
+}
+
+/* Usage / onboarding */
+.usage-card {
+  padding: 23px 21px 22px;
+  border-radius: 25px;
+  text-align: center;
+}
+.usage-char {
+  width: 92px;
+  filter: drop-shadow(0 9px 12px rgba(64,45,29,0.10));
+}
+.usage-body {
+  background: rgba(255,248,236,0.55);
+  border: 1px solid rgba(222,199,175,0.42);
+  border-radius: 16px;
+  padding: 14px 15px;
+}
+.onb {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,215,150,0.34), transparent 34%),
+    linear-gradient(180deg, #FFF8EC 0%, #F7EFE3 66%, #EFE0CE 100%);
+}
+.onb-char {
+  width: 142px;
+  filter: drop-shadow(0 12px 16px rgba(64,45,29,0.12));
+}
+.onb-title { font-size: 25px; }
+.onb-body {
+  border-radius: 23px;
+  box-shadow: var(--sh-2);
+}
+.onb-input {
+  border-radius: 18px;
+  background: rgba(255,253,247,0.95);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.82) inset;
+}
+.onb-dot {
+  height: 4px;
+  border-radius: 999px;
+}
+.onb-dot.active {
+  background: linear-gradient(90deg, var(--c-gold), var(--c-accent));
+}
+
+/* Modal / toast */
+.preorder-modal,
+.celebrate {
+  background: rgba(28, 20, 14, 0.78);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+}
+/* モーダルカードは絶対不透明にして、後ろが透けないよう保証 */
+.preorder-modal-card,
+.celebrate-card { isolation: isolate; }
+.preorder-modal-card,
+.celebrate-card {
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 50% -4%, rgba(244,228,191,0.58), transparent 32%),
+    linear-gradient(180deg, #FFF9EB 0%, #FFFDF7 100%);
+  border-color: rgba(182,146,83,0.55);
+  box-shadow: 0 24px 60px rgba(28,20,14,0.30);
+}
+.preorder-option-box {
+  border-radius: 18px;
+  background: rgba(255,253,247,0.96);
+}
+.preorder-option input:checked ~ .preorder-option-box {
+  background: linear-gradient(135deg, #FFF6E6 0%, #FFE5D8 100%);
+  box-shadow: 0 8px 22px rgba(201,117,82,0.15);
+}
+.preorder-note {
+  border-radius: 18px;
+  background: rgba(255,248,236,0.86);
+}
+.toast {
+  background: rgba(43,33,24,0.94);
+  box-shadow: 0 14px 36px rgba(28,20,14,0.24);
+}
+
+/* Farewell */
+.farewell-hero {
+  background:
+    radial-gradient(circle at 50% 14%, rgba(255,255,255,0.56), transparent 34%),
+    linear-gradient(180deg, var(--c-gold-l), var(--c-surface));
+  border-radius: 28px;
+}
+.farewell-hero img { filter: drop-shadow(0 10px 16px rgba(64,45,29,0.11)); }
+
+/* Bottom navigation: 現在地を“丸い札”で見せる */
+.nav {
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(255,253,247,0.90);
+  border-top: 1px solid rgba(222,199,175,0.70);
+  box-shadow: 0 -12px 28px rgba(64,45,29,0.065);
+  gap: 4px;
+}
+.nav-item {
+  padding: 8px 0 7px;
+  border-radius: 18px;
+  transition: color .2s, background .2s, transform .18s;
+}
+.nav-item.active {
+  color: var(--c-accent-d);
+  background: linear-gradient(180deg, rgba(255,230,217,0.82), rgba(244,228,191,0.38));
+  box-shadow: 0 6px 15px rgba(201,117,82,0.10);
+}
+.nav-item.active svg {
+  filter: drop-shadow(0 4px 8px rgba(201,117,82,0.18));
+}
+.nav-item:active { transform: translateY(1px) scale(0.98); }
+.nav-label { font-size: 10.5px; }
+
+/* Motion: 料理の湯気くらいの控えめな演出 */
+@keyframes dojoBarSheen {
+  0%, 38% { transform: translateX(-110%); opacity: 0; }
+  48% { opacity: .82; }
+  72%, 100% { transform: translateX(120%); opacity: 0; }
+}
+@keyframes dojoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes dojoSoftIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes dojoSoftPop {
+  0% { transform: scale(0.94); opacity: 0; }
+  70% { transform: scale(1.015); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes dojoPulseDot {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.55); opacity: .42; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .screen.active { animation: dojoSoftIn 0.42s cubic-bezier(0.16, 1, 0.3, 1); }
+  .feature-char,
+  .usage-char,
+  .onb-char { animation: dojoFloat 4.8s ease-in-out infinite; }
+  .preorder-modal-card,
+  .celebrate-card { animation: dojoSoftPop .42s cubic-bezier(0.16, 1, 0.3, 1); }
+  .sister-state.making .dot { animation: dojoPulseDot 1.7s ease-in-out infinite; }
+  .prog:active::before { animation: cardSheen .44s ease-out; }
+}
+
+@keyframes cardSheen {
+  from { transform: translateX(-120%); opacity: 0.2; }
+  to { transform: translateX(120%); opacity: 0; }
+}
+
+@media (hover: hover) {
+  .btn-sos:hover,
+  .preorder-btn:hover,
+  .preorder-submit:hover,
+  .celebrate-btn:hover,
+  .farewell-btn:hover,
+  .btn-primary:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 11px 24px rgba(201,117,82,0.22);
+  }
+  .sister:hover,
+  .usage-card:hover,
+  .badge.earned:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sh-2);
+  }
+  .nav-item:hover { background: rgba(255,248,236,0.70); }
+}
+
+@media (max-width: 360px) {
+  .app-main { padding-inline: 14px; }
+  .feature { padding: 16px; }
+  .feature-char { width: 62px; height: 62px; }
+  .prog { gap: 12px; padding: 16px 14px; }
+  .recipe { min-height: 168px; }
+  .recipe-emoji { width: 94px; height: 94px; }
+  .badge-grid { gap: 7px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Reusable SVG icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <symbol id="i-bottle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 2.5h4v2.5l1.5 2v13.5a1.5 1.5 0 0 1-1.5 1.5h-4a1.5 1.5 0 0 1-1.5-1.5V7l1.5-2V2.5z"/>
+    <line x1="8.5" y1="13" x2="15.5" y2="13"/>
+  </symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="8" cy="12" r="3.5"/>
+    <line x1="11.5" y1="12" x2="21" y2="12"/>
+    <line x1="17" y1="12" x2="17" y2="15.5"/>
+    <line x1="20" y1="12" x2="20" y2="15"/>
+  </symbol>
+  <symbol id="i-bowl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.5 12h17a8.5 8.5 0 0 1-17 0z"/>
+    <line x1="2" y1="20.5" x2="22" y2="20.5"/>
+    <path d="M9 7.5c0-1.5 1.5-1.5 1.5-3M14 7.5c0-1.5 1.5-1.5 1.5-3"/>
+  </symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 11l9-7.5L21 11v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V11z"/>
+  </symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 4h10v5.5a5 5 0 0 1-10 0V4z"/>
+    <path d="M7 6.5H4v2a3 3 0 0 0 3 3"/>
+    <path d="M17 6.5h3v2a3 3 0 0 1-3 3"/>
+    <line x1="12" y1="14.5" x2="12" y2="18"/>
+    <line x1="8" y1="20.5" x2="16" y2="20.5"/>
+  </symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h7a3 3 0 0 1 3 3v14a3 3 0 0 0-3-3H4V4z"/>
+    <path d="M20 4h-3a3 3 0 0 0-3 3v14a3 3 0 0 1 3-3h3V4z"/>
+  </symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12a8 8 0 1 1-3.6-6.7L21 4l-1 4.7A8 8 0 0 1 21 12z"/>
+  </symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="9 6 15 12 9 18"/>
+  </symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 6 9 12 15 18"/>
+  </symbol>
+  <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.8.3-1 .8-1 1.5"/>
+    <circle cx="12" cy="16.5" r="0.5" fill="currentColor"/>
+  </symbol>
+</defs>
+</svg>
+
+<div class="app" id="app">
+
+  <div class="admin-bar" id="adminBar">
+    <button onclick="adminReset()">リセット</button>
+    <button onclick="adminFillDemo()">デモ</button>
+    <button onclick="adminUnlockAll()">全解放</button>
+    <button onclick="adminEndCourse()">講座終了</button>
+    <button onclick="adminPreorderWindow()">先行予約OPEN</button>
+    <button onclick="adminReplayOpening()">オープニング</button>
+    <span class="tag">ADMIN</span>
+  </div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand">
+      <img class="brand-char" src="https://columns.l-mine.com/assets/chars/kayomamaprofile.png" alt="">
+      <div class="brand-text">
+        <div class="brand-eng">AJITSUKE DOJO</div>
+        <div class="brand-jp">味付け道場</div>
+      </div>
+    </div>
+    <button class="btn-sos" onclick="openLine()">
+      <svg><use href="#i-help"/></svg>
+      質問
+    </button>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ============== HOME ============== -->
+    <section class="screen active stagger" data-screen="home">
+
+      <div class="greeting">
+        <div class="greeting-eyebrow" id="greetEyebrow">WELCOME</div>
+        <div class="greeting-name" id="greetName">こんにちは</div>
+        <div class="greeting-meta">
+          <span class="chip" id="chipDay">講座 1日目</span>
+          <span class="chip accent" id="chipDays">残り —</span>
+        </div>
+      </div>
+
+      <div class="feature">
+        <img class="feature-char" id="featureChar" src="https://columns.l-mine.com/assets/chars/kayo1.png" alt="">
+        <div class="feature-body">
+          <div class="feature-eyebrow" id="featureEyebrow">TODAY</div>
+          <div class="feature-title" id="featureTitle">まずは3姉妹の仕込みから始めましょう</div>
+        </div>
+      </div>
+
+      <div class="section-h"><span class="section-h-text">PROGRESS</span></div>
+
+      <div class="progress-list stagger-fast">
+        <button class="prog" onclick="goto('sisters')">
+          <div class="prog-icon"><svg><use href="#i-bottle"/></svg></div>
+          <div class="prog-body">
+            <div class="prog-title">3姉妹仕込み</div>
+            <div class="prog-sub">つゆ子・お酢子・だし子</div>
+            <div class="prog-bar"><div class="prog-bar-fill" id="barSisters"></div></div>
+          </div>
+          <div class="prog-meta">
+            <div class="prog-count"><span id="cntSisters">0</span><small>/3</small></div>
+          </div>
+        </button>
+
+        <button class="prog" onclick="goto('recipes')">
+          <div class="prog-icon"><svg><use href="#i-bowl"/></svg></div>
+          <div class="prog-body">
+            <div class="prog-title">料理25品図鑑</div>
+            <div class="prog-sub">3姉妹を使って作る</div>
+            <div class="prog-bar"><div class="prog-bar-fill" id="barRecipes"></div></div>
+          </div>
+          <div class="prog-meta">
+            <div class="prog-count"><span id="cntRecipes">0</span><small>/25</small></div>
+          </div>
+        </button>
+      </div>
+
+      <div class="section-h"><span class="section-h-text">COMMUNITY</span></div>
+
+      <button class="community" onclick="openOpenChat()">
+        <div class="community-icon"><svg><use href="#i-chat"/></svg></div>
+        <div class="community-body">
+          <div class="community-title">かよママ味付け完全講座</div>
+          <div class="community-sub">専用オープンチャット｜仲間と質問・シェア</div>
+        </div>
+        <div class="community-arrow"><svg><use href="#i-chevron"/></svg></div>
+      </button>
+
+      <!-- 先行予約カード（サポート残り3日以内で有効化） -->
+      <div class="preorder-card" id="preorderCard">
+        <div class="preorder-eyebrow">🌸 NEW ARRIVAL</div>
+        <div class="preorder-title">かよママ 次のサポート</div>
+        <div class="preorder-msg">
+          <strong>9月 献立サポート</strong> と <strong>サブスクコミュニティ</strong> の<br>
+          <strong>先行予約</strong> が始まりました。<br>
+          ご興味のある方はボタンからお進みください。
+        </div>
+        <button class="preorder-btn" id="preorderBtn" onclick="requestPreorder()">先行予約を希望する</button>
+      </div>
+    </section>
+
+    <!-- ============== SISTERS ============== -->
+    <section class="screen" data-screen="sisters">
+      <button class="back" onclick="goto('home')"><svg><use href="#i-back"/></svg>ホーム</button>
+      <img class="screen-banner" src="https://columns.l-mine.com/assets/titles/taitoru2.jpg" alt="3姉妹の顔ぶれ" onerror="this.style.display='none'">
+      <p class="page-sub">つゆ子・お酢子・だし子を仕込みましょう。<br>「仕込んだ」→「完成」をタップしてください。</p>
+      <div id="sisterList" class="stagger-fast"></div>
+    </section>
+
+    <!-- ============== RECIPES ============== -->
+    <section class="screen" data-screen="recipes">
+      <button class="back" onclick="goto('home')"><svg><use href="#i-back"/></svg>ホーム</button>
+      <h2 class="page-h">料理25品図鑑</h2>
+      <p class="page-sub">作れた料理をタップしてチェック。<br>5・10・15・20・25品の節目でバッジがもらえます。</p>
+
+      <div class="recipe-stats">
+        <div class="recipe-stats-top">
+          <div class="recipe-count"><span id="recipeCount">0</span><small>/25品</small></div>
+          <div class="recipe-pct"><span id="recipePct">0</span>%</div>
+        </div>
+        <div class="recipe-bar"><div class="recipe-bar-fill" id="recipeBar"></div></div>
+      </div>
+
+      <div class="recipe-grid" id="recipeGrid"></div>
+    </section>
+
+    <!-- ============== BADGES ============== -->
+    <section class="screen" data-screen="badges">
+      <h2 class="page-h">バッジ図鑑</h2>
+      <p class="page-sub">講座を進めるとここにバッジが集まります。<br>全部集めて「卒業」を目指しましょう。</p>
+      <div id="badgeCats"></div>
+    </section>
+
+    <!-- ============== USAGE ============== -->
+    <section class="screen" data-screen="usage">
+      <h2 class="page-h">使い方</h2>
+      <p class="page-sub">このアプリの使い方をおさらいできます。</p>
+      <div id="usagePages"></div>
+
+      <div class="settings-card">
+        <h3>麹アプリ卒業生の方へ</h3>
+        <p>「かよママの麹つかいこなし道場」に参加されたことがある方は、麹アプリ内の合言葉を入力すると、卒業生バッジが解放されます。</p>
+        <div class="settings-row">
+          <div class="settings-row-label">引継ぎ状態</div>
+          <div class="settings-row-value" id="kojiSetState">未認証</div>
+        </div>
+        <div id="kojiSetForm">
+          <input class="onb-input" id="kojiSetInput" placeholder="合言葉を入力" autocomplete="off" style="margin-top:12px">
+          <div class="onb-hint" id="kojiSetHint"></div>
+          <button class="onb-btn" onclick="enterKojiFromSettings()">確認する</button>
+        </div>
+      </div>
+
+      <div class="usage-credits">
+        <span class="credit-line">監修：<a href="https://www.instagram.com/kayocookingclass?igsh=aDg3Y3JzZ2puODZ1" target="_blank" rel="noopener">かよママ</a></span>
+        <span class="credit-line">作成：<a href="https://www.instagram.com/tooru_lab?igsh=ZWcxcTA2OGJtajE0&amp;utm_source=qr" target="_blank" rel="noopener">とーる｜猫好きの行動経済アナリスト</a></span>
+      </div>
+    </section>
+
+    <!-- ============== FAREWELL ============== -->
+    <section class="screen" data-screen="farewell">
+      <div class="farewell-hero">
+        <img src="https://columns.l-mine.com/assets/chars/kayomamaprofile.png" alt="" style="border-radius:50%;width:130px">
+        <h2>3週間ありがとうございました</h2>
+        <p id="farewellCount">獲得バッジ：— 個</p>
+      </div>
+      <div class="farewell-next">
+        <h3>📅 次のサポート企画 先行予約</h3>
+        <p>講座はここでひと区切り。次のサポート企画の先行予約が始まっています。<br>受講生だけの優先案内です。</p>
+        <button class="farewell-btn" onclick="openNext()">先行予約フォームへ</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom nav -->
+  <nav class="nav">
+    <button class="nav-item active" data-nav="home" onclick="goto('home')">
+      <svg><use href="#i-home"/></svg>
+      <div class="nav-label">ホーム</div>
+    </button>
+    <button class="nav-item" data-nav="badges" onclick="goto('badges')">
+      <svg><use href="#i-trophy"/></svg>
+      <div class="nav-label">バッジ</div>
+    </button>
+    <button class="nav-item" data-nav="usage" onclick="goto('usage')">
+      <svg><use href="#i-book"/></svg>
+      <div class="nav-label">使い方</div>
+    </button>
+  </nav>
+</div>
+
+<!-- Opening video (first launch only) -->
+<div class="opening hidden" id="opening">
+  <video class="opening-video" id="openingVideo" muted autoplay playsinline preload="auto" webkit-playsinline x5-video-player-type="h5-page">
+    <source src="https://columns.l-mine.com/assets/video/opening.mp4" type="video/mp4">
+  </video>
+  <div class="opening-flash" id="openingFlash"></div>
+  <button class="opening-skip" id="openingSkip" onclick="skipOpening()">スキップ</button>
+</div>
+
+<!-- Onboarding -->
+<div class="onb hidden" id="onb">
+  <div class="onb-top">
+    <div class="onb-brand-eng">AJITSUKE DOJO</div>
+    <div class="onb-dots" id="onbDots"></div>
+    <button class="onb-skip" id="onbSkip" onclick="onbSkip()" style="visibility:hidden">スキップ</button>
+  </div>
+  <div class="onb-content">
+    <img class="onb-char" id="onbChar" src="" alt="">
+    <div class="onb-step" id="onbStep">STEP 01</div>
+    <div class="onb-title serif" id="onbTitle">ようこそ</div>
+    <div class="onb-body" id="onbBody"></div>
+    <div id="onbExtra"></div>
+    <div class="onb-actions">
+      <button class="onb-btn ghost" id="onbBack" onclick="onbBack()">戻る</button>
+      <button class="onb-btn" id="onbNext" onclick="onbNext()">次へ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<!-- 先行予約 選択モーダル -->
+<div class="preorder-modal hidden" id="preorderModal">
+  <div class="preorder-modal-card">
+    <div class="preorder-modal-emoji">🌸</div>
+    <div class="preorder-modal-title">かよママ 次のサポート</div>
+    <div class="preorder-modal-sub">
+      ご興味のあるサポートに<br>
+      チェックを入れて送信してください。<br>
+      <strong>かよママより詳細をお送りしますね</strong>
+    </div>
+    <div class="preorder-options">
+      <label class="preorder-option">
+        <input type="checkbox" id="popt-sep">
+        <div class="preorder-option-box">
+          <div class="preorder-option-head">
+            <div class="preorder-option-when">9月</div>
+            <div class="preorder-option-what">献立サポート</div>
+          </div>
+          <div class="preorder-option-detail">
+            毎日の献立が"組み立て"で決まる、<br>1ヶ月のオンライン伴走
+          </div>
+        </div>
+      </label>
+      <label class="preorder-option">
+        <input type="checkbox" id="popt-sub">
+        <div class="preorder-option-box">
+          <div class="preorder-option-head">
+            <div class="preorder-option-when">月額</div>
+            <div class="preorder-option-what">サブスクコミュニティ</div>
+          </div>
+          <div class="preorder-option-detail">
+            毎日の台所を、ずっと支える<br>継続サポートコミュニティ
+          </div>
+        </div>
+      </label>
+    </div>
+
+    <!-- 8月は"告知だけ"（チェック対象外） -->
+    <div class="preorder-note">
+      <div class="preorder-note-head">
+        <span class="preorder-note-tag">8月</span>
+        単発レッスンも準備中
+      </div>
+      <div class="preorder-note-body">
+        詳細は <a href="https://www.instagram.com/kayocookingclass?igsh=aDg3Y3JzZ2puODZ1"
+                 target="_blank" rel="noopener">かよママInstagram</a> でお知らせします。
+      </div>
+    </div>
+
+    <button class="preorder-submit" onclick="submitPreorder()">送信する</button>
+    <button class="preorder-cancel" onclick="closePreorderModal()">キャンセル</button>
+  </div>
+</div>
+
+<!-- Celebrate -->
+<div class="celebrate hidden" id="celebrate">
+  <div class="celebrate-card">
+    <img class="celebrate-char" id="celebrateChar" src="https://columns.l-mine.com/assets/chars/kayo3.png" alt="">
+    <div class="celebrate-eyebrow" id="celebrateEyebrow">ACHIEVEMENT</div>
+    <div class="celebrate-title" id="celebrateTitle">バッジ獲得</div>
+    <div class="celebrate-msg" id="celebrateMsg"></div>
+    <button class="celebrate-btn" onclick="closeCelebrate()">続ける</button>
+  </div>
+</div>
+
+<script>
+// ===========================================================
+// CONFIG
+// ===========================================================
+const CONFIG = {
+  GAS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbx2hHnvcjZIxkgVmGvpZMd2wmvvuMFQg_s5PpExWR5I93KJeZG1InUQyN3yQMaUz-ll/exec',
+  TOKEN: 'ajitsuke-dojo-tk9m3r7p5x2z8n6w4',
+  COURSE_START: '2026-07-04',
+  SUPPORT_DAYS: 21,
+  OPEN_CHAT_URL: 'https://line.me/ti/g2/qvFFgIWvJordhyMvMVBRiWPLSxrtXbSNPk2bMQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default',
+  LINE_SOS_URL: 'https://lin.ee/PLACEHOLDER',
+  NEXT_BOOKING_URL: 'https://PLACEHOLDER',
+  KOJI_SECRET: 'こうじだいすき',
+  OPENING_VIDEO_URL: 'https://columns.l-mine.com/assets/video/opening.mp4',
+};
+
+// ===========================================================
+// DATA
+// ===========================================================
+const SISTERS = [
+  {
+    id: 'tsuyuko', name: 'つゆ子', tag: 'TSUYUKO',
+    desc: '醤油・みりん・かつおだしのバランスで、煮物・炒め物・うどん・親子丼の味がピタッと決まる万能めんつゆ。',
+    recipe: {
+      subtitle: '手作りめんつゆ',
+      ingredients: [
+        '清酒：200cc',
+        'しょうゆ：200cc',
+        '本みりん：200cc（＋50cc）',
+        '出汁パック：1包',
+        '　又は、昆布1枚：5〜10cm',
+        '　　　　かつおぶし：10〜30g',
+      ],
+      notes: [
+        'みりんは「本みりん」、酒は「清酒」を使う',
+        'みりん風調味料や料理酒は添加物が多いので避ける',
+        '昆布・かつお節は、調味料（アミノ酸）などの添加物が入っていないだしパックで代用してもOK',
+      ],
+      stepsTitle: '昆布とかつお節で作る場合',
+      steps: [
+        'しょうゆ、みりん、酒とだし昆布を鍋に入れる',
+        '弱火で加熱し、沸騰直前に昆布を取り出す',
+        '沸騰したら火をさらに弱めて、かつお節を入れる',
+        '約10分、コトコトと煮出す（アクがあれば取る）',
+        '10分後、火を止めて冷ます',
+        '冷めたら、キッチンペーパーを広げたざるでこす',
+        '使いやすい容器に移す',
+      ],
+      altSteps: {
+        title: 'だしパックで作る場合',
+        text: 'しょうゆ、みりん、酒とだしパックを鍋に入れる。あとの作り方は一緒で、濾さずにだしパックを取り出す。',
+      },
+      storage: '2ヵ月（冷蔵）',
+    },
+  },
+  {
+    id: 'osuko', name: 'お酢子', tag: 'OSUKO',
+    desc: '酢の物・南蛮漬け・ピクルスまで万能。冷蔵庫に1本あると献立が広がる万能合わせ酢。',
+    recipe: {
+      subtitle: '無添加手作り合わせ調味料（酢の物）',
+      ingredients: [
+        '水：100cc',
+        '酢：100cc',
+        '砂糖：50g〜70g',
+        '塩：5g〜10g',
+        '昆布：10cm',
+        '鷹の爪：1本',
+      ],
+      notes: [
+        '塩と砂糖は減らしすぎると保存がきかなくなるので注意する',
+        '鷹の爪は辛みではなく保存のために入れるので、種はとる',
+      ],
+      stepsTitle: '作り方',
+      steps: [
+        '昆布、水、酢、砂糖、塩を弱火で加熱し、沸騰直前に昆布を取り出す',
+        '沸騰してから3分ほど加熱する',
+        '鷹の爪と一緒に保存する',
+      ],
+      storage: '3ヵ月　※常温OK',
+    },
+  },
+  {
+    id: 'dashiko', name: 'だし子', tag: 'DASHIKO',
+    desc: 'お味噌汁・茶碗蒸し・うどんつゆのベース。市販の顆粒だしを卒業できる万能だし。',
+    recipe: {
+      subtitle: '白だし代わり',
+      ingredients: [
+        '清酒：200cc',
+        'しょうゆ：170cc',
+        '本みりん：200cc（＋50cc）',
+        '出汁パック：1包',
+        '　又は、昆布1枚：5〜10cm',
+        '　　　　かつおぶし：10〜30g',
+      ],
+      notes: [],
+      stepsTitle: '作り方',
+      steps: [
+        '鍋に調味料と昆布を入れる（だしパックを入れる）',
+        '弱火で加熱し、沸騰直前に昆布を取り出す',
+        '沸騰したら、かつおぶしを入れて弱火で10分ほど煮詰める',
+        'アルコールが飛んだらそのまま冷まし、冷めたらこす',
+      ],
+      storage: '2ヵ月（冷蔵）',
+    },
+  },
+];
+
+const RATIOS = [];  // 黄金比図鑑は廃止（3姉妹は分量で、対比/比率ではない）
+
+// icon = 独自の水彩キャラ画像（assets/dishes/d01-d25.png）
+const DISH_BASE = 'https://columns.l-mine.com/assets/dishes/';
+const RECIPES = [
+  { id: 'd01', name: 'ぶっかけうどん',   use: 'つゆ子' },
+  { id: 'd02', name: '野菜の焼き浸し',   use: 'だし子' },
+  { id: 'd03', name: '親子丼',           use: 'つゆ子' },
+  { id: 'd04', name: '筑前煮',           use: 'つゆ子' },
+  { id: 'd05', name: '肉じゃが',         use: 'つゆ子' },
+  { id: 'd06', name: '煮魚',             use: 'つゆ子' },
+  { id: 'd07', name: 'おろし煮',         use: 'つゆ子' },
+  { id: 'd08', name: 'ハンバーグ',       use: 'つゆ子' },
+  { id: 'd09', name: '照り焼き',         use: 'つゆ子' },
+  { id: 'd10', name: '焼きうどん',       use: 'つゆ子' },
+  { id: 'd11', name: '和風パスタ',       use: 'つゆ子' },
+  { id: 'd12', name: '酢の物',           use: 'お酢子' },
+  { id: 'd13', name: 'もずく酢',         use: 'お酢子' },
+  { id: 'd14', name: 'マリネ',           use: 'お酢子' },
+  { id: 'd15', name: 'ラペ',             use: 'お酢子' },
+  { id: 'd16', name: '南蛮漬け',         use: 'お酢子' },
+  { id: 'd17', name: '海老チリ',         use: '合わせ技' },
+  { id: 'd18', name: 'ミートソース',     use: '合わせ技' },
+  { id: 'd19', name: 'うどんだし',       use: 'だし子' },
+  { id: 'd20', name: 'けんちん汁',       use: 'だし子' },
+  { id: 'd21', name: '中華スープ',       use: 'だし子' },
+  { id: 'd22', name: 'お浸し',           use: 'だし子' },
+  { id: 'd23', name: '和風ドレッシング', use: 'お酢子' },
+  { id: 'd24', name: '中華ダレ',         use: '合わせ技' },
+  { id: 'd25', name: '洋食ドレッシング', use: 'お酢子' },
+];
+
+const BADGES = [
+  { id: 'b_t', cat: '仕込み',       icon: '🍶', name: 'つゆ子完成', cond: s => s.sisters.tsuyuko === 'done' },
+  { id: 'b_o', cat: '仕込み',       icon: '🍶', name: 'お酢子完成', cond: s => s.sisters.osuko === 'done' },
+  { id: 'b_d', cat: '仕込み',       icon: '🍶', name: 'だし子完成', cond: s => s.sisters.dashiko === 'done' },
+  { id: 'b_3', cat: '仕込み',       icon: '👯', name: '3姉妹そろい踏み', cond: s => Object.values(s.sisters).every(v => v === 'done') },
+  { id: 'd5',  cat: '料理達成',     icon: '🍳', name: '5品達成', cond: s => s.recipes.length >= 5 },
+  { id: 'd10', cat: '料理達成',     icon: '🍳', name: '10品達成', cond: s => s.recipes.length >= 10 },
+  { id: 'd15', cat: '料理達成',     icon: '🍳', name: '15品達成', cond: s => s.recipes.length >= 15 },
+  { id: 'd20', cat: '料理達成',     icon: '🍳', name: '20品達成', cond: s => s.recipes.length >= 20 },
+  { id: 'd25', cat: '料理達成',     icon: '🌟', name: '全25品制覇', cond: s => s.recipes.length >= 25 },
+  { id: 'cm',  cat: '仲間と学ぶ',   icon: '👥', name: 'オープンチャット', cond: s => s.flags.openedChat },
+  { id: 'kj',  cat: '麹卒業生',     icon: '🎓', name: '麹アプリ卒業生', cond: s => s.flags.kojiGraduate },
+  { id: 'grad', cat: '卒業',        icon: '🏆', name: '味付け道場 卒業', cond: s =>
+      Object.values(s.sisters).every(v => v === 'done') &&
+      s.recipes.length >= RECIPES.length },
+];
+
+const TUTORIAL = [
+  { step: 'STEP 01', title: 'ようこそ', char: 'kayomamaprofile',
+    body: 'はじめまして、かよママです。<br><br>この3週間で、レシピを見なくても味が決まる「3姉妹（つゆ子・お酢子・だし子）」を、手に馴染ませていきましょう。一緒に楽しくいきましょうね。' },
+  { step: 'STEP 02', title: '講座の日程', char: 'kayo3',
+    body: '<strong>7/4（土）21:30〜23:00</strong><br>Zoomで仕組み座学＋3姉妹を仕込みます。<br><br><strong>7/5（日）21:30〜23:00</strong><br>3姉妹を使ったおうちごはん作り。<br><br>どちらも見るだけ参加でOKです。' },
+  { step: 'STEP 03', title: '3姉妹を仕込む', char: 'kayo2',
+    body: 'つゆ子・お酢子・だし子の3つを仕込んで、まずは台所の「土台」を整えます。<br><br>アプリで仕込みの状態を記録できます。' },
+  { step: 'STEP 04', title: '料理図鑑', char: 'kayo1',
+    body: '3姉妹を使った25品の料理は、作れたらタップでチェック。<br><br>5・10・15・20・25品の節目でバッジがもらえます。' },
+  { step: 'STEP 05', title: '困った時は', char: 'kayo4',
+    body: '3週間、なんでも質問できます。<br><br>仲間と学ぶ「オープンチャット」もぜひのぞいてみてくださいね。' },
+  { step: 'STEP 06', title: 'お名前を教えてください', char: 'kayo3',
+    body: 'アプリ内で呼びかける時に使います。<br>ニックネームでもOKです。', extra: 'name' },
+  { step: 'STEP 07', title: '麹アプリ卒業生の方へ', char: 'kayo3',
+    body: '「かよママの麹つかいこなし道場」に参加されたことがある方は、麹アプリ内の合言葉を入力してください。<br><br>はじめての方は「あとで」を押してそのまま進めます。', extra: 'koji' },
+];
+
+// ===========================================================
+// STATE
+// ===========================================================
+const STORAGE_KEY = 'ajitsuke-dojo-v2';
+const DEFAULT_STATE = {
+  userName: '',
+  startedAt: null,
+  onboarded: false,
+  sisters: { tsuyuko: 'unmade', osuko: 'unmade', dashiko: 'unmade' },
+  sistersAt: { tsuyuko: null, osuko: null, dashiko: null },
+  ratios: [],
+  recipes: [],
+  badges: [],
+  flags: { openedChat: false, kojiGraduate: false, ended: false, preorderNotified: false, preorderRequested: false, preorderChoices: '', openingShown: false },
+};
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
+  } catch(e) {}
+}
+function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+// ===========================================================
+// INIT
+// ===========================================================
+let onbStep = 0;
+document.addEventListener('DOMContentLoaded', () => {
+  if (location.search.includes('admin')) document.getElementById('adminBar').classList.add('on');
+  load();
+  if (!state.onboarded) {
+    showOnboarding();
+  } else {
+    document.getElementById('onb').classList.add('hidden');
+    refresh();
+    const home = document.querySelector('[data-screen="home"]');
+    if (home) {
+      triggerStagger(home);
+      replayProgressBars(home);
+    }
+    maybeShowPreorderPopup();
+  }
+  renderUsage();
+});
+
+// ===========================================================
+// OPENING VIDEO (after first onboarding — video → flash → home)
+// ===========================================================
+let openingFinishTimer = null;
+let openingOnDone = null;
+const OPENING_VIDEO_MAX_MS = 6000; // 動画尺 + 予備 (実尺は約 4.4秒)
+
+function showOpening(onDone) {
+  openingOnDone = typeof onDone === 'function' ? onDone : null;
+  const wrap = document.getElementById('opening');
+  const video = document.getElementById('openingVideo');
+  const flash = document.getElementById('openingFlash');
+  if (!wrap || !video) { if (openingOnDone) openingOnDone(); return; }
+
+  // クリーンな状態から再生
+  wrap.classList.remove('hidden', 'leaving');
+  wrap.dataset.done = '';
+  if (flash) flash.classList.remove('on');
+
+  // srcを明示リロード（キャッシュ回避＆再再生対応）
+  try {
+    video.currentTime = 0;
+    video.muted = true;
+    video.playsInline = true;
+    video.load();
+  } catch(e) {}
+
+  const tryPlay = () => {
+    const p = video.play();
+    if (p && typeof p.catch === 'function') p.catch(() => {});
+  };
+  tryPlay();
+  video.addEventListener('canplay', tryPlay, { once: true });
+
+  // 動画が自然に終わったら → フラッシュ発火
+  video.onended = () => triggerFlash();
+
+  // 保険：動画尺を超えたら強制フラッシュ
+  clearTimeout(openingFinishTimer);
+  openingFinishTimer = setTimeout(() => triggerFlash(), OPENING_VIDEO_MAX_MS);
+}
+
+function triggerFlash() {
+  const wrap = document.getElementById('opening');
+  const flash = document.getElementById('openingFlash');
+  if (!wrap || wrap.dataset.done === '1') return;
+  wrap.dataset.done = '1';
+  clearTimeout(openingFinishTimer);
+
+  // フラッシュ演出開始
+  if (flash) flash.classList.add('on');
+  // フラッシュのピーク（0.35 * 1.05s ≒ 370ms）でモーダルを閉じ、その後透明化
+  setTimeout(() => {
+    wrap.classList.add('leaving');
+  }, 370);
+  setTimeout(() => {
+    wrap.classList.add('hidden');
+    wrap.classList.remove('leaving');
+    if (flash) flash.classList.remove('on');
+    const video = document.getElementById('openingVideo');
+    try { if (video) { video.pause(); video.currentTime = 0; } } catch(e) {}
+    state.flags.openingShown = true;
+    persist();
+    if (openingOnDone) { const cb = openingOnDone; openingOnDone = null; cb(); }
+  }, 1050);
+}
+
+function skipOpening() { triggerFlash(); }
+
+window.skipOpening = skipOpening;
+
+function refresh() {
+  updateGreeting();
+  updateDays();
+  updateFeature();
+  updateProgressBars();
+  updatePreorderCard();
+  renderSisters();
+  renderRecipes();
+  renderBadges();
+  renderKojiSettings();
+  checkBadges();
+  persist();
+}
+
+// ===========================================================
+// ONBOARDING
+// ===========================================================
+function showOnboarding() {
+  document.getElementById('onb').classList.remove('hidden');
+  onbStep = 0;
+  updateOnb();
+}
+function updateOnb() {
+  const t = TUTORIAL[onbStep];
+  const dots = TUTORIAL.map((_, i) => `<div class="onb-dot ${i === onbStep ? 'active' : i < onbStep ? 'done' : ''}"></div>`).join('');
+  document.getElementById('onbDots').innerHTML = dots;
+  document.getElementById('onbStep').textContent = t.step;
+  document.getElementById('onbTitle').textContent = t.title;
+  document.getElementById('onbBody').innerHTML = t.body;
+  document.getElementById('onbChar').src = 'https://columns.l-mine.com/assets/chars/' + t.char + '.png';
+  document.getElementById('onbBack').style.visibility = onbStep === 0 ? 'hidden' : 'visible';
+
+  const extra = document.getElementById('onbExtra');
+  const next = document.getElementById('onbNext');
+  const skip = document.getElementById('onbSkip');
+
+  if (t.extra === 'name') {
+    extra.innerHTML = '<input class="onb-input" id="onbName" placeholder="お名前またはニックネーム" autocomplete="off">';
+    next.textContent = '次へ';
+    skip.style.visibility = 'hidden';
+    setTimeout(() => { const el = document.getElementById('onbName'); if (el) { el.value = state.userName || ''; el.focus(); } }, 100);
+  } else if (t.extra === 'koji') {
+    extra.innerHTML =
+      '<input class="onb-input" id="onbKoji" placeholder="合言葉を入力（なければスキップ）" autocomplete="off">' +
+      '<div class="onb-hint" id="onbKojiHint"></div>';
+    next.textContent = 'はじめる';
+    skip.style.visibility = 'visible';
+    skip.textContent = 'あとで';
+  } else {
+    extra.innerHTML = '';
+    next.textContent = onbStep === TUTORIAL.length - 1 ? 'はじめる' : '次へ';
+    skip.style.visibility = 'hidden';
+  }
+}
+function onbBack() {
+  if (onbStep > 0) { onbStep--; updateOnb(); }
+}
+function onbNext() {
+  const t = TUTORIAL[onbStep];
+
+  if (t.extra === 'name') {
+    const name = (document.getElementById('onbName').value || '').trim();
+    if (!name) { toast('お名前を入れてください'); return; }
+    state.userName = name;
+  }
+
+  if (t.extra === 'koji') {
+    const val = (document.getElementById('onbKoji').value || '').trim();
+    if (val) {
+      if (normalizeSecret(val) === normalizeSecret(CONFIG.KOJI_SECRET)) {
+        state.flags.kojiGraduate = true;
+        sendToSheet('koji-link', { name: state.userName });
+        finishOnboarding(true);
+        return;
+      } else {
+        document.getElementById('onbKojiHint').textContent = '合言葉が違うようです。麹アプリの表示と確認してください。';
+        return;
+      }
+    }
+    // 空欄ならスキップ扱いで完了
+    finishOnboarding(false);
+    return;
+  }
+
+  if (onbStep < TUTORIAL.length - 1) {
+    onbStep++;
+    updateOnb();
+  }
+}
+function onbSkip() {
+  finishOnboarding(false);
+}
+function finishOnboarding(withKoji) {
+  state.onboarded = true;
+  state.startedAt = new Date().toISOString();
+  persist();
+  sendToSheet('register', { name: state.userName });
+  document.getElementById('onb').classList.add('hidden');
+  refresh();
+  const home = document.querySelector('[data-screen="home"]');
+  if (home) {
+    triggerStagger(home);
+    replayProgressBars(home);
+  }
+
+  const afterOpening = () => {
+    // ホーム画面のカードを段階表示で登場（フラッシュ後の余韻）
+    if (home) {
+      triggerStagger(home);
+      replayProgressBars(home);
+    }
+    if (withKoji) {
+      celebrate('引継ぎ完了', '麹アプリ卒業生として認証されました。<br>バッジが解放されています。', 'kayo3', 'WELCOME BACK');
+    } else {
+      toast('はじめましょう、' + state.userName + 'さん');
+    }
+  };
+
+  // 初回のみオープニング動画 → フラッシュ → afterOpening
+  if (!state.flags.openingShown) {
+    showOpening(afterOpening);
+  } else {
+    afterOpening();
+  }
+}
+
+function normalizeSecret(s) {
+  return s.toLowerCase().replace(/\s/g,'').normalize('NFKC');
+}
+
+// ===========================================================
+// SCREEN NAV
+// ===========================================================
+function goto(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const tgt = document.querySelector('[data-screen="' + screen + '"]');
+  if (tgt) {
+    tgt.classList.add('active');
+    triggerStagger(tgt);
+    replayProgressBars(tgt);
+  }
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.querySelector('[data-nav="' + screen + '"]');
+  if (nav) nav.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Restart entrance staggers when a screen becomes active
+function triggerStagger(tgt) {
+  const containers = [...tgt.querySelectorAll('.stagger, .stagger-fast')];
+  if (tgt.classList.contains('stagger') || tgt.classList.contains('stagger-fast')) containers.unshift(tgt);
+  containers.forEach(c => {
+    [...c.children].forEach(ch => { ch.style.animation = 'none'; });
+  });
+  void tgt.offsetHeight;
+  containers.forEach(c => {
+    [...c.children].forEach(ch => { ch.style.animation = ''; });
+  });
+}
+
+// Replay progress bars from 0 to their current value
+function replayProgressBars(tgt) {
+  const bars = tgt.querySelectorAll('.prog-bar-fill, .recipe-bar-fill, .tile-progress-fill');
+  bars.forEach(b => {
+    const w = b.style.width || '0%';
+    b.style.transition = 'none';
+    b.style.width = '0%';
+    void b.offsetHeight;
+    b.style.transition = '';
+    requestAnimationFrame(() => { b.style.width = w; });
+  });
+}
+
+// Smooth count-up animation for numeric elements
+function countUp(el, target, duration) {
+  if (!el) return;
+  duration = duration || 700;
+  const current = parseInt(el.textContent, 10) || 0;
+  target = Math.round(target);
+  if (current === target) { el.textContent = target; return; }
+  const start = current;
+  const startTime = performance.now();
+  function step(now) {
+    const t = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    el.textContent = Math.round(start + (target - start) * eased);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Confetti emission for celebrations
+const CONFETTI_COLORS = ['#C97551','#B89254','#FFC56B','#6E8B6E','#FFE7B0','#A65A3A','#D4856A'];
+function emitConfetti(cx, cy, count) {
+  count = count || 38;
+  const W = window.innerWidth, H = window.innerHeight;
+  cx = cx == null ? W / 2 : cx;
+  cy = cy == null ? H / 2.5 : cy;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = cx + 'px';
+    p.style.top = cy + 'px';
+    p.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+    p.style.setProperty('--dx', (Math.random() * 480 - 240) + 'px');
+    p.style.setProperty('--dy', (-180 - Math.random() * 220) + 'px');
+    p.style.setProperty('--rot', (Math.random() * 900 - 450) + 'deg');
+    p.style.setProperty('--dur', (1.6 + Math.random() * 0.9) + 's');
+    p.style.animationDelay = (Math.random() * 0.18) + 's';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 3200);
+  }
+}
+
+// ===========================================================
+// HOME
+// ===========================================================
+function updateGreeting() {
+  const name = state.userName || 'あなた';
+  const hour = new Date().getHours();
+  let prefix = 'こんにちは';
+  let eyebrow = 'HELLO';
+  if (hour < 11) { prefix = 'おはようございます'; eyebrow = 'OHAYO'; }
+  else if (hour >= 18) { prefix = 'こんばんは'; eyebrow = 'KONBANWA'; }
+  document.getElementById('greetEyebrow').textContent = eyebrow;
+  document.getElementById('greetName').textContent = name + 'さん、' + prefix;
+
+  // 講座n日目
+  const start = state.startedAt ? new Date(state.startedAt) : new Date();
+  const dayN = Math.max(1, Math.floor((Date.now() - start.getTime()) / 86400000) + 1);
+  document.getElementById('chipDay').textContent = '講座 ' + Math.min(dayN, CONFIG.SUPPORT_DAYS) + '日目';
+}
+function updateDays() {
+  const start = state.startedAt ? new Date(state.startedAt) : new Date(CONFIG.COURSE_START);
+  const end = new Date(start);
+  end.setDate(end.getDate() + CONFIG.SUPPORT_DAYS);
+  const days = Math.max(0, Math.ceil((end - new Date()) / 86400000));
+  const chip = document.getElementById('chipDays');
+  if (days === 0) {
+    chip.textContent = '期間終了';
+    chip.className = 'chip';
+    if (!state.flags.ended) { state.flags.ended = true; persist(); }
+  } else if (days <= 3) {
+    chip.textContent = '残り ' + days + '日';
+    chip.className = 'chip warn';
+  } else {
+    chip.textContent = '残り ' + days + '日';
+    chip.className = 'chip accent';
+  }
+}
+function updateFeature() {
+  const sDone = Object.values(state.sisters).filter(v => v === 'done').length;
+  const r = state.recipes.length;
+  let eyebrow = 'TODAY';
+  let title = 'まずは3姉妹の仕込みから始めましょう';
+  let char = 'kayo2';
+
+  if (sDone === 0) {
+    title = 'まずは3姉妹の仕込みから始めましょう';
+  } else if (sDone < 3) {
+    title = '3姉妹の仕込み、進んでいます。残り' + (3-sDone) + '本';
+    char = 'kayo2';
+  } else if (r < 5) {
+    title = '3姉妹そろい踏み。今日は何を作りますか？';
+    char = 'kayo4';
+    eyebrow = 'NEXT STEP';
+  } else if (r < 25) {
+    title = r + '品クリア。次の一品はどれですか？';
+    char = 'kayo1';
+    eyebrow = 'KEEP GOING';
+  } else {
+    title = '全25品 達成しました。味付け道場 卒業です';
+    char = 'kayo3';
+    eyebrow = 'GRADUATED';
+  }
+  document.getElementById('featureEyebrow').textContent = eyebrow;
+  document.getElementById('featureTitle').textContent = title;
+  document.getElementById('featureChar').src = 'https://columns.l-mine.com/assets/chars/' + char + '.png';
+}
+function updateProgressBars() {
+  const sDone = Object.values(state.sisters).filter(v => v === 'done').length;
+  countUp(document.getElementById('cntSisters'), sDone);
+  document.getElementById('barSisters').style.width = (sDone/3*100) + '%';
+  countUp(document.getElementById('cntRecipes'), state.recipes.length);
+  document.getElementById('barRecipes').style.width = (state.recipes.length/25*100) + '%';
+}
+
+// ===========================================================
+// SISTERS
+// ===========================================================
+function renderSisters() {
+  const html = SISTERS.map(s => {
+    const st = state.sisters[s.id];
+    const lbl = { unmade: '未仕込み', making: '仕込み中（発酵中）', done: '完成しました' }[st];
+    const date = state.sistersAt[s.id];
+    return `
+      <div class="sister" data-id="${s.id}">
+        <div class="sister-head">
+          <div class="sister-name serif">${s.name}</div>
+          <div class="sister-tag">${s.tag}</div>
+        </div>
+        <div class="sister-desc">${s.desc}</div>
+        <div class="sister-state ${st}"><div class="dot"></div>${lbl}</div>
+        ${date ? '<div class="sister-date">' + new Date(date).toLocaleDateString('ja-JP') + ' に' + (st === 'making' ? '仕込みました' : '完成しました') + '</div>' : ''}
+        <div class="sister-actions">
+          <button class="btn ${st !== 'unmade' ? 'btn-secondary' : 'btn-primary'}" ${st === 'done' ? 'disabled' : ''} onclick="sisterAction('${s.id}','making')">${st === 'unmade' ? '仕込みました' : '仕込み直す'}</button>
+          <button class="btn btn-primary" ${st !== 'making' ? 'disabled' : ''} onclick="sisterAction('${s.id}','done')">完成しました</button>
+        </div>
+        ${s.recipe ? renderRecipeBlock(s) : ''}
+      </div>
+    `;
+  }).join('');
+  document.getElementById('sisterList').innerHTML = html;
+}
+
+function renderRecipeBlock(s) {
+  const r = s.recipe;
+  const notesHtml = (r.notes && r.notes.length) ? `
+    <div class="recipe-notes">
+      <ul>${r.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+    </div>
+  ` : '';
+  const altHtml = r.altSteps ? `
+    <div class="recipe-alt">
+      <div class="recipe-alt-title">${r.altSteps.title}</div>
+      <div class="recipe-alt-text">${r.altSteps.text}</div>
+    </div>
+  ` : '';
+  return `
+    <button class="recipe-toggle" onclick="toggleSisterRecipe('${s.id}', this)">
+      <span class="rt-icon">📖</span>
+      <span>${s.name} のレシピを見る</span>
+      <span class="rt-arrow">▼</span>
+    </button>
+    <div class="recipe-detail" id="recipe-${s.id}">
+      <div class="recipe-inner">
+        <div class="recipe-subtitle">${r.subtitle}</div>
+        <div class="recipe-section">
+          <div class="recipe-section-label"><span class="rl-icon">📝</span>材料</div>
+          <ul class="recipe-list">${r.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+        </div>
+        ${notesHtml}
+        <div class="recipe-section">
+          <div class="recipe-section-label"><span class="rl-icon">👩‍🍳</span>${r.stepsTitle}</div>
+          <ol class="recipe-steps">${r.steps.map(step => `<li>${step}</li>`).join('')}</ol>
+        </div>
+        ${altHtml}
+        <div class="recipe-storage">📦 保存期間：${r.storage}</div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleSisterRecipe(id, btn) {
+  const detail = document.getElementById('recipe-' + id);
+  if (detail) detail.classList.toggle('open');
+  if (btn) btn.classList.toggle('open');
+}
+function sisterAction(id, target) {
+  state.sisters[id] = target;
+  if (target === 'making') state.sistersAt[id] = new Date().toISOString();
+  if (target === 'done') {
+    const s = SISTERS.find(x => x.id === id);
+    celebrate(s.name + ' 完成', '毎日の料理が変わっていきます。<br>常備しておきましょう。', 'kayo1', 'COMPLETED');
+    sendToSheet('sister-done', { id, name: s.name });
+  }
+  refresh();
+}
+
+// ===========================================================
+// RATIOS
+// ===========================================================
+// 黄金比図鑑は廃止（3姉妹は分量で、対比/比率ではないため）
+
+// ===========================================================
+// RECIPES
+// ===========================================================
+function renderRecipes() {
+  document.getElementById('recipeGrid').innerHTML = RECIPES.map(r => {
+    const done = state.recipes.includes(r.id);
+    return `
+      <button class="recipe ${done ? 'done' : ''}" onclick="toggleRecipe('${r.id}')">
+        <img class="recipe-emoji" src="${DISH_BASE}${r.id}.png" alt="" loading="lazy">
+        <div class="recipe-name">${r.name}</div>
+        <div class="recipe-tag">${r.use}</div>
+      </button>
+    `;
+  }).join('');
+  const cnt = state.recipes.length;
+  countUp(document.getElementById('recipeCount'), cnt);
+  document.getElementById('recipeBar').style.width = (cnt/25*100) + '%';
+  countUp(document.getElementById('recipePct'), Math.round(cnt/25*100));
+}
+function toggleRecipe(id) {
+  const idx = state.recipes.indexOf(id);
+  const r = RECIPES.find(x => x.id === id);
+  if (idx >= 0) {
+    state.recipes.splice(idx, 1);
+  } else {
+    state.recipes.push(id);
+    sendToSheet('recipe-done', { id, name: r.name });
+    const c = state.recipes.length;
+    if ([5,10,15,20,25].includes(c)) {
+      const titles = {5:'5品達成',10:'10品達成',15:'15品達成',20:'20品達成',25:'全25品 制覇'};
+      const msgs = {
+        5: 'まずは5品。料理の引き出しが増えてきました。',
+        10: 'もう半分近く。手が覚えてきたはずです。',
+        15: '味の組み立てが体に馴染んできているはず。',
+        20: 'あと少し。仕組みが体に入ってきています。',
+        25: '全部達成。レシピなしで味が決まる「自分の手」が育ちました。'
+      };
+      celebrate(titles[c], msgs[c], c >= 20 ? 'kayo1' : 'kayo3', c === 25 ? 'GRADUATED' : 'MILESTONE');
+    }
+  }
+  refresh();
+}
+
+// ===========================================================
+// BADGES
+// ===========================================================
+function renderBadges() {
+  const cats = {};
+  BADGES.forEach(b => { if (!cats[b.cat]) cats[b.cat] = []; cats[b.cat].push(b); });
+  document.getElementById('badgeCats').innerHTML = Object.entries(cats).map(([cat, items]) => {
+    const earned = items.filter(b => state.badges.includes(b.id)).length;
+    return `
+      <div class="badge-cat">
+        <div class="badge-cat-head">
+          <div class="badge-cat-name">${cat}</div>
+          <div class="badge-cat-count">${earned} / ${items.length}</div>
+        </div>
+        <div class="badge-grid">
+          ${items.map(b => `
+            <div class="badge ${state.badges.includes(b.id) ? 'earned' : ''}">
+              <div class="badge-em">${b.icon}</div>
+              <div class="badge-name">${b.name}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('farewellCount').textContent = '獲得バッジ：' + state.badges.length + ' 個 / 全 ' + BADGES.length + ' 個';
+}
+function checkBadges() {
+  const news = [];
+  BADGES.forEach(b => {
+    if (!state.badges.includes(b.id) && b.cond(state)) {
+      state.badges.push(b.id);
+      news.push(b);
+    }
+  });
+  if (news.length > 0) {
+    persist();
+    setTimeout(() => celebrate(
+      news[0].name,
+      news[0].icon + ' を獲得しました' + (news.length > 1 ? '。ほか' + (news.length-1) + '個も' : '。'),
+      'kayo3', 'ACHIEVEMENT'
+    ), 240);
+    news.forEach(b => sendToSheet('badge-earned', { id: b.id, name: b.name }));
+  }
+}
+
+// ===========================================================
+// USAGE / KOJI SETTINGS
+// ===========================================================
+function renderUsage() {
+  document.getElementById('usagePages').innerHTML = TUTORIAL.slice(0,5).map(t => `
+    <div class="usage-card">
+      <div class="usage-step-no">${t.step}</div>
+      <img class="usage-char" src="https://columns.l-mine.com/assets/chars/${t.char}.png" alt="">
+      <div class="usage-title serif">${t.title}</div>
+      <div class="usage-body">${t.body}</div>
+    </div>
+  `).join('');
+}
+function renderKojiSettings() {
+  const set = document.getElementById('kojiSetState');
+  const form = document.getElementById('kojiSetForm');
+  if (state.flags.kojiGraduate) {
+    set.textContent = '✓ 認証済み';
+    set.style.color = '#5A7A5A';
+    if (form) form.style.display = 'none';
+  } else {
+    set.textContent = '未認証';
+    set.style.color = '';
+    if (form) form.style.display = 'block';
+  }
+}
+function enterKojiFromSettings() {
+  const val = (document.getElementById('kojiSetInput').value || '').trim();
+  const hint = document.getElementById('kojiSetHint');
+  if (!val) { hint.textContent = '合言葉を入力してください'; return; }
+  if (normalizeSecret(val) === normalizeSecret(CONFIG.KOJI_SECRET)) {
+    state.flags.kojiGraduate = true;
+    sendToSheet('koji-link', { name: state.userName });
+    celebrate('引継ぎ完了', '麹アプリ卒業生として認証されました。', 'kayo3', 'WELCOME BACK');
+    refresh();
+  } else {
+    hint.textContent = '合言葉が違います。麹アプリの表示と確認してください。';
+  }
+}
+
+// ===========================================================
+// EXTERNAL
+// ===========================================================
+function openLine()      { window.open(CONFIG.LINE_SOS_URL, '_blank'); }
+function openOpenChat()  { state.flags.openedChat = true; refresh(); window.open(CONFIG.OPEN_CHAT_URL, '_blank'); }
+function openNext()      { sendToSheet('next-booking', { name: state.userName }); window.open(CONFIG.NEXT_BOOKING_URL, '_blank'); }
+
+// ===========================================================
+// 先行予約（サポート残り3日以内で有効化）
+// ===========================================================
+function isPreorderAvailable() {
+  const start = state.startedAt ? new Date(state.startedAt) : new Date(CONFIG.COURSE_START);
+  const end = new Date(start);
+  end.setDate(end.getDate() + CONFIG.SUPPORT_DAYS);
+  const diff = end - Date.now();
+  const daysLeft = Math.ceil(diff / 86400000);
+  // 残り3日以内から、講座終了30日後まで有効
+  return daysLeft <= 3;
+}
+
+function updatePreorderCard() {
+  const card = document.getElementById('preorderCard');
+  const btn = document.getElementById('preorderBtn');
+  if (!card || !btn) return;
+  if (isPreorderAvailable()) {
+    card.classList.add('on');
+    if (state.flags.preorderRequested) {
+      btn.classList.add('done');
+      btn.textContent = 'ご希望を承りました';
+      btn.disabled = true;
+    } else {
+      btn.classList.remove('done');
+      btn.textContent = '先行予約を希望する';
+      btn.disabled = false;
+    }
+  } else {
+    card.classList.remove('on');
+  }
+}
+
+function requestPreorder() {
+  if (state.flags.preorderRequested) {
+    toast('すでにご希望を受付済みです');
+    return;
+  }
+  const modal = document.getElementById('preorderModal');
+  const sepEl = document.getElementById('popt-sep');
+  const subEl = document.getElementById('popt-sub');
+  if (sepEl) sepEl.checked = false;
+  if (subEl) subEl.checked = false;
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closePreorderModal() {
+  const modal = document.getElementById('preorderModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function submitPreorder() {
+  const sepEl = document.getElementById('popt-sep');
+  const subEl = document.getElementById('popt-sub');
+  const sepChecked = sepEl && sepEl.checked;
+  const subChecked = subEl && subEl.checked;
+  if (!sepChecked && !subChecked) {
+    toast('ご興味のあるものを選んでください');
+    return;
+  }
+  const choices = [];
+  if (sepChecked) choices.push('9月 献立サポート');
+  if (subChecked) choices.push('サブスクコミュニティ');
+  const choicesStr = choices.join(' / ');
+
+  state.flags.preorderRequested = true;
+  state.flags.preorderChoices = choicesStr;
+  sendToSheet('next-booking', { name: state.userName, choices: choicesStr });
+
+  closePreorderModal();
+  setTimeout(() => {
+    celebrate(
+      'ありがとうございます！',
+      '追って詳細を<br>お送りしますね🌸',
+      'kayo3',
+      'RECEIVED'
+    );
+  }, 250);
+  refresh();
+}
+
+function maybeShowPreorderPopup() {
+  if (!isPreorderAvailable()) return;
+  if (state.flags.preorderNotified) return;
+  state.flags.preorderNotified = true;
+  persist();
+  setTimeout(() => {
+    celebrate(
+      '先行予約、はじまりました',
+      'かよママの次のサポート企画の<br><strong>先行予約</strong>ができるようになりました🌸<br><br>ホーム画面からいつでも<br>お申し込みいただけます。',
+      'kayo3',
+      'PREORDER OPEN'
+    );
+  }, 1400);
+}
+
+// ===========================================================
+// GAS
+// ===========================================================
+async function sendToSheet(action, payload) {
+  if (!CONFIG.GAS_ENDPOINT) return;
+  try {
+    await fetch(CONFIG.GAS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        token: CONFIG.TOKEN, action,
+        userName: state.userName,
+        ts: new Date().toISOString(),
+        payload
+      })
+    });
+  } catch(e) {}
+}
+
+// ===========================================================
+// UI HELPERS
+// ===========================================================
+let toastT;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.add('hidden'), 2400);
+}
+function celebrate(title, msg, char, eyebrow) {
+  document.getElementById('celebrateTitle').textContent = title;
+  document.getElementById('celebrateMsg').innerHTML = msg;
+  document.getElementById('celebrateChar').src = 'https://columns.l-mine.com/assets/chars/' + (char || 'kayo3') + '.png';
+  document.getElementById('celebrateEyebrow').textContent = eyebrow || 'ACHIEVEMENT';
+  const modal = document.getElementById('celebrate');
+  modal.classList.remove('hidden');
+  // Restart bounce animation on the character
+  const charEl = document.getElementById('celebrateChar');
+  charEl.style.animation = 'none';
+  void charEl.offsetHeight;
+  charEl.style.animation = '';
+  // Particles burst from the modal center
+  setTimeout(() => {
+    const rect = modal.querySelector('.celebrate-card').getBoundingClientRect();
+    emitConfetti(rect.left + rect.width / 2, rect.top + rect.height / 3, eyebrow === 'GRADUATED' ? 70 : 40);
+  }, 180);
+}
+function closeCelebrate() {
+  document.getElementById('celebrate').classList.add('hidden');
+}
+
+// ===========================================================
+// ADMIN
+// ===========================================================
+function adminReset() {
+  if (!confirm('全データをリセットします。よろしいですか？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+function adminFillDemo() {
+  state.sisters = { tsuyuko: 'done', osuko: 'making', dashiko: 'unmade' };
+  state.sistersAt = { tsuyuko: new Date(Date.now()-3*86400000).toISOString(), osuko: new Date().toISOString(), dashiko: null };
+  state.recipes = ['d01','d02','d05','d08','d14','d15','d17'];
+  refresh();
+  toast('デモデータを入れました');
+}
+function adminUnlockAll() {
+  state.sisters = { tsuyuko: 'done', osuko: 'done', dashiko: 'done' };
+  state.sistersAt = { tsuyuko: new Date().toISOString(), osuko: new Date().toISOString(), dashiko: new Date().toISOString() };
+  state.recipes = RECIPES.map(r => r.id);
+  state.flags = { openedChat: true, kojiGraduate: true, ended: false };
+  refresh();
+  toast('全部開放しました');
+}
+function adminEndCourse() {
+  state.startedAt = new Date(Date.now() - 22*86400000).toISOString();
+  refresh();
+  goto('farewell');
+  toast('講座終了状態にしました');
+}
+function adminPreorderWindow() {
+  // サポート残り3日の状態を作る（21-3=18日前スタート）
+  state.startedAt = new Date(Date.now() - 18*86400000).toISOString();
+  state.flags.preorderNotified = false;
+  state.flags.preorderRequested = false;
+  refresh();
+  goto('home');
+  toast('先行予約ウィンドウ突入状態にしました');
+  setTimeout(maybeShowPreorderPopup, 400);
+}
+function adminReplayOpening() {
+  // オープニング動画を強制再生（テスト用）
+  const wrap = document.getElementById('opening');
+  if (wrap) wrap.dataset.done = '';
+  state.flags.openingShown = false;
+  persist();
+  showOpening();
+}
+
+// 公開
+window.goto = goto;
+window.sisterAction = sisterAction;
+window.toggleSisterRecipe = toggleSisterRecipe;
+window.toggleRecipe = toggleRecipe;
+window.openLine = openLine;
+window.openOpenChat = openOpenChat;
+window.openNext = openNext;
+window.onbBack = onbBack;
+window.onbNext = onbNext;
+window.onbSkip = onbSkip;
+window.closeCelebrate = closeCelebrate;
+window.enterKojiFromSettings = enterKojiFromSettings;
+window.adminReset = adminReset;
+window.adminFillDemo = adminFillDemo;
+window.adminUnlockAll = adminUnlockAll;
+window.adminEndCourse = adminEndCourse;
+window.adminPreorderWindow = adminPreorderWindow;
+window.adminReplayOpening = adminReplayOpening;
+window.requestPreorder = requestPreorder;
+window.submitPreorder = submitPreorder;
+window.closePreorderModal = closePreorderModal;
+</script>
+</body>
+</html>
