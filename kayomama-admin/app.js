@@ -182,7 +182,7 @@ function renderHeader() {
         <div class="subttl">更新 ${t}</div>
       </div>
       <div class="hdr-actions">
-        <a class="refresh-btn hdr-video-btn" href="../kayomama-video-app/" title="視聴アプリへ">🎬 視聴</a>
+        <a class="refresh-btn hdr-video-btn" href="https://apps.l-mine.com/kayomama-video-app/" target="_blank" rel="noopener" title="視聴アプリへ">🎬 視聴</a>
         <button class="refresh-btn" id="refresh">↻ 更新</button>
       </div>
     </div>
@@ -495,7 +495,7 @@ function renderAppCard(a, url) {
     <div class="app-card" data-app-id="${escape_(a.app_id)}" style="background:#fff;border:1px solid #f0e0d5;border-radius:12px;padding:14px 16px;margin-bottom:12px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
         <h4 style="margin:0;font-size:15px;color:#5D4A3C;">${escape_(a.name)}</h4>
-        ${url ? `<a href="${escape_(url)}" target="_blank" rel="noopener" style="font-size:11px;color:#c77b5e;text-decoration:none;">開く →</a>` : ''}
+        ${url ? `<a href="${escape_(url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;font-size:12px;color:#fff;background:#c77b5e;border-radius:16px;text-decoration:none;font-weight:500;white-space:nowrap;">🌸 開く</a>` : ''}
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
         <label style="font-size:12px;color:#8B7A6B;">
