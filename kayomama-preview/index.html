@@ -30,7 +30,7 @@ footer{text-align:center;font-size:11px;color:var(--ink-mid);margin-top:48px;pad
 </style></head>
 <body><div class="container">
 <header><h1>かよママ 全画面プレビュー</h1><div class="sub">Diagnostic / Trial App / Video / Admin — Quick Access Hub</div></header>
-<div class="row-help"><b>使い方：</b> 各カードをタップすると新規タブで開きます。トライアルアプリは preview-XX というダミーUIDで開くので実運用ユーザーには影響しません。</div>
+<div class="row-help"><b>使い方：</b> 各カードをタップすると新規タブで開きます。管理アプリの<b>「アプリ」タブ</b>で3つのサブアプリの期間・公開設定ができます。トライアルアプリは preview-XX というダミーUIDで開くので実運用ユーザーには影響しません。</div>
 <section><h2>1. 診断LP</h2><div class="note">お料理迷子タイプ診断（6問）→ 結果 → LINE友だち追加</div><div class="cards">
 <a class="card" href="https://apps.l-mine.com/kayomama-diagnosis/" target="_blank" rel="noopener"><div class="title">診断LP（本番）</div><div class="desc">6問診断→結果→LINE誘導</div></a>
 <a class="card" href="https://apps.l-mine.com/kayomama-diagnosis/?debug=1" target="_blank" rel="noopener"><div class="title">診断LP（debug）</div><div class="desc">デバッグバー表示</div><span class="badge debug">?debug=1</span></a>
@@ -46,6 +46,11 @@ footer{text-align:center;font-size:11px;color:var(--ink-mid);margin-top:48px;pad
 <section><h2>3. 動画視聴アプリ</h2><div class="note">単発動画・月毎シリーズを閲覧するアプリ。本番はLINE経由でログイン必須なので、プレビューはtestモードでダッシュボード直行。</div><div class="cards">
 <a class="card" href="https://apps.l-mine.com/kayomama-video-app/?test=1" target="_blank" rel="noopener"><div class="title">動画リスト（プレビュー）</div><div class="desc">testモードでダッシュボードを直接表示（ログインスキップ）</div><span class="badge debug">?test=1</span></a>
 <a class="card" href="https://apps.l-mine.com/kayomama-video-app/" target="_blank" rel="noopener"><div class="title">動画視聴アプリ（本番入口）</div><div class="desc">お名前登録→動画一覧。実運用ではLINE経由で開かれる</div></a>
+</div></section>
+<section><h2>3.5 サブアプリ（サービス連動）</h2><div class="note">4サービスに対応した専用アプリ。管理アプリの「アプリ」タブから公開期間・機能ON/OFFを制御。</div><div class="cards">
+<a class="card" href="https://apps.l-mine.com/tamagoyaki/" target="_blank" rel="noopener"><div class="title">タマゴヤキハサイカクウン</div><div class="desc">献立サポート</div><span class="badge" style="background:#FFE7B0;color:#8B5A00;">献立</span></a>
+<a class="card" href="https://apps.l-mine.com/ajitsuke-dojo/" target="_blank" rel="noopener"><div class="title">味付け道場</div><div class="desc">一生ものの味付け</div><span class="badge" style="background:#F4D6C4;">味付け</span></a>
+<a class="card" href="https://apps.l-mine.com/hakkou-club/" target="_blank" rel="noopener"><div class="title">麹使い道場</div><div class="desc">麹レッスン1ヶ月サポート</div><span class="badge" style="background:#DBE9D6;">麹</span></a>
 </div></section>
 <section><h2>4. 管理アプリ（かよママ専用）</h2><div class="note">受講者一覧・関心表明・お知らせ投稿・動画分析</div><div class="cards">
 <a class="card" href="https://apps.l-mine.com/kayomama-admin/" target="_blank" rel="noopener"><div class="title">管理アプリ（本番）</div><div class="desc">ダッシュボード／ユーザー一覧／関心リスト</div><span class="badge admin">Admin</span></a>
