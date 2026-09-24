@@ -450,6 +450,38 @@ body.admin header{top:66px}
 </style>
 </head>
 <body>
+<script>
+/* ==== かよママ アプリ設定ゲート（v3.13） ==== */
+(function(){
+  var APP_ID = 'hakkou-club';
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbwyy_kIboj_EnyxbJSIhPFlUJOgITE1iSBMoHGLyoDyaMGkfbNd7PNaFf91xMnI-ZTb/exec';
+  var TOKEN = 'kayomama-app-tk8n3r5p2x9m7w4';
+  var ADMIN_UIDS = ['bayxtq','itlfra'];
+  function getUid(){ try { return new URLSearchParams(location.search).get('uid') || localStorage.getItem('kayomama_line_uid') || ''; } catch(e){return '';} }
+  function isAdmin(){ return ADMIN_UIDS.indexOf(getUid()) >= 0; }
+  function showGate(reason, from){
+    var msg = reason === 'not_started' ? ('まだ開始されていません。<br>公開開始日：' + (from||'未設定'))
+           : reason === 'ended' ? '公開期間が終了しました。'
+           : 'このアプリはまだ準備中です。';
+    document.body.innerHTML = '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#FAF4EB;color:#4A3628;font-family:\'Hiragino Kaku Gothic ProN\',\'Yu Gothic\',sans-serif;padding:20px;text-align:center;z-index:999999;">' +
+      '<div style="max-width:400px;"><div style="font-size:48px;margin-bottom:16px;">🌸</div>' +
+      '<h1 style="font-family:\'Hiragino Mincho ProN\',\'Yu Mincho\',serif;font-size:26px;margin:0 0 16px;font-weight:500;letter-spacing:0.05em;">準備中です</h1>' +
+      '<p style="font-size:14px;line-height:1.9;color:#8B7A6B;">' + msg + '</p>' +
+      '<p style="font-size:12px;color:#8B7A6B;margin-top:24px;line-height:1.7;">公開までもう少しお待ちください。</p></div></div>';
+  }
+  fetch(GAS_URL + '?action=get_app_settings&token=' + encodeURIComponent(TOKEN) + '&app_id=' + APP_ID)
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if (!j.ok || !j.settings) return;
+      var s = j.settings;
+      if (s.active) return;
+      if (isAdmin()) { console.log('[gate] admin bypass'); return; }
+      showGate(s.gate_reason, s.active_from);
+    })
+    .catch(function(e){ console.warn('[gate] failed:', e); });
+})();
+</script>
+
 
 <!-- 管理者テストバー（URLに ?admin を付けたときのみ表示） -->
 <div class="admin-bar" id="adminBar">
