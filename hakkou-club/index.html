@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#F5A623">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="麹使い道場">
+<meta name="robots" content="noindex,nofollow">
+<title>🔰 麹使い道場 | 麹レッスン1ヶ月サポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="manifest" href="assets/manifest.webmanifest">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif;background:#FFFCF5;color:#3A2E1F;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{padding-bottom:env(safe-area-inset-bottom);max-width:480px;margin:0 auto;position:relative;background:#FFFCF5}
+button,input,select,textarea{font-family:inherit;color:inherit;outline:none}
+button{cursor:pointer;border:none;background:none}
+
+/* Header */
+header{position:sticky;top:0;background:linear-gradient(180deg,#FFFCF5 0%,#FFF6E5 100%);z-index:30;border-bottom:1px solid rgba(245,166,35,.12);padding:env(safe-area-inset-top) 0 0}
+.head-row{display:flex;align-items:center;padding:10px 14px 8px;gap:8px}
+.head-row .title{font-family:'Klee One',serif;font-size:16px;font-weight:600;color:#B3631A;flex:1;letter-spacing:.04em}
+.head-row .title .emoji{font-size:18px;margin-right:3px}
+.head-row .countdown{font-size:11px;color:#8C7A6A;background:#FFF4DC;padding:3px 9px;border-radius:999px;border:1px solid #F5E0B5}
+.head-row .ham{width:32px;height:32px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px}
+.head-row .ham span{display:block;width:18px;height:2px;background:#B3631A;border-radius:1px;transition:transform .2s}
+.subhead{display:flex;align-items:center;padding:0 14px 8px;gap:8px;flex-wrap:wrap}
+.subhead .date{font-size:13px;color:#5A4A3A;font-weight:500}
+.subhead .today-badge{background:#FFE7B0;color:#B3631A;padding:1px 7px;border-radius:8px;font-weight:700;font-size:10px;margin-left:4px}
+.streak-pill{display:inline-flex;align-items:center;gap:3px;background:#FFF4DC;color:#C16B1A;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid #F5E0B5}
+.streak-pill .flame{font-size:13px;animation:flicker 1.6s ease-in-out infinite}
+@keyframes flicker{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.phase-pill{font-size:10.5px;color:#7A5A2A;background:#FFF8E7;padding:2px 9px;border-radius:999px;border:1px solid #F5CF8E;font-weight:700;letter-spacing:.04em}
+
+/* Main */
+main{padding:0 14px 80px}
+.main-view.off{display:none}
+
+/* Banners */
+.banner{display:flex;align-items:center;gap:8px;border-radius:12px;padding:9px 12px;margin:8px 0;font-size:12px;line-height:1.5}
+.banner .ico{font-size:18px;flex-shrink:0}
+.banner.lucky{background:linear-gradient(90deg,#FFE7B0 0%,#FFC56B 50%,#FFE7B0 100%);background-size:200% 100%;animation:luckyShimmer 4s linear infinite;border:1px solid #F5A623;color:#8C4A0D;font-weight:700;box-shadow:0 2px 6px rgba(245,166,35,.25)}
+.banner.lucky small{display:block;font-size:10px;color:#A06B1F;font-weight:500;margin-top:1px}
+.banner.read-only{background:linear-gradient(135deg,#FFF4DC 0%,#FFE7B0 100%);border:1px solid #F5CF8E;color:#7A5A2A}
+.banner.read-only b{color:#B3631A}
+.banner.pre-launch{background:#F0F8F0;border:1px solid #C4DBC4;color:#3F6F3F}
+@keyframes luckyShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Onboarding & Add-Koji selection */
+.modal-bg{position:fixed;inset:0;background:rgba(60,40,20,.45);display:none;align-items:center;justify-content:center;z-index:50;animation:fadeIn .25s ease-out;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:#FFFCF5;border-radius:18px;max-width:380px;width:100%;max-height:90vh;overflow-y:auto;padding:22px 20px 18px;animation:slideUp .35s ease-out}
+.modal h2{font-family:'Klee One',serif;font-size:19px;color:#C16B1A;margin-bottom:8px;text-align:center;letter-spacing:.05em}
+.modal .sub{font-size:13px;color:#6A5A4A;line-height:1.7;text-align:center;margin-bottom:14px}
+.modal .modal-hero{text-align:center;margin-bottom:8px}
+.modal-hero .emoji{font-size:24px;display:inline-block;margin-top:4px}
+.kayo-illust{display:block;margin:0 auto 4px;max-width:100%;height:auto;filter:drop-shadow(0 3px 8px rgba(193,107,26,.15))}
+.kayo-illust.onboard{width:140px}
+.kayo-illust.farewell{width:128px;margin-bottom:0}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Koji selection grid */
+.koji-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.koji-pick label{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 6px;border:2px solid #F5E0B5;border-radius:12px;cursor:pointer;background:#FFFDF7;transition:all .15s;position:relative}
+.koji-pick label:hover{border-color:#F5A623}
+.koji-pick label input{position:absolute;opacity:0;pointer-events:none}
+.koji-pick label.checked{background:linear-gradient(135deg,#FFFCF0 0%,#FFF4D8 100%);border-color:#F5A623;box-shadow:0 2px 8px rgba(245,166,35,.18)}
+.koji-pick label.checked::before{content:'✓';position:absolute;top:4px;right:6px;color:#F5A623;font-weight:700;font-size:13px}
+.koji-pick .ke{font-size:26px}
+.koji-pick .kn{font-size:13px;font-weight:700;color:#5A4A3A}
+.koji-pick .kt{font-size:10px;color:#8C7A6A;line-height:1.4;text-align:center}
+.koji-pick label.disabled{opacity:.45;cursor:not-allowed;background:#F5EDD8}
+.koji-pick label.disabled::after{content:'選択済';position:absolute;top:4px;right:6px;font-size:9px;color:#8C7A6A;background:#fff;padding:1px 5px;border-radius:6px}
+
+/* Buttons */
+.btn{display:block;width:100%;padding:13px;border-radius:12px;font-weight:700;font-size:14px;text-align:center;border:none;font-family:inherit;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:linear-gradient(135deg,#FFC56B 0%,#F5A623 100%);color:#fff;box-shadow:0 3px 10px rgba(245,166,35,.3)}
+.btn.sec{background:#FFFDF7;color:#B3631A;border:1px solid #F5CF8E}
+.btn:disabled{opacity:.45;cursor:not-allowed;background:#E5DDD0;box-shadow:none}
+
+/* Koji cards */
+.koji-cards{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.koji-card{background:#FFFDF8;border:1px solid #F5E0B5;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;position:relative}
+.koji-card:active{transform:scale(.98)}
+.koji-card .kc-ico{font-size:34px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#FFFAE5 0%,#FFE7B0 100%);border-radius:14px;flex-shrink:0;border:1px solid #F5CF8E}
+.koji-card .kc-info{flex:1;min-width:0}
+.koji-card .kc-name{font-family:'Klee One',serif;font-size:15px;color:#B3631A;font-weight:700;display:flex;align-items:center;gap:8px}
+.koji-card .kc-name .stage{font-size:9.5px;color:#fff;background:#F5A623;padding:1px 7px;border-radius:999px;letter-spacing:.04em}
+.koji-card .kc-meta{font-size:11px;color:#8C7A6A;margin-top:3px}
+.koji-card .kc-meta b{color:#B3631A}
+.koji-card .kc-bar{margin-top:6px;height:5px;background:#F5EAD0;border-radius:3px;overflow:hidden}
+.koji-card .kc-bar .fill{height:100%;background:linear-gradient(90deg,#FFC56B 0%,#F5A623 100%);border-radius:3px;transition:width .3s}
+.koji-card .kc-arrow{color:#C2B39B;font-size:18px;flex-shrink:0}
+.koji-card.completed{background:linear-gradient(135deg,#F4F8E8 0%,#E8F4D9 100%);border-color:#A8C97A}
+.koji-card.completed .kc-name{color:#3B6D11}
+.koji-card.completed .kc-ico{background:linear-gradient(135deg,#E8F4D9 0%,#C8E0A0 100%);border-color:#A8C97A}
+.koji-card.resting{opacity:.55;background:#F5F0E5}
+.koji-card.resting::after{content:'お休み中';position:absolute;top:6px;right:8px;font-size:9px;color:#8C7A6A;background:#fff;padding:1px 6px;border-radius:6px;border:1px solid #D9D0BC}
+.koji-card .kc-chip-row{margin-top:5px;display:flex;gap:4px;flex-wrap:wrap}
+.ci-chip{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:.03em;line-height:1.55}
+.ci-chip.done{background:#E8F4D9;color:#3B6D11;border:1px solid #A8C97A}
+.ci-chip.pending{background:#FFF4DC;color:#B3631A;border:1px solid #F5CF8E;animation:chipPulse 2.4s ease-in-out infinite}
+@keyframes chipPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.3)}50%{box-shadow:0 0 0 4px rgba(245,166,35,0)}}
+
+/* 講座アーカイブ */
+.archive-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.archive-item{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#FFFDF8;border:1px solid #F5E0B5;border-radius:12px;cursor:pointer;transition:transform .12s,box-shadow .15s}
+.archive-item:active{transform:scale(.98);box-shadow:0 2px 6px rgba(245,166,35,.15)}
+.archive-item .av-ico{font-size:24px;flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#FFFAE5 0%,#FFE7B0 100%);border-radius:10px;border:1px solid #F5CF8E}
+.archive-item .av-info{flex:1;min-width:0}
+.archive-item .av-title{font-family:'Klee One',serif;font-size:14px;color:#B3631A;font-weight:700;line-height:1.4}
+.archive-item .av-meta{font-size:10.5px;color:#8C7A6A;margin-top:2px;line-height:1.45}
+.archive-item .av-arrow{color:#C2B39B;font-size:18px;flex-shrink:0}
+.video-frame{position:relative;width:100%;padding-bottom:56.25%;background:#000;border-radius:10px;overflow:hidden;margin-top:4px}
+.video-frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.video-back{flex:0 0 auto;padding:5px 10px !important;font-size:12px !important;width:auto !important;margin:0 !important}
+
+/* Add-koji button */
+.add-koji-btn{width:100%;padding:11px;border-radius:12px;background:transparent;border:2px dashed #F5CF8E;color:#B3631A;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
+.add-koji-btn:active{background:#FFF4DC}
+
+/* Empty state */
+.empty-state{text-align:center;padding:30px 16px;color:#8C7A6A;font-size:13px;line-height:1.7}
+.empty-state .ico{font-size:42px;margin-bottom:8px}
+
+/* Check-in modal */
+.checkin-form{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.checkin-form .field{display:flex;flex-direction:column;gap:4px}
+.checkin-form .field label{font-size:12px;font-weight:700;color:#B3631A}
+.checkin-form .field .opts{display:flex;flex-wrap:wrap;gap:5px}
+.checkin-form .field .opt-btn{flex:1;min-width:60px;padding:7px 8px;border:1px solid #F5E0B5;background:#FFFDF7;color:#5A4A3A;font-size:11.5px;border-radius:8px;font-weight:600;cursor:pointer}
+.checkin-form .field .opt-btn.on{background:linear-gradient(135deg,#FFC56B 0%,#F5A623 100%);color:#fff;border-color:#C8810F}
+.checkin-form textarea{padding:9px 11px;border:1px solid #F5E0B5;border-radius:8px;font-size:13px;background:#FFFDF7;resize:vertical;min-height:50px;font-family:inherit}
+.checkin-form textarea:focus{border-color:#F5A623}
+.day-guide{background:linear-gradient(135deg,#FFF8E7 0%,#FFEFC5 100%);border:1px solid #F5CF8E;border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12px;line-height:1.6;color:#7A5A2A}
+.day-guide b{color:#B3631A}
+
+/* Completion modal */
+.compl-list{display:flex;flex-direction:column;gap:7px;margin:12px 0}
+.compl-list .item{display:flex;align-items:center;gap:9px;padding:9px 11px;background:#FFFDF7;border:1px solid #F5E0B5;border-radius:10px;font-size:13px;cursor:pointer;color:#5A4A3A;line-height:1.4}
+.compl-list .item.checked{background:linear-gradient(135deg,#F4F8E8 0%,#E8F4D9 100%);border-color:#A8C97A;color:#3B6D11}
+.compl-list .item .chk{width:20px;height:20px;border-radius:5px;border:2px solid #C2B39B;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;background:#fff}
+.compl-list .item.checked .chk{background:#3B6D11;border-color:#3B6D11}
+
+/* Drawer */
+.drawer-bg{position:fixed;inset:0;background:rgba(60,40,20,.4);display:none;z-index:60}
+.drawer-bg.on{display:block}
+.drawer{position:fixed;top:0;right:0;width:280px;max-width:85vw;height:100vh;background:#FFFCF5;z-index:70;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.drawer.on{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid #F5E0B5}
+.drawer-head .d-title{font-family:'Klee One',serif;font-size:16px;color:#B3631A;flex:1}
+.drawer-head .drawer-close{font-size:22px;color:#8C7A6A;background:none;border:none;cursor:pointer;padding:0 4px}
+.drawer-list{flex:1;overflow-y:auto;padding:8px 0}
+.drawer-item{display:flex;align-items:center;width:100%;padding:13px 18px;font-size:14px;color:#3A2E1F;background:none;border:none;text-align:left;text-decoration:none;font-family:inherit}
+.drawer-item:active{background:#FFF1D8}
+.drawer-item .ico{font-size:17px;width:22px;text-align:center;flex-shrink:0;margin-right:10px}
+.drawer-item .arrow{margin-left:auto;color:#C2B39B;font-size:14px}
+.drawer-item.danger{color:#B55F3A}
+.drawer-divider{height:1px;background:#F5E0B5;margin:6px 16px}
+.drawer-foot{padding:14px 18px;border-top:1px solid #F5E0B5;font-size:11px;color:#8C7A6A;line-height:1.6}
+.drawer-foot .beta{display:inline-block;background:#FFE7B0;color:#B3631A;padding:1px 7px;border-radius:8px;font-weight:700;margin-bottom:4px;font-size:10px}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(60,40,20,.92);color:#FFFCF5;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s;text-align:center;max-width:90vw}
+.toast.show{opacity:1}
+
+/* Title section (称号) */
+.title-section{background:linear-gradient(180deg,#FFF8E7 0%,#FFF1CF 100%);border:1px solid #F5CF8E;border-radius:12px;padding:10px 12px;margin-top:8px}
+.title-section .ts-head{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.title-section .ts-head .ts-title{font-family:'Klee One',serif;font-size:12px;color:#B3631A;font-weight:700}
+.title-section .ts-head .ts-count{margin-left:auto;font-size:10px;color:#8C7A6A;background:#fff;border-radius:999px;padding:2px 8px;border:1px solid #F5E0B5}
+.title-grid{display:flex;flex-wrap:wrap;gap:5px}
+.title-chip{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;padding:3px 8px;border-radius:999px;font-weight:700}
+.title-chip.tier1{background:#FFF4E5;color:#A05A1A;border:1px solid #F5C78A}
+.title-chip.tier2{background:#FFE8BE;color:#8C4A0D;border:1px solid #E9AF5C}
+.title-chip.tier3{background:linear-gradient(135deg,#FFC56B 0%,#F5A623 100%);color:#fff;border:1px solid #C8810F}
+.title-chip.locked{background:#F5ECD8;color:#BCA88A;border:1px dashed #D9C4A0;opacity:.75}
+
+/* Phase 2 / Recipes */
+.phase2-card{background:linear-gradient(135deg,#F4F8E8 0%,#E8F4D9 100%);border:1px solid #A8C97A;border-radius:14px;padding:14px;margin-top:14px}
+.phase2-card h3{font-family:'Klee One',serif;font-size:14px;color:#3B6D11;margin-bottom:6px}
+.phase2-card .stat{font-size:13px;color:#3B6D11;font-weight:700;margin-bottom:8px}
+.phase2-card .recipe-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.recipe-row{display:flex;align-items:center;gap:8px;padding:8px 11px;background:#fff;border:1px solid #C4DBC4;border-radius:10px;font-size:12px}
+.recipe-row .rl-name{flex:1;color:#3A2E1F;font-weight:600}
+.recipe-row .rl-tag{font-size:9.5px;color:#3B6D11;background:#F4F8E8;padding:1px 6px;border-radius:6px;border:1px solid #A8C97A}
+.recipe-row .rl-btn{font-size:11px;padding:4px 9px;border-radius:6px;border:1px solid #A8C97A;background:#fff;color:#3B6D11;font-weight:700;cursor:pointer}
+.recipe-row.done{opacity:.6}
+.recipe-row.done .rl-btn{background:#3B6D11;color:#fff;border-color:#3B6D11}
+
+/* Farewell modal (final) */
+.farewell-bg{position:fixed;inset:0;background:rgba(80,50,20,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:14px}
+.farewell-bg.on{display:flex}
+.farewell-card{background:linear-gradient(180deg,#FFFCF5 0%,#FFF4DC 100%);border-radius:20px;max-width:340px;width:100%;padding:22px 18px 18px;text-align:center;box-shadow:0 12px 32px rgba(0,0,0,.2);animation:slideUp .45s ease-out;max-height:90vh;overflow-y:auto}
+.farewell-card .sakura{font-size:26px;display:inline-block;animation:floatSakura 3.2s ease-in-out infinite}
+@keyframes floatSakura{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.farewell-card h2{font-family:'Klee One',serif;font-size:18px;color:#C16B1A;margin:6px 0 6px}
+.final-eval{background:linear-gradient(180deg,#FFF8E7 0%,#FFEFC5 100%);border:1px solid #F5CF8E;border-radius:14px;padding:14px 12px;margin:14px 0 8px}
+.final-eval .eval-title{font-family:'Klee One',serif;font-size:13px;color:#C16B1A;font-weight:700;text-align:center;margin-bottom:10px}
+.final-eval .eval-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.final-eval .eval-item{background:#fff;border-radius:8px;padding:8px 4px;text-align:center;border:1px solid #FAE0B5}
+.final-eval .eval-item .val{font-family:'Klee One',serif;font-size:18px;font-weight:700;color:#B3631A;line-height:1.1}
+.final-eval .eval-item .lbl{font-size:10px;color:#8C7A6A;margin-top:3px}
+.final-eval .eval-badge{background:linear-gradient(135deg,#FFC56B 0%,#F5A623 100%);color:#fff;border-radius:999px;padding:7px 14px;text-align:center;font-family:'Klee One',serif;font-size:13px;font-weight:700;margin-bottom:6px}
+.farewell-card .msg{font-size:13px;color:#5A4A3A;line-height:1.95;margin:14px 4px;text-align:left;white-space:pre-line}
+.farewell-card .msg b{color:#B3631A}
+.next-step{background:linear-gradient(180deg,#FFFCF5 0%,#FDF3E0 100%);border:1px dashed #E8B976;border-radius:14px;padding:13px 14px 12px;margin:10px 0}
+.next-step .ns-title{font-size:12px;color:#8C7A6A;text-align:center;margin-bottom:10px;line-height:1.5}
+.next-step .ns-title b{color:#B3631A;font-size:13px}
+.next-step .ns-item{display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #F5A623;background:linear-gradient(90deg,#FFFCF0 0%,#FFF4D8 100%);box-shadow:0 2px 6px rgba(245,166,35,.12)}
+.next-step .ns-ico{font-size:22px;flex-shrink:0;margin-top:1px}
+.next-step .ns-text{font-size:12px;color:#5A4A3A;line-height:1.55;flex:1;text-align:left}
+.next-step .ns-text b{color:#B3631A}
+.next-step .ns-cta{font-size:11.5px;color:#8C7A6A;text-align:center;margin-top:8px;line-height:1.65}
+.next-step .ns-cta b{color:#B3631A}
+.farewell-card .signature{font-family:'Klee One',serif;font-size:14px;color:#C16B1A;text-align:right;margin:8px 6px 12px;font-weight:700}
+.farewell-card .ig-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#FFC56B 0%,#F5A623 100%);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:13px;text-decoration:none;border:none;cursor:pointer;box-shadow:0 3px 10px rgba(245,166,35,.3);font-family:inherit}
+.farewell-card .close-btn{display:block;margin:14px auto 0;background:none;border:none;color:#8C7A6A;font-size:12px;cursor:pointer;padding:8px 16px;text-decoration:underline}
+
+/* Read-only mode (after expire) */
+body.read-only .koji-card,body.read-only .add-koji-btn,body.read-only .recipe-row .rl-btn{pointer-events:none;opacity:.85}
+body.read-only .add-koji-btn{opacity:.4}
+
+/* Bottom nav */
+.bot-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#FFFCF5;border-top:1px solid #F5E0B5;padding:6px 0 calc(env(safe-area-inset-bottom) + 6px);display:flex;z-index:25}
+.bot-btn{flex:1;background:none;border:none;padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10.5px;color:#8C7A6A;font-family:inherit;cursor:pointer}
+.bot-btn .ico{font-size:18px}
+.bot-btn.active{color:#B3631A;font-weight:700}
+
+/* 管理者テストバー（?admin のときのみ） */
+.admin-bar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:66px;background:#2D2A26;z-index:35;flex-direction:column;gap:4px;padding:7px 8px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+body.admin .admin-bar{display:flex}
+body.admin{padding-top:66px}
+body.admin header{top:66px}
+.admin-bar .ab-row{display:flex;align-items:center;gap:5px}
+.admin-bar .ab-ctrl{overflow-x:auto}
+.admin-bar .ab-tag{font-size:10px;font-weight:700;color:#2D2A26;background:#F5A623;padding:2px 7px;border-radius:5px;flex-shrink:0;letter-spacing:.05em}
+.admin-bar .ab-info{font-size:11.5px;font-weight:700;color:#FFE7B0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-bar button{background:#4A453E;color:#FFE7B0;border:1px solid #6A6258;border-radius:6px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;font-family:inherit}
+.admin-bar button:active{background:#F5A623;color:#2D2A26}
+.admin-bar .ab-date{background:#4A453E;color:#fff;border:1px solid #6A6258;border-radius:6px;padding:4px 6px;font-size:11px;flex-shrink:0;font-family:inherit}
+
+/* バッジ画面 */
+.badge-summary{background:linear-gradient(135deg,#FFF8E7 0%,#FFEFC5 100%);border:1px solid #F5CF8E;border-radius:10px;padding:9px 12px;margin:8px 0 14px;font-size:13px;color:#7A5A2A;text-align:center;font-weight:700}
+.badge-summary b{color:#B3631A;font-size:16px}
+.badge-cat{margin-bottom:12px}
+.badge-cat-head{display:flex;align-items:center;gap:6px;font-family:'Klee One',serif;font-size:13px;color:#B3631A;font-weight:700;padding:5px 0 7px;border-bottom:1px solid #F5E0B5;margin-bottom:7px}
+.badge-cat-head .count{margin-left:auto;font-size:10.5px;color:#8C7A6A;font-weight:700;background:#FFF4DC;padding:2px 8px;border-radius:999px;border:1px solid #F5E0B5}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.badge{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:8px 3px 6px;border-radius:11px;text-align:center;gap:2px;border:1px solid #F5E0B5;background:#FFFDF8;min-height:82px}
+.badge .b-ico{font-size:24px;line-height:1;margin-bottom:2px}
+.badge .b-name{font-size:9.5px;font-weight:700;line-height:1.25;color:#5A4A3A}
+.badge .b-prog{font-size:8.5px;color:#8C7A6A;line-height:1.2;margin-top:auto}
+.badge.locked{opacity:.5;background:#F5ECD8}
+.badge.locked .b-ico{filter:grayscale(.8)}
+.badge.tier2.earned{background:linear-gradient(135deg,#FFF4E5 0%,#FFE8BE 100%);border-color:#E9AF5C}
+.badge.tier3.earned{background:linear-gradient(135deg,#FFC56B 0%,#F5A623 100%);border-color:#C8810F}
+.badge.tier3.earned .b-name{color:#fff}
+.badge.tier3.earned .b-prog{color:#FFE7B0}
+
+/* 麹カードへのタップ誘導 */
+.koji-hint{background:linear-gradient(135deg,#FFF8E7 0%,#FFEFC5 100%);border:1px dashed #E8B976;border-radius:10px;padding:11px 12px;margin:10px 0 6px;text-align:center;font-size:12.5px;font-weight:700;color:#B3631A;line-height:1.5;cursor:pointer;transition:transform .12s,box-shadow .15s}
+.koji-hint:active{transform:scale(.97);box-shadow:0 2px 6px rgba(245,166,35,.18)}
+.koji-hint.done{background:linear-gradient(135deg,#F4F8E8 0%,#E8F4D9 100%);border:1px solid #A8C97A;border-style:solid;color:#3B6D11;cursor:default}
+.koji-hint.done:active{transform:none;box-shadow:none}
+
+/* チュートリアル（ページめくり式） */
+.tut-page{text-align:center;padding:4px 2px 0}
+.tut-page .tut-img{display:block;width:120px;margin:0 auto 6px;filter:drop-shadow(0 3px 8px rgba(193,107,26,.15))}
+.tut-page h3{font-family:'Klee One',serif;font-size:17px;color:#C16B1A;margin:6px 0 4px;letter-spacing:.04em}
+.tut-page .tut-body{font-size:13px;color:#5A4A3A;line-height:1.95;text-align:left;background:#FFFDF8;border:1px solid #F5E0B5;border-radius:10px;padding:11px 14px;margin-top:10px}
+.tut-page .tut-body b{color:#B3631A}
+.tut-dots{display:flex;justify-content:center;gap:6px;margin:12px 0 2px}
+.tut-dots .dot{width:7px;height:7px;border-radius:50%;background:#F5E0B5;transition:all .2s}
+.tut-dots .dot.active{background:#F5A623;transform:scale(1.3)}
+
+/* 名前入力 */
+.name-input{width:100%;padding:11px 13px;border:1.5px solid #F5CF8E;border-radius:10px;font-size:15px;background:#FFFDF7;font-family:inherit;text-align:center;color:#3A2E1F;letter-spacing:.04em}
+.name-input:focus{border-color:#F5A623;outline:none;box-shadow:0 0 0 3px rgba(245,166,35,.15)}
+
+/* 先行予約 */
+.preorder-hint{background:linear-gradient(135deg,#FFE7B0 0%,#FFC56B 100%);border:1px solid #F5A623;border-radius:12px;padding:11px 14px;margin:10px 0;text-align:center;font-size:13px;font-weight:700;color:#8C4A0D;cursor:pointer;box-shadow:0 2px 8px rgba(245,166,35,.22);line-height:1.55}
+.preorder-hint:active{transform:scale(.98)}
+.preorder-hint.done{background:linear-gradient(135deg,#F4F8E8 0%,#E8F4D9 100%);border-color:#A8C97A;color:#3B6D11;cursor:default;box-shadow:none}
+.preorder-list{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.preorder-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:#FFFDF7;border:1.5px solid #F5E0B5;border-radius:12px;cursor:pointer;transition:all .15s}
+.preorder-item:active{transform:scale(.98)}
+.preorder-item.checked{background:linear-gradient(135deg,#FFFCF0 0%,#FFF4D8 100%);border-color:#F5A623;box-shadow:0 2px 8px rgba(245,166,35,.15)}
+.preorder-item input{margin-top:3px;width:18px;height:18px;accent-color:#F5A623;flex-shrink:0}
+.preorder-item .po-info{flex:1;min-width:0}
+.preorder-item .po-info b{display:block;font-size:14px;color:#B3631A;margin-bottom:3px}
+.preorder-item .po-info small{display:block;font-size:11px;color:#8C7A6A;line-height:1.55}
+.preorder-thanks{text-align:center;color:#3B6D11;font-weight:700;font-size:13px;margin-top:10px;padding:11px 13px;background:#F4F8E8;border:1px solid #A8C97A;border-radius:10px;line-height:1.7}
+.preorder-thanks b{color:#3B6D11}
+
+/* 次の道場へ（味付け道場アプリ 合言葉案内） */
+.next-dojo{margin:14px 0 4px;background:linear-gradient(135deg,#FFFCF0 0%,#FFF4D8 100%);border:1px solid #F5CF8E;border-radius:14px;padding:14px 16px;box-shadow:0 2px 8px rgba(245,166,35,.10);position:relative;overflow:hidden}
+.next-dojo::before{content:'';position:absolute;top:-22px;right:-22px;width:80px;height:80px;background:radial-gradient(circle,rgba(245,166,35,.10) 0%,transparent 65%)}
+.next-dojo .nd-head{display:flex;align-items:center;gap:8px;font-family:'Klee One',serif;color:#B3631A;font-size:13.5px;font-weight:700;margin-bottom:8px;position:relative}
+.next-dojo .nd-icon{font-size:17px}
+.next-dojo .nd-body{font-size:12px;color:#5A4A3A;line-height:1.9;margin-bottom:10px;position:relative}
+.next-dojo .nd-body b{color:#B3631A}
+.next-dojo .nd-secret{background:#fff;border:1.5px dashed #F5A623;border-radius:10px;padding:9px 8px 11px;text-align:center;position:relative}
+.next-dojo .nd-secret-label{font-size:9px;letter-spacing:.32em;color:#B3631A;font-weight:700;margin-bottom:3px}
+.next-dojo .nd-secret-word{font-family:'Klee One',serif;font-size:19px;color:#C16B1A;font-weight:700;letter-spacing:.18em}
+.next-dojo .nd-foot{font-size:10.5px;color:#8C7A6A;text-align:center;margin-top:8px;line-height:1.7;position:relative}
+
+/* LINE内蔵ブラウザ警告 */
+.line-warning{background:linear-gradient(135deg,#FFE0E0 0%,#FFCBCB 100%);border:1px solid #E8A0A0;border-radius:10px;padding:11px 13px;margin:10px 0;font-size:12.5px;color:#993333;line-height:1.7;box-shadow:0 2px 6px rgba(160,51,51,.12)}
+.line-warning b{color:#A03333}
+.line-warning .lw-dismiss{display:block;margin-top:8px;font-size:11px;color:#7A5A2A;text-decoration:underline;cursor:pointer;text-align:right;font-weight:600}
+
+/* Phase indicator */
+.phase-indicator{padding:10px 12px;background:linear-gradient(90deg,#FFF8E7 0%,#FFEFC5 100%);border-radius:12px;border:1px solid #F5CF8E;margin-top:8px;display:flex;align-items:center;gap:10px}
+.phase-indicator .pi-ico{font-size:22px}
+.phase-indicator .pi-text{flex:1;font-size:12px;color:#7A5A2A;line-height:1.5}
+.phase-indicator .pi-text b{color:#B3631A;font-size:13px;display:block;margin-bottom:1px}
+
+/* Daily kayomama greeting */
+.daily-greet{display:flex;align-items:center;gap:10px;background:linear-gradient(180deg,#FFFDF8 0%,#FFF4DC 100%);border:1px solid #F5E0B5;border-radius:14px;padding:9px 12px;margin-top:8px}
+.daily-greet img{width:54px;height:54px;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(193,107,26,.12))}
+.daily-greet .dg-msg{flex:1;font-size:12px;color:#5A4A3A;line-height:1.55}
+.daily-greet .dg-msg b{color:#B3631A;font-size:13px}
+
+/* === 不安解消パッケージ === */
+
+/* ① 即時判定オーバーレイ */
+.judge-bg{position:fixed;inset:0;background:rgba(60,40,20,.5);display:none;align-items:center;justify-content:center;z-index:90;padding:18px;animation:fadeIn .25s ease-out}
+.judge-bg.on{display:flex}
+.judge-card{background:#FFFCF5;border-radius:18px;max-width:340px;width:100%;padding:22px 20px 18px;text-align:center;animation:slideUp .35s ease-out}
+.judge-card .badge{display:inline-flex;align-items:center;gap:6px;font-family:'Klee One',serif;font-size:18px;font-weight:700;padding:8px 18px;border-radius:999px;margin-bottom:10px;letter-spacing:.04em}
+.judge-card .badge.green{background:linear-gradient(135deg,#A8D88A 0%,#7AB85A 100%);color:#fff;box-shadow:0 3px 8px rgba(122,184,90,.3)}
+.judge-card .badge.yellow{background:linear-gradient(135deg,#FFD580 0%,#F5A623 100%);color:#fff;box-shadow:0 3px 8px rgba(245,166,35,.3)}
+.judge-card .badge.red{background:linear-gradient(135deg,#F7AAAA 0%,#E25C5C 100%);color:#fff;box-shadow:0 3px 8px rgba(226,92,92,.35)}
+.judge-card .kayo-judge{display:block;width:96px;margin:0 auto 4px;filter:drop-shadow(0 3px 8px rgba(193,107,26,.18))}
+.judge-card .reasons{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.judge-card .reasons .r{font-size:12.5px;line-height:1.65;padding:9px 12px;border-radius:10px;text-align:left;background:#FFFDF7;border:1px solid #F5E0B5;color:#5A4A3A}
+.judge-card.green .reasons .r{border-color:#A8D88A;background:#F4F8E8;color:#3B6D11}
+.judge-card.yellow .reasons .r{border-color:#F5CF8E;background:#FFF8E7;color:#7A5A2A}
+.judge-card.red .reasons .r{border-color:#F0A0A0;background:#FFF0F0;color:#993333}
+.judge-card .btn{margin-top:8px}
+
+/* ② 成功保護スコア */
+.protect-card{background:linear-gradient(135deg,#FFF8E7 0%,#FFEFC5 100%);border:1px solid #F5CF8E;border-radius:14px;padding:11px 14px;margin-top:8px;display:flex;align-items:center;gap:12px}
+.protect-card .pc-ico{font-size:28px;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(193,107,26,.15))}
+.protect-card .pc-info{flex:1;min-width:0}
+.protect-card .pc-label{font-size:10.5px;color:#8C7A6A;font-weight:700;letter-spacing:.04em;margin-bottom:1px}
+.protect-card .pc-value{font-family:'Klee One',serif;font-size:14px;color:#B3631A;font-weight:700;line-height:1.4}
+.protect-card .pc-value b{color:#C16B1A;font-size:16px}
+.protect-card .pc-msg{font-size:11px;color:#7A5A2A;margin-top:3px;line-height:1.4}
+
+/* ③ 不安カレンダー（Day 4-5などに自動表示） */
+.anxiety-card{background:linear-gradient(135deg,#FFF8E7 0%,#FFEED0 100%);border:1px solid #E8B976;border-radius:14px;padding:11px 14px;margin-top:8px;display:flex;align-items:flex-start;gap:10px}
+.anxiety-card .ax-ico{font-size:22px;flex-shrink:0;margin-top:2px}
+.anxiety-card .ax-text{flex:1;font-size:12px;line-height:1.6;color:#7A5A2A}
+.anxiety-card .ax-text b{color:#B3631A;font-size:13px}
+
+/* ⑤ SOS ボタン＆モーダル */
+.sos-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px;margin-top:10px;background:linear-gradient(135deg,#FFE0E0 0%,#FFCBCB 100%);color:#A03333;border:1px solid #E8A0A0;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.sos-btn:active{transform:scale(.97)}
+.sos-modal-card .sos-msg{font-size:13px;line-height:1.85;color:#5A4A3A;text-align:left;background:#FFFDF7;border:1px solid #F5E0B5;border-radius:10px;padding:11px 13px;margin:10px 0}
+.sos-modal-card .sos-msg b{color:#B3631A}
+.sos-modal-card .sos-tips{font-size:11.5px;color:#8C7A6A;line-height:1.7;margin:8px 0}
+.sos-modal-card .sos-tips li{margin-left:14px;margin-bottom:3px}
+
+/* === 豆知識システム === */
+/* 今日の豆知識カード */
+.knowledge-today{background:linear-gradient(135deg,#FFFCF0 0%,#FFF4D8 100%);border:1px solid #F5CF8E;border-radius:14px;padding:11px 14px;margin-top:8px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform .12s}
+.knowledge-today:active{transform:scale(.98)}
+.knowledge-today .kt-ico{font-size:24px;flex-shrink:0;width:40px;height:40px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid #F5CF8E}
+.knowledge-today .kt-info{flex:1;min-width:0}
+.knowledge-today .kt-meta{font-size:10px;color:#8C7A6A;font-weight:700;letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.knowledge-today .kt-meta .badge{background:#F5A623;color:#fff;padding:1px 5px;border-radius:6px;font-size:9px}
+.knowledge-today .kt-meta .read{color:#3B6D11}
+.knowledge-today .kt-title{font-family:'Klee One',serif;font-size:14px;color:#B3631A;font-weight:700;margin-top:2px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.knowledge-today .kt-arrow{color:#C2B39B;font-size:18px;flex-shrink:0}
+
+/* 麹図書館モーダル */
+.lib-bg{position:fixed;inset:0;background:rgba(60,40,20,.5);display:none;align-items:center;justify-content:center;z-index:65;padding:14px}
+.lib-bg.on{display:flex}
+.lib-card{background:#FFFCF5;border-radius:16px;max-width:380px;width:100%;max-height:90vh;display:flex;flex-direction:column;animation:slideUp .35s ease-out}
+.lib-head{padding:16px 18px 8px;border-bottom:1px solid #F5E0B5;display:flex;align-items:center;gap:10px}
+.lib-head h2{font-family:'Klee One',serif;font-size:16px;color:#B3631A;flex:1}
+.lib-head .progress{font-size:11px;color:#8C7A6A;background:#FFF4DC;padding:2px 8px;border-radius:999px;border:1px solid #F5E0B5;font-weight:700}
+.lib-head .close-x{background:none;border:none;font-size:20px;color:#8C7A6A;cursor:pointer;padding:0 4px}
+.lib-body{flex:1;overflow-y:auto;padding:8px 4px 12px}
+.lib-cat{padding:8px 16px}
+.lib-cat-head{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#B3631A;padding:6px 0;border-bottom:1px solid #F5E0B5}
+.lib-cat-head .count{margin-left:auto;font-size:10.5px;color:#8C7A6A;font-weight:500}
+.lib-list{display:flex;flex-direction:column;gap:2px;margin-top:5px}
+.lib-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFFDF8;border:1px solid #F5E0B5;border-radius:8px;cursor:pointer;font-size:12.5px;color:#5A4A3A;line-height:1.4}
+.lib-row.read{background:#F4F8E8;border-color:#A8C97A;color:#3B6D11}
+.lib-row .chk{width:16px;height:16px;border-radius:4px;border:1.5px solid #C2B39B;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;color:#fff;font-size:10px;font-weight:700}
+.lib-row.read .chk{background:#3B6D11;border-color:#3B6D11}
+.lib-row .row-title{flex:1;min-width:0}
+.lib-row .arr{color:#C2B39B}
+
+/* 記事閲覧モーダル */
+.article-bg{position:fixed;inset:0;background:rgba(60,40,20,.55);display:none;align-items:flex-start;justify-content:center;z-index:75;padding:14px;overflow-y:auto}
+.article-bg.on{display:flex}
+.article-card{background:#FFFCF5;border-radius:16px;max-width:380px;width:100%;padding:18px 18px 14px;margin:auto;animation:slideUp .35s ease-out}
+.article-meta{display:flex;align-items:center;gap:6px;font-size:10.5px;color:#8C7A6A;font-weight:700;letter-spacing:.04em;margin-bottom:6px}
+.article-meta .cat-pill{background:#FFE7B0;color:#B3631A;padding:1px 7px;border-radius:6px;font-size:10px}
+.article-card h2{font-family:'Klee One',serif;font-size:18px;color:#B3631A;line-height:1.5;margin-bottom:10px}
+.article-body{font-size:13.5px;color:#3A2E1F;line-height:1.95;white-space:pre-line;background:#FFFDF8;border:1px solid #F5E0B5;border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.article-body b{color:#B3631A}
+.article-actions{display:flex;gap:8px}
+
+/* FAQモーダル */
+.faq-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.faq-item{background:#FFFDF8;border:1px solid #F5E0B5;border-radius:10px;overflow:hidden}
+.faq-q{padding:10px 12px;font-size:12.5px;font-weight:700;color:#B3631A;cursor:pointer;display:flex;align-items:center;gap:6px;line-height:1.5}
+.faq-q::before{content:'❓';font-size:13px;flex-shrink:0}
+.faq-q .arr{margin-left:auto;color:#C2B39B;transition:transform .2s}
+.faq-item.on .faq-q .arr{transform:rotate(90deg)}
+.faq-a{display:none;padding:0 12px 12px;font-size:12.5px;color:#5A4A3A;line-height:1.85;border-top:1px solid #F5E0B5}
+.faq-item.on .faq-a{display:block;padding-top:8px}
+.faq-a b{color:#B3631A}
+
+/* クイズモーダル */
+.quiz-q{font-family:'Klee One',serif;font-size:16px;color:#B3631A;line-height:1.6;margin:10px 0 12px;background:#FFF8E7;border:1px solid #F5CF8E;border-radius:10px;padding:11px 14px;text-align:center}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.quiz-opt{padding:11px 13px;background:#FFFDF8;border:1px solid #F5E0B5;border-radius:10px;font-size:13px;color:#5A4A3A;text-align:left;cursor:pointer;font-family:inherit}
+.quiz-opt:active{transform:scale(.98)}
+.quiz-opt.correct{background:linear-gradient(135deg,#A8D88A 0%,#7AB85A 100%);color:#fff;border-color:#3B6D11;font-weight:700}
+.quiz-opt.wrong{background:linear-gradient(135deg,#F7AAAA 0%,#E25C5C 100%);color:#fff;border-color:#993333;font-weight:700}
+.quiz-opt.disabled{opacity:.5;pointer-events:none}
+.quiz-result{font-size:12.5px;line-height:1.7;background:#FFF8E7;border:1px solid #F5CF8E;border-radius:10px;padding:11px 13px;color:#7A5A2A;display:none}
+.quiz-result.on{display:block}
+.quiz-result b{color:#B3631A}
+
+/* シクレ豆知識ハイライト */
+.lib-row.secret{background:linear-gradient(135deg,#FFF4DC 0%,#FFE7B0 100%);border-color:#F5A623}
+.lib-row.locked{background:#F5ECD8;color:#BCA88A;cursor:not-allowed}
+.lib-row.locked .row-title::before{content:'🔒 ';font-size:12px}
+
+/* Helper */
+.center{text-align:center}
+.muted{color:#8C7A6A}
+</style>
+</head>
+<body>
+
+<!-- 管理者テストバー（URLに ?admin を付けたときのみ表示） -->
+<div class="admin-bar" id="adminBar">
+  <div class="ab-row">
+    <span class="ab-tag">🛠 ADMIN</span>
+    <span class="ab-info" id="abInfo">—</span>
+  </div>
+  <div class="ab-row ab-ctrl">
+    <button id="abPrev">◀前日</button>
+    <button id="abNext">翌日▶</button>
+    <input type="date" id="abJump" class="ab-date">
+    <button data-scn="seed">仕込日</button>
+    <button data-scn="ferment">発酵中</button>
+    <button data-scn="phase2">Phase2</button>
+    <button data-scn="end">終了後</button>
+    <button id="abReal">実日付</button>
+    <button id="abReset">初期化</button>
+  </div>
+</div>
+
+<header>
+  <div class="head-row">
+    <span class="title"><span class="emoji">🔰</span>麹使い道場</span>
+    <span class="countdown" id="countdown">準備中</span>
+    <button class="ham" id="hamBtn" aria-label="メニュー"><span></span><span></span><span></span></button>
+  </div>
+  <div class="subhead">
+    <span class="date" id="currentDate"></span>
+    <span id="streakPill"></span>
+    <span class="phase-pill" id="phasePill"></span>
+  </div>
+</header>
+
+<main>
+  <section class="main-view" id="mainView">
+    <div id="lineWarning"></div>
+    <div id="luckyBanner"></div>
+    <div id="readOnlyBanner"></div>
+    <div id="preLaunchBanner"></div>
+    <div id="preorderHint"></div>
+    <div id="phaseIndicator"></div>
+    <div id="dailyGreet"></div>
+    <div id="anxietyCard"></div>
+    <div id="protectCard"></div>
+    <div id="todayKnowledge"></div>
+    <div id="titleSection"></div>
+    <div id="kojiHint"></div>
+    <div class="koji-cards" id="kojiCards"></div>
+    <button class="add-koji-btn" id="addKojiBtn" style="display:none">＋ 麹を追加する</button>
+    <div id="phase2Section"></div>
+
+    <!-- 次の道場へ：味付け道場アプリ 合言葉案内 -->
+    <div class="next-dojo">
+      <div class="nd-head"><span class="nd-icon">🎁</span><span>次の道場へ</span></div>
+      <div class="nd-body">
+        かよママの<b>「一生ものの味付け道場」</b>アプリで、下の合言葉を入力すると<b>麹アプリ卒業生バッジ</b>が解放されます🌾
+      </div>
+      <div class="nd-secret">
+        <div class="nd-secret-label">あいことば</div>
+        <div class="nd-secret-word">こうじだいすき</div>
+      </div>
+      <div class="nd-foot">麹アプリを大切に育てた方だけのお守りです</div>
+    </div>
+  </section>
+</main>
+
+<nav class="bot-nav">
+  <button class="bot-btn active" id="navHome"><span class="ico">🍶</span>ホーム</button>
+  <button class="bot-btn" id="navBadges"><span class="ico">🏆</span>バッジ</button>
+  <button class="bot-btn" id="navManual"><span class="ico">📖</span>使い方</button>
+</nav>
+
+<!-- 初回チュートリアル（ページめくり式） -->
+<div class="modal-bg" id="tutorialModal">
+  <div class="modal" style="max-width:380px">
+    <div id="tutorialContent"></div>
+    <div class="tut-dots" id="tutDots"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn sec" id="tutPrev" style="flex:1">← 前</button>
+      <button class="btn pri" id="tutNext" style="flex:2">次へ →</button>
+    </div>
+    <button id="tutSkip" style="display:block;margin:10px auto 0;background:none;border:none;color:#8C7A6A;font-size:11px;text-decoration:underline;cursor:pointer">スキップして始める</button>
+  </div>
+</div>
+
+<!-- 名前入力モーダル -->
+<div class="modal-bg" id="nameModal">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-hero">
+      <img src="assets/chars/kayo1.png" alt="かよママ" class="kayo-illust onboard" onerror="this.style.display='none'">
+    </div>
+    <h2>まずあなたの名前を教えてください！</h2>
+    <p class="sub">かよママから呼びかけるときに使います🌸<br>ニックネームでもOK</p>
+    <input type="text" id="nameInput" maxlength="20" placeholder="例：はなこ" class="name-input">
+    <button class="btn pri" id="nameSave" style="margin-top:12px">この名前で始める</button>
+  </div>
+</div>
+
+<!-- Onboarding Modal -->
+<div class="modal-bg" id="onboardModal">
+  <div class="modal">
+    <div class="modal-hero">
+      <img src="assets/chars/kayo4.png" alt="かよママ" class="kayo-illust onboard" onerror="this.style.display='none'">
+    </div>
+    <h2>🔰 麹使い道場へようこそ！</h2>
+    <p class="sub">かよママの麹レッスン参加者向け<br>1ヶ月伴走サポートアプリです🌾</p>
+    <div style="background:#FFF8E7;border:1px solid #F5CF8E;border-radius:10px;padding:11px 13px;font-size:12px;color:#7A5A2A;line-height:1.7;margin-bottom:12px">
+      <b style="color:#B3631A">どの麹を作りますか？</b><br>
+      複数選択OK・あとから追加もできます
+    </div>
+    <div class="koji-pick" id="kojiPickGrid"></div>
+    <button class="btn pri" id="onboardStart" disabled>選んだ麹で始める</button>
+    <p class="sub muted" style="font-size:10.5px;margin-top:8px">いつでも増減できるので気軽に！</p>
+  </div>
+</div>
+
+<!-- Add Koji Modal -->
+<div class="modal-bg" id="addKojiModal">
+  <div class="modal">
+    <h2>🌱 麹を追加する</h2>
+    <p class="sub">挑戦したい麹を選んでください<br>（既に作っているものは選択できません）</p>
+    <div class="koji-pick" id="addKojiGrid"></div>
+    <button class="btn pri" id="addKojiConfirm" disabled style="margin-bottom:6px">追加する</button>
+    <button class="btn sec" id="addKojiCancel">キャンセル</button>
+  </div>
+</div>
+
+<!-- Check-in Modal -->
+<div class="modal-bg" id="checkinModal">
+  <div class="modal">
+    <h2 id="ciTitle">今日のチェックイン</h2>
+    <p class="sub" id="ciSub"></p>
+    <div class="day-guide" id="ciGuide"></div>
+    <div class="checkin-form" id="ciForm"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn sec" id="ciCancel" style="flex:1">キャンセル</button>
+      <button class="btn pri" id="ciSave" style="flex:2">記録する</button>
+    </div>
+    <button class="btn sec" id="ciJudge" style="margin-top:8px;display:none">完成したかも？判定する</button>
+    <button class="sos-btn" id="ciSos">😰 ちょっと不安…かよママに相談</button>
+    <button class="btn sec" id="ciFaq" style="margin-top:6px;font-size:12px;padding:8px">💡 よくある質問・困り事を見る</button>
+    <button class="btn sec" id="ciRest" style="margin-top:6px;font-size:11px;padding:8px;color:#8C7A6A">この麹を「お休み中」にする</button>
+  </div>
+</div>
+
+<!-- 即時判定オーバーレイ -->
+<div class="judge-bg" id="judgeOverlay">
+  <div class="judge-card" id="judgeCard">
+    <img id="judgeKayo" src="" alt="かよママ" class="kayo-judge" onerror="this.style.display='none'">
+    <div class="badge" id="judgeBadge"></div>
+    <div class="reasons" id="judgeReasons"></div>
+    <button class="btn pri" id="judgeOk">OK！</button>
+  </div>
+</div>
+
+<!-- 麹図書館 -->
+<div class="lib-bg" id="libModal">
+  <div class="lib-card">
+    <div class="lib-head">
+      <h2>📚 麹図書館</h2>
+      <span class="progress" id="libProgress">0/0</span>
+      <button class="close-x" id="libClose">×</button>
+    </div>
+    <div class="lib-body" id="libBody"></div>
+  </div>
+</div>
+
+<!-- 記事閲覧モーダル -->
+<div class="article-bg" id="articleModal">
+  <div class="article-card">
+    <div class="article-meta" id="articleMeta"></div>
+    <h2 id="articleTitle"></h2>
+    <div class="article-body" id="articleBody"></div>
+    <div class="article-actions">
+      <button class="btn sec" id="articleBack" style="flex:1">閉じる</button>
+      <button class="btn pri" id="articleNext" style="flex:2">次の記事へ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQモーダル -->
+<div class="modal-bg" id="faqModal">
+  <div class="modal" style="max-height:85vh;overflow-y:auto">
+    <h2>❓ よくある質問</h2>
+    <p class="sub">困った時はまずここを見てみてください</p>
+    <div class="faq-list" id="faqList"></div>
+    <button class="btn sec" id="faqClose" style="margin-top:12px">閉じる</button>
+  </div>
+</div>
+
+<!-- クイズモーダル -->
+<div class="modal-bg" id="quizModal">
+  <div class="modal">
+    <h2>🎲 今日の麹クイズ</h2>
+    <p class="sub" id="quizSub">3択クイズに挑戦！</p>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <div class="quiz-result" id="quizResult"></div>
+    <button class="btn sec" id="quizClose" style="margin-top:8px">閉じる</button>
+  </div>
+</div>
+
+<!-- SOSモーダル -->
+<div class="modal-bg" id="sosModal">
+  <div class="modal sos-modal-card">
+    <img src="assets/chars/kayo3.png" alt="かよママ" style="display:block;width:110px;margin:0 auto 4px;filter:drop-shadow(0 3px 8px rgba(193,107,26,.15))" onerror="this.style.display='none'">
+    <h2 style="color:#A03333">🌷 大丈夫、ひとりじゃないよ</h2>
+    <div class="sos-msg">
+      麹作りで不安になるのは、<b>ちゃんと観察してる証拠</b>です。<br><br>
+      気になることがあれば、<b>オープンチャット「🔰麹使い道場」で気軽に質問</b>してください。写真と一緒に「Day ◯の塩麹、こんな感じです」と投稿すると、かよママや仲間からアドバイスがもらえます🌾
+    </div>
+    <ul class="sos-tips">
+      <li>気泡がない？水分が多い／少ない？</li>
+      <li>色が想像と違う？匂いが気になる？</li>
+      <li>「これって正常？」と思ったら即連絡を</li>
+    </ul>
+    <a class="btn pri" id="sosLineBtn" href="https://line.me/ti/g2/J8VE9qcVUKuipZaVjRPVURvronnOT89EGENO8A?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">💬 オープンチャットで質問する</a>
+    <button class="btn sec" id="sosClose" style="margin-top:6px">閉じる</button>
+  </div>
+</div>
+
+<!-- Completion Modal -->
+<div class="modal-bg" id="completionModal">
+  <div class="modal">
+    <h2>🎉 完成判定</h2>
+    <p class="sub" id="cpSub">セルフチェックでご確認ください</p>
+    <div class="compl-list" id="cpList"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn sec" id="cpBack" style="flex:1">もう少し</button>
+      <button class="btn pri" id="cpDone" style="flex:2" disabled>完成！</button>
+    </div>
+  </div>
+</div>
+
+<!-- 先行予約モーダル -->
+<div class="modal-bg" id="preorderModal">
+  <div class="modal" style="max-width:380px;max-height:90vh;overflow-y:auto">
+    <div class="modal-hero">
+      <img src="assets/chars/kayo1.png" alt="かよママ" class="kayo-illust onboard" onerror="this.style.display='none'">
+    </div>
+    <h2>🌸 他サポートの先行予約</h2>
+    <p class="sub">麹サポート受講者限定の特典です🌾<br>気になる企画にチェックを入れてください</p>
+    <div class="preorder-list" id="preorderList">
+      <label class="preorder-item">
+        <input type="checkbox" value="aji">
+        <span class="po-info"><b>🧂 味付けサポート</b><small>次回開催：<b>3月／7月／11月</b>（年3回・約3週間）</small></span>
+      </label>
+      <label class="preorder-item">
+        <input type="checkbox" value="kondate">
+        <span class="po-info"><b>🍱 献立サポート</b><small>次回開催：<b>1月／5月／9月</b>（年3回・約3週間）</small></span>
+      </label>
+    </div>
+    <button class="btn pri" id="preorderSubmit" style="margin-top:6px">先行予約する</button>
+    <button class="btn sec" id="preorderClose" style="margin-top:6px">あとで</button>
+    <div class="preorder-thanks" id="preorderThanks" style="display:none"></div>
+  </div>
+</div>
+
+<!-- 講座アーカイブ：動画一覧モーダル -->
+<div class="modal-bg" id="archiveModal">
+  <div class="modal" style="max-width:380px;max-height:90vh;overflow-y:auto">
+    <h2>🎥 講座アーカイブ</h2>
+    <p class="sub">レッスン動画を見返せます🌾</p>
+    <div id="archiveList"></div>
+    <button class="btn pri" id="archiveClose" style="margin-top:12px">閉じる</button>
+  </div>
+</div>
+
+<!-- 動画再生モーダル（アーカイブの上に重ねて開く） -->
+<div class="modal-bg" id="videoModal" style="z-index:55">
+  <div class="modal" style="max-width:480px;max-height:95vh;overflow-y:auto;padding:14px 14px 14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <button class="btn sec video-back" id="videoBack">‹ 戻る</button>
+      <h2 id="videoTitle" style="margin:0;flex:1;font-size:14px;text-align:left">—</h2>
+    </div>
+    <p class="sub" id="videoNote" style="text-align:left;margin-bottom:6px;font-size:11.5px"></p>
+    <div class="video-frame"><iframe id="videoIframe" src="about:blank" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+  </div>
+</div>
+
+<!-- バッジ画面モーダル -->
+<div class="modal-bg" id="badgesModal">
+  <div class="modal" style="max-width:420px;max-height:90vh;overflow-y:auto">
+    <h2>🏆 バッジコレクション</h2>
+    <p class="sub">毎日の見守り・図書館・クイズ・麹完成で集まります</p>
+    <div class="badge-summary" id="badgesSummary">—</div>
+    <div id="badgesContent"></div>
+    <button class="btn pri" id="badgesClose" style="margin-top:8px">閉じる</button>
+  </div>
+</div>
+
+<!-- Manual Modal -->
+<div class="modal-bg" id="manualModal">
+  <div class="modal">
+    <h2>📖 麹使い道場の使い方</h2>
+    <div style="font-size:13px;line-height:1.85;color:#5A4A3A">
+      <p style="margin:10px 0 4px"><b style="color:#B3631A">📅 レッスン＆サポート日程</b></p>
+      <div style="background:#FFF8E7;border:1px solid #F5CF8E;border-radius:10px;padding:10px 12px;margin:4px 0 8px;font-size:12.5px;line-height:1.85">
+        <div>🗓 <b style="color:#B3631A">5/30</b>　レッスン①（麹の選び方・材料の説明）</div>
+        <div>🗓 <b style="color:#B3631A">6/5</b>　レッスン②（麹調味料を仕込む＝発酵スタート）</div>
+        <div>⏳ <b style="color:#B3631A">発酵期間</b>　仕込みから7〜10日が目安</div>
+        <div>💬 <b style="color:#B3631A">サポート期間</b>　6/20まで（かよママに相談OK）</div>
+        <div>📱 <b style="color:#B3631A">アプリ利用</b>　6月末まで使えます</div>
+      </div>
+      <p style="margin:10px 0 6px"><b style="color:#B3631A">🌾 Phase 1：作る期</b><br>選んだ麹を毎日見守ります。1日1回タップで状態をチェックイン。</p>
+      <p style="margin:10px 0 6px"><b style="color:#B3631A">🍱 Phase 2：使う期</b><br>麹が完成すると、作れるレシピが表示されます。「〜だけシリーズ」。</p>
+      <p style="margin:10px 0 6px"><b style="color:#B3631A">💡 困ったら</b><br>不安なときはオープンチャット「🔰麹使い道場」で気軽に質問OK！1人じゃないから成功率アップ✨</p>
+      <p style="margin:10px 0 6px"><b style="color:#B3631A">🎁 おまけ</b><br>連続記録ストリーク、称号、ラッキーデイ、隠れキャラなど隠し要素もあるよ。</p>
+    </div>
+    <button class="btn pri" id="manualClose" style="margin-top:12px">閉じる</button>
+  </div>
+</div>
+
+<!-- Drawer -->
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span class="d-title">🍶 メニュー</span>
+    <button class="drawer-close" id="drawerClose">×</button>
+  </div>
+  <div class="drawer-list">
+    <button class="drawer-item" data-act="manual"><span class="ico">📖</span>使い方を見る<span class="arrow">›</span></button>
+    <button class="drawer-item" data-act="library"><span class="ico">📚</span>麹図書館<span class="arrow">›</span></button>
+    <button class="drawer-item" data-act="faq"><span class="ico">❓</span>よくある質問<span class="arrow">›</span></button>
+    <button class="drawer-item" data-act="quiz"><span class="ico">🎲</span>麹クイズ<span class="arrow">›</span></button>
+    <button class="drawer-item" data-act="addKoji"><span class="ico">➕</span>麹を追加する<span class="arrow">›</span></button>
+    <button class="drawer-item" data-act="archive"><span class="ico">🎥</span>講座アーカイブ<span class="arrow">›</span></button>
+    <div class="drawer-divider"></div>
+    <a class="drawer-item" href="https://line.me/ti/g2/J8VE9qcVUKuipZaVjRPVURvronnOT89EGENO8A?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener noreferrer">
+      <span class="ico">💬</span>麹使い道場で質問<span class="arrow">↗</span>
+    </a>
+    <div class="drawer-divider"></div>
+    <button class="drawer-item danger" data-act="reset"><span class="ico">🔄</span>データをリセット</button>
+  </div>
+  <div class="drawer-foot">
+    <span class="beta">β版</span><br>
+    2026-06-05 〜 2026-06-30<br>
+    監修：かよママ（料理講師）<br>
+    <span style="display:block;margin-top:6px;font-size:10px;color:#B0A090">作成：とーる｜行動経済アナリスト</span>
+  </div>
+</aside>
+
+<!-- Farewell Modal -->
+<div class="farewell-bg" id="farewellModal">
+  <div class="farewell-card">
+    <span class="sakura">🌾</span>
+    <img src="assets/chars/kayo3.png" alt="かよママ" class="kayo-illust farewell" onerror="this.style.display='none'">
+    <h2 id="farewellTitle">1ヶ月、おつかれさまでした！</h2>
+
+    <div class="final-eval" id="finalEval">
+      <div class="eval-title">🏆 あなたの1ヶ月の記録</div>
+      <div class="eval-grid" id="finalEvalGrid"></div>
+      <div class="eval-badge" id="finalEvalBadge">麹デビュー！</div>
+    </div>
+
+    <div class="msg">麹レッスンから1ヶ月、<br>毎日のかき混ぜ、観察、味見──<br>本当によく頑張ってくれました🌾<br><br>
+冷蔵庫にできた<b>麹のお守り</b>は、これからの<br>毎日の料理を変えてくれます。<br><br>
+さて、麹で「味付け」が変わったら、次は<br><b>「献立」</b>そのものをラクにしませんか？</div>
+
+    <div class="next-step" id="nextStep">
+      <div class="ns-title"><b>他サポートの先行予約</b><br>👇 麹サポート受講者限定の特典 🌸</div>
+      <div class="ns-item" id="preorderOpenBtn" style="cursor:pointer">
+        <div class="ns-ico">🌸</div>
+        <div class="ns-text"><b>味付け／献立サポート</b><br><span style="color:#8C7A6A">タップで先行予約フォームへ<br>味付け：3月／7月／11月、献立：1月／5月／9月</span></div>
+      </div>
+      <div class="ns-cta">予約すると、後日かよママから <b>個別にご案内</b> が届きます ✨</div>
+    </div>
+
+    <div class="signature">— かよママ より</div>
+    <a class="ig-btn" href="https://line.me/ti/g2/J8VE9qcVUKuipZaVjRPVURvronnOT89EGENO8A?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener noreferrer">
+      🔰 麹使い道場に参加する
+    </a>
+    <button class="close-btn" id="farewellClose">閉じる</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+// ======== Config ========
+const STORAGE_KEY='hakkou-club-state-v1';
+const ONBOARD_KEY='hakkou-club-onboarded-v1';
+const FAREWELL_SEEN_KEY='hakkou-club-farewell-v1';
+
+// =========================================================================
+// 🚀 リリース手順（リリース時のみ実施）:
+//    1. TEST_MODE を false に変更
+//    2. 必要なら START_AT / EXPIRE_AT / PHASE2_AT を実際の日付に調整
+// テスト中:
+//   ・期間ガードがすべて無効（pre-launch / read-only バナー出ない）
+//   ・カウントダウンは「テスト中」表示
+//   ・Phase 2 は「完成麹が出たら」自動で開く
+//   ・お別れポップアップは ?preview=farewell でのみ表示
+// =========================================================================
+const TEST_MODE=false;
+
+// ======== Google Sheets 連携（GAS Web App） ========
+// セットアップ手順は GAS_セットアップ手順.md を参照
+// 設定済みなら GAS Web App URL を入れる、未設定（__から始まる）なら送信しない
+const GAS_ENDPOINT_DEFAULT='https://script.google.com/macros/s/AKfycbx5qfUrwVTVQm9NNvFMuZtU1Z3mCwHA9cHQeGCVhYXUl2KYyLxbBfh5Ev_dbdWlT8dt/exec';
+function gasEndpoint(){
+  try{const o=localStorage.getItem('hakkou-club-gas-url');if(o)return o;}catch(e){}
+  return GAS_ENDPOINT_DEFAULT;
+}
+function sendToSheet(event,data){
+  const url=gasEndpoint();
+  if(!url||url.indexOf('__')===0)return;
+  const body=Object.assign({event:event,name:userName(),at:new Date().toISOString()},data||{});
+  try{
+    fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).catch(function(){});
+  }catch(e){}
+}
+// register 用ペイロード（全選択麹＋各麹の startDate＋最古日付）
+function buildRegisterPayload(){
+  const details=state.selectedKoji.map(function(k){return {k:k,startDate:(state.kojiData[k]||{}).startDate||''}});
+  const earliest=details.reduce(function(acc,d){return (!acc||(d.startDate&&d.startDate<acc))?d.startDate:acc},'');
+  return {koji:state.selectedKoji.slice(),kojiDetails:details,startDate:earliest||(new Date().toISOString().slice(0,10))};
+}
+
+// 期間定数（TEST_MODE=false 時に有効）
+// レッスン①5/30（麹選び）→ レッスン②6/5（仕込み＝Day1）→ 発酵7〜10日 → サポート6/20まで → アプリは6月末まで利用可
+const START_AT=new Date('2026-06-05T00:00:00+09:00');  // 仕込み日（アプリのDay 1）
+const PHASE2_AT=new Date('2026-06-15T00:00:00+09:00'); // 発酵完了の目安・使う期へ
+const EXPIRE_AT=new Date('2026-06-30T15:00:00.000Z');  // 7/1 0:00 JST（6月末まで利用可）
+
+// 6種類の麹
+const KOJI=[
+  {k:'shio',  n:'塩麹',     emoji:'🧂', tagline:'初心者おすすめ', days:7},
+  {k:'shoyu', n:'醤油麹',   emoji:'🍶', tagline:'万能調味料',     days:7},
+  {k:'tama',  n:'玉ねぎ麹', emoji:'🧅', tagline:'旨味爆発',       days:10},
+  {k:'chu',   n:'中華麹',   emoji:'🥢', tagline:'中華の素卒業',   days:10},
+  {k:'sho',   n:'生姜麹',   emoji:'🌿', tagline:'チューブ卒業',   days:7},
+  {k:'nin',   n:'にんにく麹', emoji:'🧄', tagline:'チューブ卒業',  days:7}
+];
+
+// Day別の見守りガイド
+const DAY_GUIDES={
+  1:'<b>仕込み完了！</b>清潔な瓶に入れて常温へ。明日から1日1回かき混ぜてあげてくださいね',
+  2:'フタを開けてしっかり混ぜましょう。<b>ガス抜きが大事</b>。混ぜる時に空気を入れる感覚で',
+  3:'少しずつ水分が出始める頃。混ぜたら密閉して常温キープ',
+  4:'<b>気泡チェック！</b>ぷくぷく出てきたら大成功サイン✨ まだなら明日まで様子見',
+  5:'匂いの変化に注目。米の甘さから<b>まろやか発酵香</b>に変わってきます',
+  6:'色がほんのりベージュ〜薄茶に。順調に発酵中の証拠',
+  7:'<b>塩麹・醤油麹・生姜麹・にんにく麹はそろそろ完成判定OK</b>。味見してみて',
+  8:'中華麹・玉ねぎ麹はもう少し。じっくり育てて深みを出しましょう',
+  9:'残り少し。今日もかき混ぜを忘れずに',
+  10:'<b>完成判定の最終日！</b>セルフチェックで確認しましょう'
+};
+
+// チェックイン項目
+const CHECKIN_FIELDS=[
+  {k:'color',   label:'色',     opts:['白','ベージュ','薄茶','茶']},
+  {k:'smell',   label:'香り',   opts:['米','甘い','発酵香','酸っぱい']},
+  {k:'moisture',label:'水分',   opts:['乾き気味','適度','しっとり','水分多め']},
+  {k:'bubble',  label:'気泡',   opts:['なし','少し','出てる','よく出る']},
+  {k:'temp',    label:'温度感', opts:['ひんやり','ふつう','あったか']}
+];
+
+const COMPL_CHECKS=[
+  '色が白〜ベージュ〜薄茶に変化した',
+  '甘い発酵の香りがする',
+  '気泡やふつふつ感があった',
+  '塩や醤油・素材との一体感がある',
+  'ペースト状〜とろみが出た',
+  'カビ・異臭などの異変はない'
+];
+
+// レシピ（〜だけシリーズ・サンプル30件・後日かよママから50件で差替）
+const RECIPES=[
+  {id:'r01',n:'塩麹キャベツ',uses:['shio'],tag:'漬けるだけ'},
+  {id:'r02',n:'塩麹のおかゆ',uses:['shio'],tag:'お湯に溶かすだけ'},
+  {id:'r03',n:'塩麹ドレッシング',uses:['shio'],tag:'混ぜるだけ'},
+  {id:'r04',n:'塩麹ゆで卵漬け',uses:['shio'],tag:'漬けるだけ'},
+  {id:'r05',n:'塩麹豚肉ソテー',uses:['shio'],tag:'味付けるだけ'},
+  {id:'r06',n:'醤油麹冷奴',uses:['shoyu'],tag:'かけるだけ'},
+  {id:'r07',n:'醤油麹卵かけご飯',uses:['shoyu'],tag:'かけるだけ'},
+  {id:'r08',n:'醤油麹照り焼き',uses:['shoyu'],tag:'味付けるだけ'},
+  {id:'r09',n:'醤油麹おにぎり',uses:['shoyu'],tag:'混ぜるだけ'},
+  {id:'r10',n:'醤油麹トマト和え',uses:['shoyu'],tag:'混ぜるだけ'},
+  {id:'r11',n:'玉ねぎ麹オムレツ',uses:['tama'],tag:'混ぜるだけ'},
+  {id:'r12',n:'玉ねぎ麹コンソメ風スープ',uses:['tama'],tag:'お湯に溶かすだけ'},
+  {id:'r13',n:'玉ねぎ麹トマトソース',uses:['tama'],tag:'混ぜるだけ'},
+  {id:'r14',n:'玉ねぎ麹マリネ',uses:['tama'],tag:'漬けるだけ'},
+  {id:'r15',n:'中華麹チャーハン',uses:['chu'],tag:'味付けるだけ'},
+  {id:'r16',n:'中華麹スープ',uses:['chu'],tag:'お湯に溶かすだけ'},
+  {id:'r17',n:'中華麹麻婆豆腐',uses:['chu'],tag:'味付けるだけ'},
+  {id:'r18',n:'中華麹野菜炒め',uses:['chu'],tag:'味付けるだけ'},
+  {id:'r19',n:'生姜麹冷奴',uses:['sho'],tag:'かけるだけ'},
+  {id:'r20',n:'生姜麹豚バラ巻き',uses:['sho'],tag:'味付けるだけ'},
+  {id:'r21',n:'生姜麹サバの煮付け',uses:['sho'],tag:'味付けるだけ'},
+  {id:'r22',n:'にんにく麹アヒージョ',uses:['nin'],tag:'味付けるだけ'},
+  {id:'r23',n:'にんにく麹ステーキ',uses:['nin'],tag:'味付けるだけ'},
+  {id:'r24',n:'にんにく麹パスタ',uses:['nin'],tag:'味付けるだけ'},
+  // 組み合わせレシピ
+  {id:'r25',n:'万能から揚げ',uses:['shoyu','sho','nin'],tag:'漬けるだけ'},
+  {id:'r26',n:'チャプチェ風',uses:['shoyu','tama','nin'],tag:'味付けるだけ'},
+  {id:'r27',n:'ラーメンスープ',uses:['shoyu','chu','nin'],tag:'お湯に溶かすだけ'},
+  {id:'r28',n:'手作りドレッシング',uses:['shio','tama'],tag:'混ぜるだけ'},
+  {id:'r29',n:'豚キムチ風',uses:['chu','nin'],tag:'味付けるだけ'},
+  {id:'r30',n:'うま塩スープ',uses:['shio','tama'],tag:'お湯に溶かすだけ'}
+];
+
+// ======== Date override (テスト用・stateより先に宣言) ========
+let _DATE_OVERRIDE=null;
+let ADMIN=false;                                  // ?admin で true
+const ADMIN_DATE_KEY='hakkou-club-admin-date-v1'; // 管理者モードの仮想日付保存
+
+// ======== State ========
+let state={
+  selectedKoji:[],   // ['shio','tama']
+  kojiData:{},       // {shio:{startDate,isResting,completedDate,checkins:{}}}
+  recipesUsed:{},    // {r01:'2026-06-08'}
+  preorders:[],      // ['aji','kondate'] - 先行予約済みのサポート
+  view:'main',
+  date:today()       // 表示中の日付
+};
+
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){const o=JSON.parse(raw);state=Object.assign(state,o);}
+  }catch(e){}
+}
+function save(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}
+}
+
+// ======== Date utils ========
+function _now(){return _DATE_OVERRIDE?new Date(_DATE_OVERRIDE):new Date()}
+function today(){
+  const d=_now();
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function pad(n){return String(n).padStart(2,'0')}
+// ユーザー名ヘルパー（呼びかけ用）
+function userName(){return ((state.userName||'')+'').trim()}
+function nameAddr(){const n=userName();return n?n+'さん、':''}
+function parseDate(s){const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d))}
+function daysBetween(s1,s2){return Math.round((parseDate(s2)-parseDate(s1))/86400000)}
+function fmtJP(s){
+  const[y,m,d]=s.split('-').map(Number);
+  const wn=['日','月','火','水','木','金','土'];
+  const dt=new Date(y,m-1,d);
+  return y+'年'+m+'月'+d+'日('+wn[dt.getDay()]+')';
+}
+
+// ======== Phase / Mode ========
+// ADMIN モードでは TEST_MODE でも日付ガードを有効化し、ライフサイクル全体をテスト可能にする
+function isPreLaunch(){if(TEST_MODE&&!ADMIN)return false;return _now()<START_AT}
+function isReadOnly(){if(TEST_MODE&&!ADMIN)return false;return _now()>=EXPIRE_AT}
+function isPhase2Started(){
+  // 完成麹が1つでもあれば Phase 2 入り
+  const hasCompleted=state.kojiData?Object.values(state.kojiData).some(k=>k&&k.completedDate):false;
+  if(TEST_MODE&&!ADMIN)return hasCompleted;
+  return _now()>=PHASE2_AT||hasCompleted;
+}
+function isToday(s){return s===today()}
+function getKoji(k){return KOJI.find(x=>x.k===k)}
+
+function dayOfKoji(kk){
+  const kd=state.kojiData[kk];
+  if(!kd||!kd.startDate)return 0;
+  const d=daysBetween(kd.startDate,today())+1;
+  return Math.max(0,d); // 0 = まだ始まってない
+}
+function stageOfKoji(kk){
+  const d=dayOfKoji(kk);
+  const k=getKoji(kk);
+  if(d<=2)return {n:1,name:'仕込み期'};
+  if(d<=Math.floor(k.days*0.7))return {n:2,name:'発酵期'};
+  if(d<=k.days)return {n:3,name:'完成期'};
+  return {n:3,name:'熟成期'};
+}
+function isCompletable(kk){
+  const kd=state.kojiData[kk];
+  if(!kd||kd.completedDate||kd.isResting)return false;
+  const k=getKoji(kk);
+  return dayOfKoji(kk)>=k.days;
+}
+
+// ======== Streak ========
+function streak(){
+  // 直近の連続「いずれかの麹をチェックインした日」
+  let s=0,d=today();
+  while(true){
+    if(parseDate(d)<parseDate('2026-06-05'))break;
+    let any=false;
+    for(const k in state.kojiData){
+      const ci=state.kojiData[k].checkins||{};
+      if(ci[d]){any=true;break;}
+    }
+    if(!any)break;
+    s++;d=shiftDate(d,-1);
+  }
+  return s;
+}
+function shiftDate(s,n){
+  const d=parseDate(s);d.setUTCDate(d.getUTCDate()+n);
+  return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate());
+}
+
+// ======== Lucky Day ========
+function isLuckyDay(s){let h=17;for(let i=0;i<s.length;i++){h=((h*37)+s.charCodeAt(i))|0;}return ((h>>>0)%100)<20;}
+
+// ======== Daily kayomama greeting (Day-aware版) ========
+// Day範囲指定があれば優先。育成中の麹のうち最大Dayで判定
+const DAILY_GREETS=[
+  // Day別（優先・不安に寄り添う）
+  {dayMin:1,dayMax:3,ki:'kayo4',msg:'仕込みおつかれさま！焦
