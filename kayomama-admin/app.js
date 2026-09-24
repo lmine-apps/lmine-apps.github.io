@@ -7,7 +7,7 @@ import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/fireb
 
 // ============ State ============
 const state = {
-  tab: 'dashboard',   // dashboard | users | interests | videos | settings
+  tab: 'dashboard',   // dashboard | users | interests | videos | apps | settings
   videoSubTab: 'viewers', // viewers | stats | notices
   stats: null,
   users: null,
@@ -15,6 +15,8 @@ const state = {
   viewers: null,       // v1.2: 視聴アプリ閲覧者
   videoStats: null,    // v1.2: 動画別視聴/いいね
   notices: null,       // v1.2: お知らせ管理
+  apps: null,          // v1.3: アプリ設定（サブアプリ期間・公開・通知）
+  savingApp: null,     // v1.3: 保存中のapp_id
   loading: false,
   fcmToken: null,
   authed: false,
@@ -133,13 +135,14 @@ async function callGas(action, extra) {
 async function refreshAll() {
   state.loading = true;
   render();
-  const [s, u, i, vw, vs, nt] = await Promise.all([
+  const [s, u, i, vw, vs, nt, ap] = await Promise.all([
     callGas('admin_stats'),
     callGas('admin_list_users'),
     callGas('admin_list_interests'),
     callGas('admin_list_viewers'),
     callGas('admin_video_stats'),
-    callGas('admin_list_notices')
+    callGas('admin_list_notices'),
+    callGas('admin_get_app_settings')
   ]);
   state.stats = (s && s.ok) ? s.stats : null;
   state.users = (u && u.ok) ? u.users : [];
@@ -147,6 +150,7 @@ async function refreshAll() {
   state.viewers = (vw && vw.ok) ? vw.viewers : [];
   state.videoStats = (vs && vs.ok) ? vs.videos : [];
   state.notices = (nt && nt.ok) ? nt.notices : [];
+  state.apps = (ap && ap.ok) ? ap.apps : [];
   state.loading = false;
 }
 
@@ -161,6 +165,7 @@ function render() {
       state.tab === 'users'     ? renderUsers() :
       state.tab === 'interests' ? renderInterests() :
       state.tab === 'videos'    ? renderVideos() :
+      state.tab === 'apps'      ? renderAppSettings() :
       state.tab === 'settings'  ? renderSettings() : ''}
     ${renderTabs()}
   `;
@@ -199,6 +204,9 @@ function renderTabs() {
       </button>
       <button data-tab="videos" class="${state.tab === 'videos' ? 'active' : ''}">
         <span class="ico">🎬</span>動画
+      </button>
+      <button data-tab="apps" class="${state.tab === 'apps' ? 'active' : ''}">
+        <span class="ico">🌸</span>アプリ
       </button>
       <button data-tab="settings" class="${state.tab === 'settings' ? 'active' : ''}">
         <span class="ico">⚙️</span>設定
@@ -451,6 +459,105 @@ function openViewerModal_(uid) {
   });
 }
 
+// ============ App Settings (v1.3: サブアプリ期間・公開・通知) ============
+function renderAppSettings() {
+  const apps = state.apps || [];
+  if (!apps.length) return '<div class="empty">アプリ設定を読み込み中…</div>';
+
+  const APP_URLS = {
+    'trial-app': 'https://apps.l-mine.com/kayomama-trial-app/',
+    'tamagoyaki': 'https://apps.l-mine.com/tamagoyaki/',
+    'ajitsuke-dojo': 'https://apps.l-mine.com/ajitsuke-dojo/',
+    'hakkou-club': 'https://apps.l-mine.com/hakkou-club/',
+    'diagnosis-results': 'https://apps.l-mine.com/kayomama-diagnosis/'
+  };
+
+  return `
+    <div class="funnel-box">
+      <h3>🌸 アプリ設定</h3>
+      <div class="empty" style="padding:6px 4px; font-size:12px; color:#8B7A6B; line-height:1.7;">
+        各アプリの<b>公開期間</b>と<b>機能ON/OFF</b>を設定できます。<br>
+        期間が空欄なら期間制限なし。公開OFFのアプリは訪問者に「準備中」画面が出ます。
+      </div>
+    </div>
+    ${apps.map(a => renderAppCard(a, APP_URLS[a.app_id] || '')).join('')}
+  `;
+}
+
+function renderAppCard(a, url) {
+  const isSaving = state.savingApp === a.app_id;
+  const toDate = (s) => {
+    if (!s) return '';
+    const m = String(s).match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+    return m ? `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}` : '';
+  };
+  return `
+    <div class="app-card" data-app-id="${escape_(a.app_id)}" style="background:#fff;border:1px solid #f0e0d5;border-radius:12px;padding:14px 16px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
+        <h4 style="margin:0;font-size:15px;color:#5D4A3C;">${escape_(a.name)}</h4>
+        ${url ? `<a href="${escape_(url)}" target="_blank" rel="noopener" style="font-size:11px;color:#c77b5e;text-decoration:none;">開く →</a>` : ''}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <label style="font-size:12px;color:#8B7A6B;">
+          公開開始
+          <input type="date" data-field="active_from" value="${toDate(a.active_from)}" style="display:block;width:100%;padding:6px;margin-top:4px;border:1px solid #e0d5c8;border-radius:6px;font-size:12px;">
+        </label>
+        <label style="font-size:12px;color:#8B7A6B;">
+          公開終了
+          <input type="date" data-field="active_to" value="${toDate(a.active_to)}" style="display:block;width:100%;padding:6px;margin-top:4px;border:1px solid #e0d5c8;border-radius:6px;font-size:12px;">
+        </label>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+        ${renderToggle('public', 'アプリ自体を公開', a.public)}
+        ${renderToggle('notification_on', '通知（LINE配信）ON', a.notification_on)}
+        ${renderToggle('interest_btn_on', '「関心表明」ボタン表示', a.interest_btn_on)}
+      </div>
+      <button class="btn-primary" data-save-app="${escape_(a.app_id)}" ${isSaving?'disabled':''} style="width:100%;padding:10px;font-size:13px;">
+        ${isSaving ? '保存中…' : '💾 保存'}
+      </button>
+      <div style="font-size:10px;color:#bbb;margin-top:6px;text-align:right;">最終更新: ${escape_(a.updated_at || '-')}</div>
+    </div>
+  `;
+}
+
+function renderToggle(field, label, checked) {
+  return `
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#5D4A3C;cursor:pointer;">
+      <input type="checkbox" data-field="${field}" ${checked?'checked':''} style="width:18px;height:18px;">
+      <span>${escape_(label)}</span>
+    </label>
+  `;
+}
+
+async function saveAppSettings(app_id) {
+  const card = document.querySelector(`.app-card[data-app-id="${app_id}"]`);
+  if (!card) return;
+  const from = card.querySelector('[data-field="active_from"]').value;
+  const to = card.querySelector('[data-field="active_to"]').value;
+  const pub = card.querySelector('[data-field="public"]').checked;
+  const notif = card.querySelector('[data-field="notification_on"]').checked;
+  const interest = card.querySelector('[data-field="interest_btn_on"]').checked;
+  state.savingApp = app_id;
+  render();
+  const r = await callGas('admin_set_app_settings', {
+    app_id: app_id,
+    active_from: from ? (from + ' 00:00') : '',
+    active_to: to ? (to + ' 23:59') : '',
+    public: pub,
+    notification_on: notif,
+    interest_btn_on: interest
+  });
+  state.savingApp = null;
+  if (r && r.ok) {
+    showToast('✓ 保存しました');
+    const upd = await callGas('admin_get_app_settings');
+    if (upd && upd.ok) state.apps = upd.apps;
+  } else {
+    showToast('❌ 保存に失敗しました');
+  }
+  render();
+}
+
 // ============ Settings ============
 function renderSettings() {
   const t = window.ADMIN_TOKEN || '';
@@ -685,6 +792,11 @@ function bindEvents() {
   if (nn) nn.addEventListener('click', openNoticeCreateModal_);
   document.querySelectorAll('[data-notice-id]').forEach(el => {
     el.addEventListener('click', () => deleteNotice_(el.dataset.noticeId));
+  });
+
+  // v1.3: アプリ設定の保存ボタン
+  document.querySelectorAll('[data-save-app]').forEach(btn => {
+    btn.addEventListener('click', () => saveAppSettings(btn.dataset.saveApp));
   });
 }
 
