@@ -539,10 +539,11 @@ async function saveAppSettings(app_id) {
   const interest = card.querySelector('[data-field="interest_btn_on"]').checked;
   state.savingApp = app_id;
   render();
+  // JST明示のISO形式で送信（Google Sheetsのタイムゾーン自動解釈ズレ回避）
   const r = await callGas('admin_set_app_settings', {
     app_id: app_id,
-    active_from: from ? (from + ' 00:00') : '',
-    active_to: to ? (to + ' 23:59') : '',
+    active_from: from ? (from + 'T00:00:00+09:00') : '',
+    active_to: to ? (to + 'T23:59:00+09:00') : '',
     public: pub,
     notification_on: notif,
     interest_btn_on: interest
